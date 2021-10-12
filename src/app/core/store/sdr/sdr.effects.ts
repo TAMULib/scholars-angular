@@ -705,7 +705,11 @@ export class SdrEffects {
                     const filters = sidebarItem.queryParams.filters
                       .split(',')
                       .map((field) => field.trim())
-                      .filter((field) => field !== sdrFacet.field);
+                      .filter((field) => {
+                        delete sidebarItem.queryParams[`${field}.filter`];
+                        delete sidebarItem.queryParams[`${field}.opKey`];
+                        return field !== sdrFacet.field;
+                      });
                     if (filters.length > 0) {
                       sidebarItem.queryParams.filters = filters.join(',');
                     } else {
