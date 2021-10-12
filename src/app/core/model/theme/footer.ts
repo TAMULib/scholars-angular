@@ -4,5 +4,5 @@ import { Style } from './style';
 export interface Footer {
   readonly links: Link[];
   readonly variables: Style[];
-  readonly copyright: String;
+  readonly copyright: string;
 }
