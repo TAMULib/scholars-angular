@@ -104,6 +104,9 @@ const resetFiltersInQueryParams = (queryParams: Params, collectionView: Collecti
       delete queryParams[`${aff}.opKey`];
     });
     queryParams.filters = defaultFilterFields.join(',');
+    if (!queryParams.filters) {
+      delete queryParams.filters;
+    }
   }
 };
 
