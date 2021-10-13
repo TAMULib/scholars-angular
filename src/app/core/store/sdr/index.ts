@@ -32,7 +32,8 @@ export const selectCollectionViewByName = (collectionViewType: string, name: str
 const findCollectionView = (collectionViews, clazz: string, defaultName: string): CollectionView => {
   let defaultCollectionView;
   for (const collectionView of collectionViews) {
-    if (collectionView.filters.find((filter: Filter) => filter.field === 'class').value === clazz) {
+    const viewByClass = collectionView.filters.find((filter: Filter) => filter.field === 'class');
+    if (!!viewByClass && viewByClass.value === clazz) {
       return collectionView;
     }
     if (collectionView.name === defaultName) {
@@ -42,9 +43,9 @@ const findCollectionView = (collectionViews, clazz: string, defaultName: string)
   return defaultCollectionView;
 };
 
-export const selectDirectoryViewByClass = (clazz: string) => createSelector(selectAllResources<DirectoryView>('directoryViews'), (resources) => findCollectionView(resources, clazz, 'People'));
+export const selectDirectoryViewByClass = (clazz: string) => createSelector(selectAllResources<DirectoryView>('directoryViews'), (resources) => findCollectionView(resources, clazz, 'All'));
 
-export const selectDiscoveryViewByClass = (clazz: string) => createSelector(selectAllResources<DiscoveryView>('discoveryViews'), (resources) => findCollectionView(resources, clazz, 'People'));
+export const selectDiscoveryViewByClass = (clazz: string) => createSelector(selectAllResources<DiscoveryView>('discoveryViews'), (resources) => findCollectionView(resources, clazz, 'All'));
 
 const findDisplayView = (displayViews, types: string[], defaultName: string): DisplayView => {
   let defaultDisplayView;
