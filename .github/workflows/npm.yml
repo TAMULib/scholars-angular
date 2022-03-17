@@ -22,14 +22,11 @@ jobs:
         key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package.json') }}
         restore-keys: ${{ runner.os }}-node_modules-
 
-    - name: Install Chrome drivers
-      run: sudo apt-get install xvfb
-
     - name: Install dependencies
       run: yarn install
 
     - name: Test CI
-      run: xvfb-run --auto-servernum yarn test:ci
+      run: yarn test:ci
 
     - name: Coveralls coverage report
       uses: coverallsapp/github-action@master
