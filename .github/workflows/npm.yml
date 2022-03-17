@@ -22,11 +22,21 @@ jobs:
         key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package.json') }}
         restore-keys: ${{ runner.os }}-node_modules-
 
+    - name: Install Chrome drivers
+      run: |
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+        apt-get update
+        apt-get install apt-get update
+
+    - name: Install x video frame buffer *lame
+      run: sudo apt-get install xvfb
+
     - name: Install dependencies
       run: yarn install
 
     - name: Test CI
-      run: yarn test:ci
+      run: xvfb-run --auto-servernum yarn test:ci
 
     - name: Coveralls coverage report
       uses: coverallsapp/github-action@master
