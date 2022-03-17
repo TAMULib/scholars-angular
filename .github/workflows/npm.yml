@@ -22,7 +22,7 @@ jobs:
         key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package.json') }}
         restore-keys: ${{ runner.os }}-node_modules-
 
-    - name: Install Chrome drivers
+    - name: Install virtual framebuffer
       run: sudo apt-get install xvfb
 
     - name: Install dependencies
