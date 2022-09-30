@@ -14,10 +14,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 14
-        cache: 'npm'
-
-    - name: Install virtual framebuffer
-      run: sudo apt-get install xvfb
+        cache: 'yarn'
 
     - name: Install dependencies
       run: yarn install
