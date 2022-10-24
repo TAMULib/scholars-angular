@@ -174,12 +174,10 @@ export class DisplayComponent implements OnDestroy, OnInit {
                     });
                   });
 
-                  const viewAllTabSections = Array.from(sections.values());
-
                   const viewAllTab: DisplayTabView = {
                     name: 'View All',
                     hidden: false,
-                    sections: viewAllTabSections,
+                    sections: Array.from(sections.values()),
                   };
 
                   displayView.tabs.push(viewAllTab);
