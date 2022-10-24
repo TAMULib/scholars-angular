@@ -167,19 +167,20 @@ export class DisplayComponent implements OnDestroy, OnInit {
                     displayView.tabs.splice(tabCount, 1);
                   }
 
-                  const viewAllTabSections = [];
+                  const sections = new Map();
+                  this.getTabsToShow(displayView.tabs, document).forEach((tab: DisplayTabView) => {
+                    this.getSectionsToShow(tab.sections, document).forEach((section: DisplayTabSectionView) => {
+                      sections.set(section.name, section);
+                    });
+                  });
+
+                  const viewAllTabSections = Array.from(sections.values());
 
                   const viewAllTab: DisplayTabView = {
                     name: 'View All',
                     hidden: false,
                     sections: viewAllTabSections,
                   };
-
-                  this.getTabsToShow(displayView.tabs, document).forEach((tab: DisplayTabView) => {
-                    this.getSectionsToShow(tab.sections, document).forEach((section: DisplayTabSectionView) => {
-                      viewAllTabSections.push(section);
-                    });
-                  });
 
                   displayView.tabs.push(viewAllTab);
                 })
