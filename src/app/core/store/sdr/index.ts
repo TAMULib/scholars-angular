@@ -43,9 +43,9 @@ const findCollectionView = (collectionViews, clazz: string, defaultName: string)
   return defaultCollectionView;
 };
 
-export const selectDirectoryViewByClass = (clazz: string) => createSelector(selectAllResources<DirectoryView>('directoryViews'), (resources) => findCollectionView(resources, clazz, 'All'));
+export const selectDirectoryViewByClass = (clazz: string) => createSelector(selectAllResources<DirectoryView>('directoryViews'), (resources) => findCollectionView(resources, clazz, 'People'));
 
-export const selectDiscoveryViewByClass = (clazz: string) => createSelector(selectAllResources<DiscoveryView>('discoveryViews'), (resources) => findCollectionView(resources, clazz, 'All'));
+export const selectDiscoveryViewByClass = (clazz: string) => createSelector(selectAllResources<DiscoveryView>('discoveryViews'), (resources) => findCollectionView(resources, clazz, 'People'));
 
 const findDisplayView = (displayViews, types: string[], defaultName: string): DisplayView => {
   let defaultDisplayView;
