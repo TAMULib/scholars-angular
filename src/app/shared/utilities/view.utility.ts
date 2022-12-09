@@ -167,7 +167,9 @@ const getValueByPath = (obj: any, path: string): string => {
   const reducedPath = pathParts.join('.')
   const nextValue = obj[nextPart];
 
-  return typeof nextValue === 'string' ? nextValue : getValueByPath(nextValue, reducedPath);
+  return typeof nextValue === 'string' 
+    ? nextValue 
+    : getValueByPath(nextValue, reducedPath);
 }
 
 const getResourcesPage = (resources: any[], sort: Sort[], page: SdrPage): any[] => {
