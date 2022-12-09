@@ -160,21 +160,35 @@ const equals = (filterOne: Filter, filterTwo: Filter): boolean => {
   return filterTwo ? filterOne.field === filterTwo.field && filterOne.value === filterTwo.value : true;
 };
 
+const getValueByPath = (obj: any, path: string): string => {
+
+  const pathParts = path.split('.');
+  const nextPart = pathParts.shift();
+  const reducedPath = pathParts.join('.')
+  const nextValue = obj[nextPart];
+
+  return typeof nextValue === 'string' ? nextValue : getValueByPath(nextValue, reducedPath);
+}
+
 const getResourcesPage = (resources: any[], sort: Sort[], page: SdrPage): any[] => {
-  let sorted = [].concat(resources);
+  let sorted = [].concat(resources); 
   // sort
   sorted = sorted.sort((a, b) => {
     let result = 0;
     for (const s of sort) {
+
+      const aField = getValueByPath(a, s.field);
+      const bField = getValueByPath(b, s.field);
+
       const isAsc = Direction[s.direction] === Direction.ASC;
-      if (a[s.field] === undefined) {
+      if (aField === undefined) {
         return isAsc ? -1 : 1;
       }
-      if (b[s.field] === undefined) {
+      if (bField === undefined) {
         return isAsc ? 1 : -1;
       }
-      const av = s.date ? new Date(a[s.field]) : a[s.field];
-      const bv = s.date ? new Date(b[s.field]) : b[s.field];
+      const av = s.date ? new Date(aField) : aField;
+      const bv = s.date ? new Date(bField) : bField;
       if (isAsc) {
         result = av > bv ? 1 : av < bv ? -1 : 0;
       } else {
