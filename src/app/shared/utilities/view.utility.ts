@@ -160,17 +160,18 @@ const equals = (filterOne: Filter, filterTwo: Filter): boolean => {
   return filterTwo ? filterOne.field === filterTwo.field && filterOne.value === filterTwo.value : true;
 };
 
-const getValueByPath = (obj: any, path: string): string => {
+const getValueByPath = (obj: any, path: string): string | undefined => {
 
   const pathParts = path.split('.');
   const nextPart = pathParts.shift();
-  const reducedPath = pathParts.join('.')
+  const reducedPath = pathParts.join('.');
   const nextValue = obj[nextPart];
 
-  return typeof nextValue === 'string' 
+  return nextValue === undefined || typeof nextValue === 'string'
     ? nextValue 
     : getValueByPath(nextValue, reducedPath);
-}
+
+};
 
 const getResourcesPage = (resources: any[], sort: Sort[], page: SdrPage): any[] => {
   let sorted = [].concat(resources); 
