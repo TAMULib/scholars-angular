@@ -160,17 +160,27 @@ const equals = (filterOne: Filter, filterTwo: Filter): boolean => {
   return filterTwo ? filterOne.field === filterTwo.field && filterOne.value === filterTwo.value : true;
 };
 
-const getValueByPath = (obj: any, path: string): string => {
-
-  const pathParts = path.split('.');
-  const nextPart = pathParts.shift();
-  const reducedPath = pathParts.join('.')
-  const nextValue = obj[nextPart];
-
-  return typeof nextValue === 'string' 
-    ? nextValue 
-    : getValueByPath(nextValue, reducedPath);
-}
+/**
+ * Traverse object by path returning value else undefined.
+ *
+ * {
+ *   'trainee': {
+ *     'label': 'Name of organization'
+ *   }
+ * }
+ * i.e. `trainee.label` returns 'Name of organizarion'
+ *
+ * @param doc solr document or any JSON object
+ * @param path dot notation path
+ * @returns value at path
+ */
+const getValueByPath = (doc: any, path: string): string | undefined => {
+  let pathValue;
+  path.split('.').forEach((p: string) => {
+    pathValue = pathValue ? pathValue[p] : doc[p];
+  });
+  return pathValue;
+};
 
 const getResourcesPage = (resources: any[], sort: Sort[], page: SdrPage): any[] => {
   let sorted = [].concat(resources); 
