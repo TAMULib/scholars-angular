@@ -183,7 +183,7 @@ const getValueByPath = (doc: any, path: string): string | undefined => {
 };
 
 const getResourcesPage = (resources: any[], sort: Sort[], page: SdrPage): any[] => {
-  let sorted = [].concat(resources); 
+  let sorted = [].concat(resources);
   // sort
   sorted = sorted.sort((a, b) => {
     let result = 0;
