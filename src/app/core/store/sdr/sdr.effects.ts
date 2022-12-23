@@ -671,7 +671,7 @@ export class SdrEffects {
                     : facetEntry.value;
 
                 if (requestFacet && route.queryParams[`${requestFacet}.filter`] !== undefined) {
-                  selected = route.queryParams[`${requestFacet}.filter`].split(',').indexOf(filterValue) >= 0;
+                  selected = route.queryParams[`${requestFacet}.filter`].split(';').indexOf(filterValue) >= 0;
                 }
 
                 const sidebarItem: SidebarItem = {

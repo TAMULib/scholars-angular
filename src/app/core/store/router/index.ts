@@ -20,7 +20,7 @@ export const selectRouterQueryParamFilters = createSelector(selectRouterQueryPar
       const values = queryParams[`${field}.filter`];
       const opKey = queryParams[`${field}.opKey`];
       if (values) {
-        values.split(',').forEach((value: string) => {
+        values.split(';').forEach((value: string) => {
           filters.push({
             field,
             value,

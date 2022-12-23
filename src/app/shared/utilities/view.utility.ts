@@ -87,8 +87,7 @@ const addExportToQueryParams = (queryParams: Params, collectionView: CollectionV
 };
 
 const removeFilterFromQueryParams = (queryParams: Params, filterToRemove: Filter): void => {
-  const filterValues = queryParams[`${filterToRemove.field}.filter`]
-    .split(',');
+  const filterValues = queryParams[`${filterToRemove.field}.filter`].split(';');
 
   if (filterValues.length === 1) {
     queryParams.filters = queryParams.filters.split(',')
@@ -104,7 +103,7 @@ const removeFilterFromQueryParams = (queryParams: Params, filterToRemove: Filter
   } else if (filterValues.length > 1) {
     queryParams[`${filterToRemove.field}.filter`] = filterValues
       .filter((filterValue: string) => filterValue !== filterToRemove.value)
-      .join(',');
+      .join(';');
   } // else (filterValues.length < 1) do nothing 
 };
 
