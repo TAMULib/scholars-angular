@@ -50,7 +50,7 @@
     "express-static-gzip": "2.1.7",
     "font-awesome": "4.7.0",
     "rxjs": "7.8.0",
-    "scholars-embed-utilities": "0.3.2",
+    "scholars-embed-utilities": "0.3.3",
     "tslib": "2.4.1",
     "zone.js": "0.12.0"
   },
