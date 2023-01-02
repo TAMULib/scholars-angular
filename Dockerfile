@@ -18,7 +18,7 @@ FROM keymetrics/pm2:18-alpine
 # set deployment directory
 WORKDIR /
 
-# copy over the built artifact from the maven image
+# copy over the built artifact from the node image
 COPY --from=node /scholars-angular/dist /dist
 
 # deploy scholars-angular using pm2 when running container
