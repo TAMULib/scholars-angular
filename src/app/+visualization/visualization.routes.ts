@@ -10,17 +10,17 @@ export const routes: Routes = [
     component: VisualizationComponent,
     children: [
       {
-        path: 'co-author',
+        path: 'Co-author Network',
         component: CoAuthorNetworkComponent,
         data: {
-          tags: [{ name: 'view', content: 'Scholars Co-Author Network' }],
+          tags: [{ name: 'view', content: 'Scholars Co-author Network' }],
         },
       },
       {
-        path: 'co-investigator',
+        path: 'Co-investigator Network',
         component: CoInvestigatorNetworkComponent,
         data: {
-          tags: [{ name: 'view', content: 'Scholars Co-Investigator Network' }],
+          tags: [{ name: 'view', content: 'Scholars Co-investigator Network' }],
         },
       },
       { path: '**', redirectTo: 'co-author' },
