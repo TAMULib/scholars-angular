@@ -23,7 +23,7 @@ export const routes: Routes = [
           tags: [{ name: 'view', content: 'Scholars Co-investigator Network' }],
         },
       },
-      { path: '**', redirectTo: 'co-author' },
+      { path: '**', redirectTo: 'Co-author Network' },
     ],
   },
 ];
