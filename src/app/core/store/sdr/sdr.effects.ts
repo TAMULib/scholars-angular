@@ -29,7 +29,7 @@ import { createSdrRequest, buildDateYearFilterValue, buildNumberRangeFilterValue
 import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
 
 import { selectSdrState } from './';
-import { SdrState } from './sdr.reducer';
+import { CoDataNetwork, SdrState } from './sdr.reducer';
 import { selectRouterState } from '../router';
 import { selectIsStompConnected, selectStompState } from '../stomp';
 
@@ -130,6 +130,74 @@ export class SdrEffects {
   getOneFailure = createEffect(() => this.actions.pipe(
     ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_ONE_FAILURE)),
     map((action: fromSdr.GetOneResourceFailureAction) => this.alert.getOneFailureAlert(action.payload))
+  ));
+
+  getCoAuthorNetwork = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_AUTHOR_NETWORK)),
+    switchMap((action: fromSdr.GetCoAuthorNetworkAction) =>
+      this.repos
+        .get(action.name)
+        .getCoAuthorNetwork(action.payload.id)
+        .pipe(
+          map((coDataNetwork: CoDataNetwork) => new fromSdr.GetCoAuthorNetworkSuccessAction(action.name, { coDataNetwork })),
+          catchError((response) =>
+            scheduled(
+              [
+                new fromSdr.GetCoAuthorNetworkFailureAction(action.name, {
+                  response,
+                }),
+              ],
+              asapScheduler
+            )
+          )
+        )
+    )
+  ));
+
+  getCoAuthorNetworkSuccess = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_AUTHOR_NETWORK_SUCCESS)),
+    switchMap((action: fromSdr.GetCoAuthorNetworkSuccessAction) => this.waitForStompConnection(action.name)),
+    withLatestFrom(this.store.pipe(select(selectStompState))),
+    map(([combination, stomp]) => this.subscribeToResourceQueue(combination[0], stomp))
+  ), { dispatch: false });
+
+  getCoAuthorNetworkFailure = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_AUTHOR_NETWORK_FAILURE)),
+    map((action: fromSdr.GetCoAuthorNetworkFailureAction) => this.alert.getCoAuthorNetworkFailureAlert(action.payload))
+  ));
+
+  getCoInvestigatorNetwork = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK)),
+    switchMap((action: fromSdr.GetCoInvestigatorNetworkAction) =>
+      this.repos
+        .get(action.name)
+        .getCoInvestigatorNetwork(action.payload.id)
+        .pipe(
+          map((coDataNetwork: CoDataNetwork) => new fromSdr.GetCoInvestigatorNetworkSuccessAction(action.name, { coDataNetwork })),
+          catchError((response) =>
+            scheduled(
+              [
+                new fromSdr.GetCoInvestigatorNetworkFailureAction(action.name, {
+                  response,
+                }),
+              ],
+              asapScheduler
+            )
+          )
+        )
+    )
+  ));
+
+  getCoInvestigatorNetworkSuccess = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_SUCCESS)),
+    switchMap((action: fromSdr.GetCoInvestigatorNetworkSuccessAction) => this.waitForStompConnection(action.name)),
+    withLatestFrom(this.store.pipe(select(selectStompState))),
+    map(([combination, stomp]) => this.subscribeToResourceQueue(combination[0], stomp))
+  ), { dispatch: false });
+
+  getCoInvestigatorNetworkFailure = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_FAILURE)),
+    map((action: fromSdr.GetCoInvestigatorNetworkFailureAction) => this.alert.getCoInvestigatorNetworkFailureAlert(action.payload))
   ));
 
   findByIdIn = createEffect(() => this.actions.pipe(

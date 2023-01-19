@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { PieArcDatum } from 'd3-shape';
 
 import * as d3 from 'd3';
 
-
-type Debt = { source: string, target: string, value: number; };
+import { DirectedData } from '../../core/store/sdr/sdr.reducer';
 
 @Component({
   selector: 'scholars-chord-diagram',
@@ -14,52 +13,52 @@ type Debt = { source: string, target: string, value: number; };
 })
 export class ChordDiagramComponent implements OnInit {
 
-  private data: Debt[] = [
-    { source: 'France', target: 'Britain', value: 22.4 },
-    { source: 'Greece', target: 'Britain', value: 0.55 },
-    { source: 'Italy', target: 'Britain', value: 26 },
-    { source: 'Portugal', target: 'Britain', value: 19.4 },
-    { source: 'United States', target: 'Britain', value: 345 },
-    { source: 'Germany', target: 'France', value: 53.8 },
-    { source: 'Greece', target: 'France', value: 53.9 },
-    { source: 'Ireland', target: 'France', value: 17.3 },
-    { source: 'Italy', target: 'France', value: 366 },
-    { source: 'Japan', target: 'France', value: 7.73 },
-    { source: 'Portugal', target: 'France', value: 18.3 },
-    { source: 'Spain', target: 'France', value: 118 },
-    { source: 'United States', target: 'France', value: 322 },
-    { source: 'Britain', target: 'Germany', value: 321 },
-    { source: 'Greece', target: 'Germany', value: 19.3 },
-    { source: 'Ireland', target: 'Germany', value: 48.9 },
-    { source: 'Portugal', target: 'Germany', value: 32.5 },
-    { source: 'Spain', target: 'Germany', value: 57.6 },
-    { source: 'United States', target: 'Germany', value: 324 },
-    { source: 'Britain', target: 'Ireland', value: 12 },
-    { source: 'Greece', target: 'Ireland', value: 0.34 },
-    { source: 'Spain', target: 'Ireland', value: 6.38 },
-    { source: 'Germany', target: 'Italy', value: 111 },
-    { source: 'Greece', target: 'Italy', value: 3.22 },
-    { source: 'Ireland', target: 'Italy', value: 2.83 },
-    { source: 'Portugal', target: 'Italy', value: 0.87 },
-    { source: 'Britain', target: 'Japan', value: 28.2 },
-    { source: 'Germany', target: 'Japan', value: 88.5 },
-    { source: 'Greece', target: 'Japan', value: 1.37 },
-    { source: 'Ireland', target: 'Japan', value: 18.9 },
-    { source: 'Italy', target: 'Japan', value: 38.8 },
-    { source: 'Portugal', target: 'Japan', value: 2.18 },
-    { source: 'Spain', target: 'Japan', value: 25.9 },
-    { source: 'United States', target: 'Japan', value: 796 },
-    { source: 'Greece', target: 'Portugal', value: 10.1 },
-    { source: 'Ireland', target: 'Portugal', value: 3.77 },
-    { source: 'United States', target: 'Portugal', value: 0.52 },
-    { source: 'Britain', target: 'Spain', value: 326 },
-    { source: 'Greece', target: 'Spain', value: 0.78 },
-    { source: 'Italy', target: 'Spain', value: 9.79 },
-    { source: 'Portugal', target: 'Spain', value: 62 },
-    { source: 'United States', target: 'Spain', value: 163 },
-    { source: 'Greece', target: 'United States', value: 3.1 },
-    { source: 'Ireland', target: 'United States', value: 11.1 },
-    { source: 'Italy', target: 'United States', value: 3.16 },
+  @Input() data: DirectedData[] = [
+    { source: 'France', target: 'Britain', count: 1 },
+    { source: 'Greece', target: 'Britain', count: 1 },
+    { source: 'Italy', target: 'Britain', count: 1 },
+    { source: 'Portugal', target: 'Britain', count: 1 },
+    { source: 'United States', target: 'Britain', count: 1 },
+    { source: 'Germany', target: 'France', count: 1 },
+    { source: 'Greece', target: 'France', count: 1 },
+    { source: 'Ireland', target: 'France', count: 1 },
+    { source: 'Italy', target: 'France', count: 1 },
+    { source: 'Japan', target: 'France', count: 10 },
+    { source: 'Portugal', target: 'France', count: 1 },
+    { source: 'Spain', target: 'France', count: 1 },
+    { source: 'United States', target: 'France', count: 1 },
+    { source: 'Britain', target: 'Germany', count: 1 },
+    { source: 'Greece', target: 'Germany', count: 1 },
+    { source: 'Ireland', target: 'Germany', count: 1 },
+    { source: 'Portugal', target: 'Germany', count: 1 },
+    { source: 'Spain', target: 'Germany', count: 1 },
+    { source: 'United States', target: 'Germany', count: 1 },
+    { source: 'Britain', target: 'Ireland', count: 1 },
+    { source: 'Greece', target: 'Ireland', count: 1 },
+    { source: 'Spain', target: 'Ireland', count: 1 },
+    { source: 'Germany', target: 'Italy', count: 1 },
+    { source: 'Greece', target: 'Italy', count: 1 },
+    { source: 'Ireland', target: 'Italy', count: 1 },
+    { source: 'Portugal', target: 'Italy', count: 1 },
+    { source: 'Britain', target: 'Japan', count: 1 },
+    { source: 'Germany', target: 'Japan', count: 1 },
+    { source: 'Greece', target: 'Japan', count: 1 },
+    { source: 'Ireland', target: 'Japan', count: 1 },
+    { source: 'Italy', target: 'Japan', count: 1 },
+    { source: 'Portugal', target: 'Japan', count: 1 },
+    { source: 'Spain', target: 'Japan', count: 10 },
+    { source: 'United States', target: 'Japan', count: 1 },
+    { source: 'Greece', target: 'Portugal', count: 1 },
+    { source: 'Ireland', target: 'Portugal', count: 1 },
+    { source: 'United States', target: 'Portugal', count: 1 },
+    { source: 'Britain', target: 'Spain', count: 1 },
+    { source: 'Greece', target: 'Spain', count: 1 },
+    { source: 'Italy', target: 'Spain', count: 1 },
+    { source: 'Portugal', target: 'Spain', count: 1 },
+    { source: 'United States', target: 'Spain', count: 1 },
+    { source: 'Greece', target: 'United States', count: 1 },
+    { source: 'Ireland', target: 'United States', count: 1 },
+    { source: 'Italy', target: 'United States', count: 5 },
   ];
 
   private height = 964;
@@ -69,8 +68,8 @@ export class ChordDiagramComponent implements OnInit {
   private shellWidth = 16;
   private shellGap = 2;
 
-  private defaultOpacity = .8;
-  private hoverOpacity = .1;
+  private defaultOpacity = .75;
+  private hoverOpacity = .15;
 
   private fontFamily = 'sans-serif';
 
@@ -94,7 +93,7 @@ export class ChordDiagramComponent implements OnInit {
       .radius(innerRadius - this.shellGap)
       .padAngle(1 / innerRadius);
 
-    const arc = d3.arc<PieArcDatum<Debt>>()
+    const arc = d3.arc<PieArcDatum<DirectedData>>()
       .innerRadius(innerRadius)
       .outerRadius(outerRadius);
 
@@ -155,17 +154,17 @@ export class ChordDiagramComponent implements OnInit {
         .attr('d', arc)
         .attr('fill', d => color(d.index))
         .attr('stroke', '#fff')
-        .on('mouseover', (p, cg) => {
-          fade(this.hoverOpacity)(p, cg);
+        .on('mouseover', (e, d) => {
+          fade(this.hoverOpacity)(e, d);
 
           tooltip.transition()
             .duration(400)
             .style('opacity', 1);
-          tooltip.html(names[cg.index]);
+          tooltip.html(`<span>${names[d.index]}</span>`);
         })
         .on('mousemove', positionTooltip)
-        .on('mouseout', (p, cg) => {
-          fade(this.defaultOpacity)(p, cg);
+        .on('mouseout', (e, d) => {
+          fade(this.defaultOpacity)(e, d);
 
           tooltip.style('opacity', 0);
         }));
@@ -190,7 +189,8 @@ export class ChordDiagramComponent implements OnInit {
         tooltip.transition()
           .duration(400)
           .style('opacity', 1);
-        tooltip.html(`${names[d.source.index]} to ${names[d.target.index]}`);
+
+        tooltip.html(`<span>${names[d.source.index]} co-authored ${d.target.value} times with ${names[d.target.index]}</span>`);
       })
       .on('mousemove', positionTooltip)
       .on('mouseout', () => {
@@ -208,8 +208,8 @@ export class ChordDiagramComponent implements OnInit {
   private build = (data, names) => {
     const index = new Map<string, number>(names.map((name, i) => [name, i]));
     const matrix = Array.from(index, () => new Array(names.length).fill(0));
-    for (const { source, target, value } of data) {
-      matrix[index.get(source)][index.get(target)] += value;
+    for (const { source, target, count } of data) {
+      matrix[index.get(source)][index.get(target)] += count;
     }
 
     return matrix;

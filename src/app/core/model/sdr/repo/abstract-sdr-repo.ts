@@ -1,16 +1,17 @@
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
-import { Observable, forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { RestService } from '../../../service/rest.service';
 import { SdrRepo } from './sdr-repo';
 
 import { AppConfig, APP_CONFIG } from '../../../../app.config';
-import { Sort, Facetable, Filterable, Boostable, SdrRequest } from '../../request';
+import { CoDataNetwork } from '../../../store/sdr/sdr.reducer';
+import { Boostable, Facetable, Filterable, SdrRequest, Sort } from '../../request';
 import { Count } from '../count';
-import { SdrResource } from '../sdr-resource';
 import { SdrCollection } from '../sdr-collection';
+import { SdrResource } from '../sdr-resource';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +44,14 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
 
   public getOne(id: string | number): Observable<R> {
     return this.restService.get<R>(`${this.appConfig.serviceUrl}/${this.path()}/${id}`);
+  }
+
+  public getCoAuthorNetwork(id: string | number): Observable<CoDataNetwork> {
+    return this.restService.get<CoDataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-author-network`);
+  }
+
+  public getCoInvestigatorNetwork(id: string | number): Observable<CoDataNetwork> {
+    return this.restService.get<CoDataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-investigator-network`);
   }
 
   public findByIdIn(ids: string[]): Observable<SdrCollection> {

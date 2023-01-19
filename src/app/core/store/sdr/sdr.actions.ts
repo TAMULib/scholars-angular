@@ -21,6 +21,12 @@ export enum SdrActionTypes {
   GET_ONE = 'get one resource by id',
   GET_ONE_SUCCESS = 'sucessfully got resource by id',
   GET_ONE_FAILURE = 'failed getting resource by id',
+  GET_CO_AUTHOR_NETWORK = 'get co-author network for resource by id',
+  GET_CO_AUTHOR_NETWORK_SUCCESS = 'sucessfully got co-author network for resource by id',
+  GET_CO_AUTHOR_NETWORK_FAILURE = 'failed getting co-author network for resource by id',
+  GET_CO_INVESTIGATOR_NETWORK = 'get co-investigator network for resource by id',
+  GET_CO_INVESTIGATOR_NETWORK_SUCCESS = 'sucessfully got co-investigator network for resource by id',
+  GET_CO_INVESTIGATOR_NETWORK_FAILURE = 'failed getting co-investigator network for resource by id',
   FIND_BY_ID_IN = 'find resource by id in',
   FIND_BY_ID_IN_SUCCESS = 'sucessfully found resource by id in',
   FIND_BY_ID_IN_FAILURE = 'failed finding resource by id is',
@@ -136,6 +142,36 @@ export class GetOneResourceSuccessAction implements Action {
 
 export class GetOneResourceFailureAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.GET_ONE_FAILURE, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
+export class GetCoAuthorNetworkAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK, this.name);
+  constructor(public name: string, public payload: { id: number }) { }
+}
+
+export class GetCoAuthorNetworkSuccessAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK_SUCCESS, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
+export class GetCoAuthorNetworkFailureAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK_FAILURE, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
+export class GetCoInvestigatorNetworkAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK, this.name);
+  constructor(public name: string, public payload: { id: number }) { }
+}
+
+export class GetCoInvestigatorNetworkSuccessAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_SUCCESS, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
+export class GetCoInvestigatorNetworkFailureAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_FAILURE, this.name);
   constructor(public name: string, public payload: any) { }
 }
 
@@ -268,6 +304,12 @@ export type SdrActions =
   GetOneResourceAction |
   GetOneResourceSuccessAction |
   GetOneResourceFailureAction |
+  GetCoAuthorNetworkAction |
+  GetCoAuthorNetworkSuccessAction |
+  GetCoAuthorNetworkFailureAction |
+  GetCoInvestigatorNetworkAction |
+  GetCoInvestigatorNetworkSuccessAction |
+  GetCoInvestigatorNetworkFailureAction |
   FindByIdInResourceAction |
   FindByIdInResourceSuccessAction |
   FindByIdInResourceFailureAction |
