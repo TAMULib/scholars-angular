@@ -21,8 +21,6 @@ describe('CoAuthorNetworkComponent', () => {
   let component: CoAuthorNetworkComponent;
   let fixture: ComponentFixture<CoAuthorNetworkComponent>;
 
-  const params = {};
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -46,7 +44,6 @@ describe('CoAuthorNetworkComponent', () => {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
             },
-            queryParams: scheduled([params], queueScheduler),
           },
         },
       ],

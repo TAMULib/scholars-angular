@@ -21,8 +21,6 @@ describe('CoInvestigatorNetworkComponent', () => {
   let component: CoInvestigatorNetworkComponent;
   let fixture: ComponentFixture<CoInvestigatorNetworkComponent>;
 
-  const params = {};
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -46,7 +44,6 @@ describe('CoInvestigatorNetworkComponent', () => {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
             },
-            queryParams: scheduled([params], queueScheduler),
           },
         },
       ],
