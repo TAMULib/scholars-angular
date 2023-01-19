@@ -43,6 +43,9 @@ describe('CoAuthorNetworkComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
+            parent: {
+              params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
+            },
             queryParams: scheduled([params], queueScheduler),
           },
         },

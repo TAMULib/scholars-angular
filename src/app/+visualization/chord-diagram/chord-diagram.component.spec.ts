@@ -36,7 +36,7 @@ describe('ChordDiagramComponent', () => {
             strictActionSerializability: false,
           },
         }),
-        RouterTestingModule.withRoutes(routes[0].children),
+        RouterTestingModule.withRoutes(routes[1].children),
       ],
       providers: [
         { provide: APP_CONFIG, useValue: testAppConfig },
