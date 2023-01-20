@@ -14,7 +14,11 @@ import { CoDataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
 })
 export class ChordDiagramComponent implements OnInit {
 
-  @Input() coDataNetwork: CoDataNetwork;
+  @Input() coDataNetwork: CoDataNetwork = {
+    name: '',
+    data: [],
+    map: new Map<string, number>()
+  };
 
   private height = 964;
   private width = 964;
