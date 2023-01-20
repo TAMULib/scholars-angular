@@ -46,4 +46,8 @@ export class CoAuthorNetworkComponent implements OnDestroy, OnInit {
     });
   }
 
+  asIsOrder(): number {
+    return 0;
+  }
+
 }

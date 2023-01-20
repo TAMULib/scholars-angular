@@ -17,27 +17,27 @@ export class ChordDiagramComponent implements OnInit {
 
   @Input() coDataNetwork: CoDataNetwork;
 
-  @Input() action: string;
+  @Input() action = 'author';
 
-  @Input() actionPastTense: string;
+  @Input() actionPastTense = 'authored';
 
-  @Input() type: string;
+  @Input() type = 'Publication';
+
+  @Input() height = 1024;
+  @Input() width = 1024;
+
+  @Input() outerPadding = 0;
+  @Input() shellWidth = 16;
+  @Input() shellGap = 2;
+
+  @Input() defaultOpacity = .75;
+  @Input() hoverOpacity = .15;
+
+  @Input() fontFamily = 'sans-serif';
+
+  @Input() labelFontSize = 14;
 
   public id = uuidv4();
-
-  private height = 964;
-  private width = 964;
-
-  private outerPadding = 0;
-  private shellWidth = 16;
-  private shellGap = 2;
-
-  private defaultOpacity = .75;
-  private hoverOpacity = .15;
-
-  private fontFamily = 'sans-serif';
-
-  private labelFontSize = 16;
 
   constructor(@Inject(PLATFORM_ID) private platformId: string) { }
 
@@ -47,11 +47,11 @@ export class ChordDiagramComponent implements OnInit {
     }
 
     setTimeout(() => {
-      const { map } = this.coDataNetwork;
+      const { data } = this.coDataNetwork;
 
-      const names = Array.from(new Set(map.flatMap(d => [d.source, d.target])));
+      const names = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
 
-      const matrix = this.build(map, names);
+      const matrix = this.build(data, names);
 
       const labelLength = Math.max(...(names.map(n => n.length))) * this.labelFontSize / 1.5;
 
@@ -70,7 +70,7 @@ export class ChordDiagramComponent implements OnInit {
 
       const chord = (a) =>
         d3.chordDirected()
-          .padAngle(12 / innerRadius)
+          .padAngle(6 / innerRadius)
           .sortSubgroups(d3.descending)
           .sortChords(d3.descending)(a);
 
@@ -85,6 +85,28 @@ export class ChordDiagramComponent implements OnInit {
           .filter(dd => matrix[cg.index][dd.index] === 0 && matrix[dd.index][cg.index] === 0 && dd.index !== cg.index)
           .transition()
           .style('opacity', opacity);
+      };
+
+      const mouseOverIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
+        fade(this.hoverOpacity)(e, d);
+
+          tooltip.transition()
+            .style('opacity', 1);
+
+          if (names[d.index] === this.coDataNetwork.name) {
+            const numOfLinks = Object.keys(this.coDataNetwork.linkCounts).length;
+            tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
+          } else {
+            const linkCount = this.coDataNetwork.linkCounts[names[d.index]];
+            tooltip.html(`<span>${names[d.index]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
+          }
+      };
+
+      const mouseOutIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
+        fade(this.defaultOpacity)(e, d);
+
+        tooltip.transition()
+          .style('opacity', 0);
       };
 
       const figure = d3.select('figure');
@@ -120,7 +142,11 @@ export class ChordDiagramComponent implements OnInit {
         .attr('transform', d => `rotate(${(d.value * 180 / Math.PI - 90)}) translate(${innerRadius + 26}) ${d.value > Math.PI ? 'rotate(180)' : ''}`)
         .attr('text-anchor', d => d.value > Math.PI ? 'end' : null)
         .attr('font-weight', d => names[d.index] === this.coDataNetwork.name ? 'bold' : 'normal')
-        .text(d => names[d.index]);
+        .style("cursor", "pointer")
+        .text(d => names[d.index])
+        .on('mouseover', mouseOverIndividual)
+        .on('mousemove', positionTooltip)
+        .on('mouseout', mouseOutIndividual);
 
       const groupPath = group
         .join('g')
@@ -128,28 +154,9 @@ export class ChordDiagramComponent implements OnInit {
           .attr('d', arc)
           .attr('fill', d => names[d.index] === this.coDataNetwork.name ? 'black' : color(d.index))
           .attr('stroke', '#fff')
-          .on('mouseover', (e, d) => {
-            fade(this.hoverOpacity)(e, d);
-
-            tooltip.transition()
-              .style('opacity', 1);
-
-            if (names[d.index] === this.coDataNetwork.name) {
-              const numOfLinks = Object.keys(this.coDataNetwork.linkCounts).length;
-              tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
-            } else {
-              const linkCount = this.coDataNetwork.linkCounts[names[d.index]];
-              tooltip.html(`<span>${names[d.index]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
-            }
-
-          })
+          .on('mouseover', mouseOverIndividual)
           .on('mousemove', positionTooltip)
-          .on('mouseout', (e, d) => {
-            fade(this.defaultOpacity)(e, d);
-
-            tooltip.transition()
-              .style('opacity', 0);
-          }));
+          .on('mouseout', mouseOutIndividual));
 
       const ribbons = svg.append('g')
         .attr('fill-opacity', this.defaultOpacity)

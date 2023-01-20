@@ -18,7 +18,7 @@ export interface CoDataNetwork {
   name: string;
   linkCounts: Map<string, number>;
   yearCounts: Map<string, number>;
-  map: DirectedData[];
+  data: DirectedData[];
 };
 
 export interface SdrState<R extends SdrResource> extends EntityState<R> {

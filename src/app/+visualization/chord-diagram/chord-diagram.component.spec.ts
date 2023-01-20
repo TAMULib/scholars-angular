@@ -24,7 +24,7 @@ describe('ChordDiagramComponent', () => {
       name: 'test',
       linkCounts: new Map<string, number>(),
       yearCounts: new Map<string, number>(),
-      map: []
+      data: []
     }
     fixture.detectChanges();
   });
