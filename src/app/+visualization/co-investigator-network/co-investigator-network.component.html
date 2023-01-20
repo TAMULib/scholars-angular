@@ -11,7 +11,7 @@
   <div class="h2">Co-investigator Network</div>
   <div *ngIf="coDataNetwork | async; let coDataNetwork" class="mb-4">
 
-    <scholars-chord-diagram [coDataNetwork]="coDataNetwork"></scholars-chord-diagram>
+    <scholars-chord-diagram [coDataNetwork]="coDataNetwork" action="investigator" actionPastTense="investigated" type="Grant"></scholars-chord-diagram>
 
     <div class="row">
       <div class="col">

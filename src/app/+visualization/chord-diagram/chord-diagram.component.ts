@@ -17,6 +17,12 @@ export class ChordDiagramComponent implements OnInit {
 
   @Input() coDataNetwork: CoDataNetwork;
 
+  @Input() action: string;
+
+  @Input() actionPastTense: string;
+
+  @Input() type: string;
+
   public id = uuidv4();
 
   private height = 964;
@@ -113,13 +119,14 @@ export class ChordDiagramComponent implements OnInit {
         .attr('dy', '.35em')
         .attr('transform', d => `rotate(${(d.value * 180 / Math.PI - 90)}) translate(${innerRadius + 26}) ${d.value > Math.PI ? 'rotate(180)' : ''}`)
         .attr('text-anchor', d => d.value > Math.PI ? 'end' : null)
+        .attr('font-weight', d => names[d.index] === this.coDataNetwork.name ? 'bold' : 'normal')
         .text(d => names[d.index]);
 
       const groupPath = group
         .join('g')
         .call(g => g.append('path')
           .attr('d', arc)
-          .attr('fill', d => color(d.index))
+          .attr('fill', d => names[d.index] === this.coDataNetwork.name ? 'black' : color(d.index))
           .attr('stroke', '#fff')
           .on('mouseover', (e, d) => {
             fade(this.hoverOpacity)(e, d);
@@ -128,11 +135,11 @@ export class ChordDiagramComponent implements OnInit {
               .style('opacity', 1);
 
             if (names[d.index] === this.coDataNetwork.name) {
-              const numOfCoAuthors = Object.keys(this.coDataNetwork.linkCounts).length;
-              tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfCoAuthors} Co-author${numOfCoAuthors > 1 ? 's' : ''}</span>`);
+              const numOfLinks = Object.keys(this.coDataNetwork.linkCounts).length;
+              tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
             } else {
-              const numOfJointPublications = this.coDataNetwork.linkCounts[names[d.index]];
-              tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfJointPublications} Joint Publication${numOfJointPublications > 1 ? 's' : ''}</span>`);
+              const linkCount = this.coDataNetwork.linkCounts[names[d.index]];
+              tooltip.html(`<span>${names[d.index]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
             }
 
           })
@@ -164,7 +171,7 @@ export class ChordDiagramComponent implements OnInit {
           tooltip.transition()
             .style('opacity', 1);
 
-          tooltip.html(`<span>${names[d.source.index]} co-authored ${d.target.value} time${d.target.value > 1 ? 's' : ''} with ${names[d.target.index]}</span>`);
+          tooltip.html(`<span>${names[d.source.index]} co-${this.actionPastTense} ${d.target.value} time${d.target.value > 1 ? 's' : ''} with ${names[d.target.index]}</span>`);
         })
         .on('mousemove', positionTooltip)
         .on('mouseout', () => {
