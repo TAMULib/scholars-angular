@@ -20,6 +20,12 @@ describe('ChordDiagramComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ChordDiagramComponent);
     component = fixture.componentInstance;
+    component.coDataNetwork = {
+      name: 'test',
+      linkCounts: new Map<string, number>(),
+      yearCounts: new Map<string, number>(),
+      map: []
+    }
     fixture.detectChanges();
   });
 

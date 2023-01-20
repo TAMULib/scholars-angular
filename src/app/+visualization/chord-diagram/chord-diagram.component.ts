@@ -48,7 +48,7 @@ export class ChordDiagramComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (isPlatformServer(this.platformId)) {
+    if (isPlatformServer(this.platformId) || this.coDataNetwork === undefined) {
       return;
     }
 
