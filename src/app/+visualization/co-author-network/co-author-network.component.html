@@ -1,7 +1,64 @@
 <div *ngIf="document | async; let individual">
-  <h1>{{ individual.name }}</h1>
+  <h1><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></h1>
   <h2>Co-author Network</h2>
-  <div *ngIf="coDataNetwork | async; let coDataNetwork">
+  <div *ngIf="coDataNetwork | async; let coDataNetwork" class="mb-4">
+
     <scholars-chord-diagram [coDataNetwork]="coDataNetwork"></scholars-chord-diagram>
+
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-warning" role="alert">
+          <p>
+            Note: This information is based solely on publications that have been loaded into the VIVO system. This may
+            only be a small sample of the person's total work.
+          </p>
+        </div>
+      </div>
+    </div>
+    <h3>Tables</h3>
+    <div class="row">
+      <div class="col-6">
+        <div class="card">
+          <div class="card-header">Publications per year</div>
+          <div class="card-body">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Year</th>
+                  <th scope="col">Publications</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let count of coDataNetwork.yearCounts | keyvalue">
+                  <td>{{ count.key }}</td>
+                  <td>{{ count.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="card-header">Co-authors</div>
+          <div class="card-body">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Author</th>
+                  <th scope="col">Publications with</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let count of coDataNetwork.linkCounts | keyvalue">
+                  <td>{{ count.key }}</td>
+                  <td>{{ count.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,21 +1,16 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
-import { scheduled } from 'rxjs';
-import { queueScheduler } from 'rxjs';
-
-import { VisualizationModule } from '../visualization.module';
-
-import { CoAuthorNetworkComponent } from './co-author-network.component';
-
-import { metaReducers, reducers } from '../../core/store';
-
-import { routes } from '../visualization.routes';
+import { queueScheduler, scheduled } from 'rxjs';
 
 import { testAppConfig } from '../../../test.config';
-import { APP_CONFIG } from 'src/app/app.config';
+import { APP_CONFIG } from '../../app.config';
+import { metaReducers, reducers } from '../../core/store';
+import { VisualizationModule } from '../visualization.module';
+import { routes } from '../visualization.routes';
+import { CoAuthorNetworkComponent } from './co-author-network.component';
 
 describe('CoAuthorNetworkComponent', () => {
   let component: CoAuthorNetworkComponent;

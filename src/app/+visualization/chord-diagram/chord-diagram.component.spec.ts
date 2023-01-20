@@ -1,14 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { VisualizationModule } from '../visualization.module';
-
 import { ChordDiagramComponent } from './chord-diagram.component';
 
 describe('ChordDiagramComponent', () => {
   let component: ChordDiagramComponent;
   let fixture: ComponentFixture<ChordDiagramComponent>;
-
-  const params = {};
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

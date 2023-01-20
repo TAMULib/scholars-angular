@@ -16,8 +16,9 @@ export class ChordDiagramComponent implements OnInit {
 
   @Input() coDataNetwork: CoDataNetwork = {
     name: '',
-    data: [],
-    map: new Map<string, number>()
+    linkCounts: new Map<string, number>(),
+    yearCounts: new Map<string, number>(),
+    map: [],
   };
 
   private height = 964;
@@ -41,11 +42,11 @@ export class ChordDiagramComponent implements OnInit {
       return;
     }
 
-    const { data } = this.coDataNetwork;
+    const { map } = this.coDataNetwork;
 
-    const names = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
+    const names = Array.from(new Set(map.flatMap(d => [d.source, d.target])));
 
-    const matrix = this.build(data, names);
+    const matrix = this.build(map, names);
 
     const labelLength = Math.max(...(names.map(n => n.length))) * this.labelFontSize / 1.5;
 
@@ -126,10 +127,10 @@ export class ChordDiagramComponent implements OnInit {
             .style('opacity', 1);
 
           if (names[d.index] === this.coDataNetwork.name) {
-            const numOfCoAuthors = Object.keys(this.coDataNetwork.map).length;
+            const numOfCoAuthors = Object.keys(this.coDataNetwork.linkCounts).length;
             tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfCoAuthors} Co-author${numOfCoAuthors > 1 ? 's' : ''}</span>`);
           } else {
-            const numOfJointPublications = this.coDataNetwork.map[names[d.index]];
+            const numOfJointPublications = this.coDataNetwork.linkCounts[names[d.index]];
             tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfJointPublications} Joint Publication${numOfJointPublications > 1 ? 's' : ''}</span>`);
           }
 
