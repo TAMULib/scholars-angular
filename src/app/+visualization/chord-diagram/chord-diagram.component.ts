@@ -13,53 +13,7 @@ import { DirectedData } from '../../core/store/sdr/sdr.reducer';
 })
 export class ChordDiagramComponent implements OnInit {
 
-  @Input() data: DirectedData[] = [
-    { source: 'France', target: 'Britain', count: 1 },
-    { source: 'Greece', target: 'Britain', count: 1 },
-    { source: 'Italy', target: 'Britain', count: 1 },
-    { source: 'Portugal', target: 'Britain', count: 1 },
-    { source: 'United States', target: 'Britain', count: 1 },
-    { source: 'Germany', target: 'France', count: 1 },
-    { source: 'Greece', target: 'France', count: 1 },
-    { source: 'Ireland', target: 'France', count: 1 },
-    { source: 'Italy', target: 'France', count: 1 },
-    { source: 'Japan', target: 'France', count: 10 },
-    { source: 'Portugal', target: 'France', count: 1 },
-    { source: 'Spain', target: 'France', count: 1 },
-    { source: 'United States', target: 'France', count: 1 },
-    { source: 'Britain', target: 'Germany', count: 1 },
-    { source: 'Greece', target: 'Germany', count: 1 },
-    { source: 'Ireland', target: 'Germany', count: 1 },
-    { source: 'Portugal', target: 'Germany', count: 1 },
-    { source: 'Spain', target: 'Germany', count: 1 },
-    { source: 'United States', target: 'Germany', count: 1 },
-    { source: 'Britain', target: 'Ireland', count: 1 },
-    { source: 'Greece', target: 'Ireland', count: 1 },
-    { source: 'Spain', target: 'Ireland', count: 1 },
-    { source: 'Germany', target: 'Italy', count: 1 },
-    { source: 'Greece', target: 'Italy', count: 1 },
-    { source: 'Ireland', target: 'Italy', count: 1 },
-    { source: 'Portugal', target: 'Italy', count: 1 },
-    { source: 'Britain', target: 'Japan', count: 1 },
-    { source: 'Germany', target: 'Japan', count: 1 },
-    { source: 'Greece', target: 'Japan', count: 1 },
-    { source: 'Ireland', target: 'Japan', count: 1 },
-    { source: 'Italy', target: 'Japan', count: 1 },
-    { source: 'Portugal', target: 'Japan', count: 1 },
-    { source: 'Spain', target: 'Japan', count: 10 },
-    { source: 'United States', target: 'Japan', count: 1 },
-    { source: 'Greece', target: 'Portugal', count: 1 },
-    { source: 'Ireland', target: 'Portugal', count: 1 },
-    { source: 'United States', target: 'Portugal', count: 1 },
-    { source: 'Britain', target: 'Spain', count: 1 },
-    { source: 'Greece', target: 'Spain', count: 1 },
-    { source: 'Italy', target: 'Spain', count: 1 },
-    { source: 'Portugal', target: 'Spain', count: 1 },
-    { source: 'United States', target: 'Spain', count: 1 },
-    { source: 'Greece', target: 'United States', count: 1 },
-    { source: 'Ireland', target: 'United States', count: 1 },
-    { source: 'Italy', target: 'United States', count: 5 },
-  ];
+  @Input() data: DirectedData[] = [];
 
   private height = 964;
   private width = 964;
@@ -87,9 +41,11 @@ export class ChordDiagramComponent implements OnInit {
     const innerRadius = Math.min(this.width, this.height) * .5 - (labelLength + this.outerPadding);
     const outerRadius = innerRadius + this.shellWidth;
 
+    console.log(names);
+
     const color = (i) => d3.scaleOrdinal(names, d3.schemeCategory10)(names[i]);
 
-    const ribbon = d3.ribbonArrow()
+    const ribbon = d3.ribbon()
       .radius(innerRadius - this.shellGap)
       .padAngle(1 / innerRadius);
 
@@ -111,7 +67,7 @@ export class ChordDiagramComponent implements OnInit {
         .transition()
         .style('opacity', opacity);
       groupPath
-        .filter(dd => dd.index != cg.index)
+        .filter(dd => matrix[cg.index][dd.index] === 0 && matrix[dd.index][cg.index] === 0 && dd.index !== cg.index)
         .transition()
         .style('opacity', opacity);
     };
@@ -175,7 +131,7 @@ export class ChordDiagramComponent implements OnInit {
       .data(chords)
       .join('path')
       .attr('d', <any>ribbon)
-      .attr('fill', d => color(d.target.index))
+      .attr('fill', d => color(d.source.index))
       .on('mouseover', (e, d) => {
         ribbons
           .filter(dd => dd !== d)
@@ -207,7 +163,7 @@ export class ChordDiagramComponent implements OnInit {
 
   private build = (data, names) => {
     const index = new Map<string, number>(names.map((name, i) => [name, i]));
-    const matrix = Array.from(index, () => new Array(names.length).fill(0));
+    const matrix: number[][] = Array.from(index, () => new Array(names.length).fill(0));
     for (const { source, target, count } of data) {
       matrix[index.get(source)][index.get(target)] += count;
     }
