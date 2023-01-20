@@ -1,6 +1,14 @@
-<div *ngIf="document | async; let individual">
-  <h1><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></h1>
-  <h2>Co-author Network</h2>
+<div *ngIf="document | async; let individual" [@fadeIn]>
+  <div class="float-right">
+    <div class="text-nowrap">
+      <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="investigator network icon">
+      <span class="ml-2">
+        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']">Co-investigator Network</a>
+      </span>
+    </div>
+  </div>
+  <div class="h1"><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></div>
+  <div class="h2">Co-author Network</div>
   <div *ngIf="coDataNetwork | async; let coDataNetwork" class="mb-4">
 
     <scholars-chord-diagram [coDataNetwork]="coDataNetwork"></scholars-chord-diagram>
@@ -9,13 +17,13 @@
       <div class="col">
         <div class="alert alert-warning" role="alert">
           <p>
-            Note: This information is based solely on publications that have been loaded into the VIVO system. This may
-            only be a small sample of the person's total work.
+            Note: This information is based solely on publications that have been loaded into the VIVO system. This
+            may only be a small sample of the person's total work.
           </p>
         </div>
       </div>
     </div>
-    <h3>Tables</h3>
+    <div class="h3">Tables</div>
     <div class="row">
       <div class="col-6">
         <div class="card">

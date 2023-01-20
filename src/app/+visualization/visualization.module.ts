@@ -9,10 +9,10 @@ import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-
 
 import { VisualizationComponent } from './visualization.component';
 
-import { routes } from './visualization.routes';
 import { ChordDiagramComponent } from './chord-diagram/chord-diagram.component';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
+import { routes } from './visualization.routes';
 
 @NgModule({
   declarations: [

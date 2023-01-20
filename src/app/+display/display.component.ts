@@ -91,9 +91,7 @@ export class DisplayComponent implements OnDestroy, OnInit {
 
   public document: Observable<SolrDocument>;
 
-  public ready: Observable<boolean>;
-
-  private readySubject: BehaviorSubject<boolean>;
+  public ready: BehaviorSubject<boolean>;
 
   private subscriptions: Subscription[];
 
@@ -104,7 +102,7 @@ export class DisplayComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute
   ) {
     this.subscriptions = [];
-    this.readySubject = new BehaviorSubject<boolean>(false);
+    this.ready = new BehaviorSubject<boolean>(false);
   }
 
   ngOnDestroy() {
@@ -114,14 +112,12 @@ export class DisplayComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.ready = this.readySubject.asObservable();
-
     this.windowDimensions = this.store.pipe(select(selectWindowDimensions));
 
     this.subscriptions.push(
       this.route.params.subscribe((params: Params) => {
         if (params.id) {
-          this.readySubject.next(false);
+          this.ready.next(false);
 
           this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: params.id }));
 
@@ -241,7 +237,7 @@ export class DisplayComponent implements OnDestroy, OnInit {
 
                   // lazily fetch references sequentially
                   lazyReferences.reduce((previousPromise, nextlazyReference) => previousPromise.then(() => dereference(nextlazyReference)), Promise.resolve()).then(() => {
-                    this.readySubject.next(true);
+                    this.ready.next(true);
 
                     if (this.route.children.length === 0) {
                       this.router.navigate([displayView.name, 'View All'], {

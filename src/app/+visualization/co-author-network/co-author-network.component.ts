@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { filter, Observable, Subscription } from 'rxjs';
-import { CoDataNetwork } from 'src/app/core/store/sdr/sdr.reducer';
+
 import { SolrDocument } from '../../core/model/discovery';
 import { AppState } from '../../core/store';
 import { selectResourceById, selectResourcesCoDataNetwork } from '../../core/store/sdr';
+import { CoDataNetwork } from '../../core/store/sdr/sdr.reducer';
+import { fadeIn } from '../../shared/utilities/animation.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
@@ -13,6 +15,8 @@ import * as fromSdr from '../../core/store/sdr/sdr.actions';
   selector: 'scholars-co-author-network',
   templateUrl: './co-author-network.component.html',
   styleUrls: ['./co-author-network.component.scss'],
+  animations: [fadeIn],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoAuthorNetworkComponent implements OnDestroy, OnInit {
 
@@ -45,9 +49,8 @@ export class CoAuthorNetworkComponent implements OnDestroy, OnInit {
           );
           this.coDataNetwork = this.store.pipe(
             select(selectResourcesCoDataNetwork('individual')),
-            filter((document: CoDataNetwork) => document !== undefined)
+            filter((document: CoDataNetwork) => document !== undefined),
           );
-
           this.store.dispatch(new fromSdr.GetCoAuthorNetworkAction('individual', { id: params.id }));
         }
       })

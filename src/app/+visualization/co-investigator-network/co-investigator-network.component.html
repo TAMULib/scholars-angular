@@ -1,6 +1,14 @@
-<div *ngIf="document | async; let individual">
-  <h1><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></h1>
-  <h1>Co-investigator Network</h1>
+<div *ngIf="document | async; let individual" [@fadeIn]>
+  <div class="float-right">
+    <div class="text-nowrap">
+      <img src="assets/images/co_author_icon.png" height="25" width="25" alt="co-author network icon">
+      <span class="ml-2">
+        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']">Co-author Network</a>
+      </span>
+    </div>
+  </div>
+  <div class="h1"><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></div>
+  <div class="h2">Co-investigator Network</div>
   <div *ngIf="coDataNetwork | async; let coDataNetwork" class="mb-4">
 
     <scholars-chord-diagram [coDataNetwork]="coDataNetwork"></scholars-chord-diagram>
@@ -15,7 +23,7 @@
         </div>
       </div>
     </div>
-    <h3>Tables</h3>
+    <span class="h3">Tables</span>
     <div class="row">
       <div class="col-6">
         <div class="card">

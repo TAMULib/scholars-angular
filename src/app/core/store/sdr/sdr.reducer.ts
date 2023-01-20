@@ -297,6 +297,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           page: undefined,
           facets: [],
           links: undefined,
+          coDataNetwork: undefined,
           loading: false,
           updating: false,
           error: undefined,
