@@ -1,7 +1,7 @@
-<div *ngIf="document | async; let document">
-  <h1>{{ document.name }}</h1>
+<div *ngIf="document | async; let individual">
+  <h1>{{ individual.name }}</h1>
   <h2>Co-author Network</h2>
   <div *ngIf="coDataNetwork | async; let coDataNetwork">
-    <scholars-chord-diagram [data]="coDataNetwork.data"></scholars-chord-diagram>
+    <scholars-chord-diagram [coDataNetwork]="coDataNetwork"></scholars-chord-diagram>
   </div>
 </div>

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 
 import { PieArcDatum } from 'd3-shape';
 
 import * as d3 from 'd3';
 
-import { DirectedData } from '../../core/store/sdr/sdr.reducer';
+import { CoDataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
 
 @Component({
   selector: 'scholars-chord-diagram',
@@ -13,7 +14,7 @@ import { DirectedData } from '../../core/store/sdr/sdr.reducer';
 })
 export class ChordDiagramComponent implements OnInit {
 
-  @Input() data: DirectedData[] = [];
+  @Input() coDataNetwork: CoDataNetwork;
 
   private height = 964;
   private width = 964;
@@ -29,19 +30,23 @@ export class ChordDiagramComponent implements OnInit {
 
   private labelFontSize = 16;
 
-  constructor() { }
+  constructor(@Inject(PLATFORM_ID) private platformId: string) { }
 
   ngOnInit(): void {
-    const names = Array.from(new Set(this.data.flatMap(d => [d.source, d.target])));
+    if (isPlatformServer(this.platformId)) {
+      return;
+    }
 
-    const matrix = this.build(this.data, names);
+    const { data } = this.coDataNetwork;
+
+    const names = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
+
+    const matrix = this.build(data, names);
 
     const labelLength = Math.max(...(names.map(n => n.length))) * this.labelFontSize / 1.5;
 
     const innerRadius = Math.min(this.width, this.height) * .5 - (labelLength + this.outerPadding);
     const outerRadius = innerRadius + this.shellWidth;
-
-    console.log(names);
 
     const color = (i) => d3.scaleOrdinal(names, d3.schemeCategory10)(names[i]);
 
@@ -114,15 +119,23 @@ export class ChordDiagramComponent implements OnInit {
           fade(this.hoverOpacity)(e, d);
 
           tooltip.transition()
-            .duration(400)
             .style('opacity', 1);
-          tooltip.html(`<span>${names[d.index]}</span>`);
+
+          if (names[d.index] === this.coDataNetwork.name) {
+            const numOfCoAuthors = Object.keys(this.coDataNetwork.map).length;
+            tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfCoAuthors} Co-author${numOfCoAuthors > 1 ? 's' : ''}</span>`);
+          } else {
+            const numOfJointPublications = this.coDataNetwork.map[names[d.index]];
+            tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfJointPublications} Joint Publication${numOfJointPublications > 1 ? 's' : ''}</span>`);
+          }
+
         })
         .on('mousemove', positionTooltip)
         .on('mouseout', (e, d) => {
           fade(this.defaultOpacity)(e, d);
 
-          tooltip.style('opacity', 0);
+          tooltip.transition()
+            .style('opacity', 0);
         }));
 
     const ribbons = svg.append('g')
@@ -143,10 +156,9 @@ export class ChordDiagramComponent implements OnInit {
           .style('opacity', this.hoverOpacity);
 
         tooltip.transition()
-          .duration(400)
           .style('opacity', 1);
 
-        tooltip.html(`<span>${names[d.source.index]} co-authored ${d.target.value} times with ${names[d.target.index]}</span>`);
+        tooltip.html(`<span>${names[d.source.index]} co-authored ${d.target.value} time${d.target.value > 1 ? 's' : ''} with ${names[d.target.index]}</span>`);
       })
       .on('mousemove', positionTooltip)
       .on('mouseout', () => {
@@ -157,7 +169,8 @@ export class ChordDiagramComponent implements OnInit {
           .transition()
           .style('opacity', this.defaultOpacity);
 
-        tooltip.style('opacity', 0);
+        tooltip.transition()
+          .style('opacity', 0);
       });
   }
 
