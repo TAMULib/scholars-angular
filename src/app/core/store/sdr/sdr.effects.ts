@@ -483,7 +483,7 @@ export class SdrEffects {
 
   clearResourceSubscription = createEffect(() => this.actions.pipe(
     ofType(...this.buildActions(fromSdr.SdrActionTypes.CLEAR)),
-    map((action: fromSdr.PageResourcesSuccessAction) => new fromStomp.UnsubscribeAction({ channel: `/queue/${action.name}` }))
+    map((action: fromSdr.ClearResourcesAction) => new fromStomp.UnsubscribeAction({ channel: `/queue/${action.name}` }))
   ));
 
   post = createEffect(() => this.actions.pipe(

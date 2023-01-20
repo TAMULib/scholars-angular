@@ -1,5 +1,5 @@
 import { isPlatformServer } from '@angular/common';
-import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3-shape';
@@ -13,7 +13,7 @@ import { CoDataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
   templateUrl: './chord-diagram.component.html',
   styleUrls: ['./chord-diagram.component.scss'],
 })
-export class ChordDiagramComponent implements OnInit, OnDestroy {
+export class ChordDiagramComponent implements OnInit {
 
   @Input() coDataNetwork: CoDataNetwork;
 
@@ -34,18 +34,6 @@ export class ChordDiagramComponent implements OnInit, OnDestroy {
   private labelFontSize = 16;
 
   constructor(@Inject(PLATFORM_ID) private platformId: string) { }
-
-  ngOnDestroy(): void {
-    const figure = d3.select('figure');
-    const div = figure.select('div');
-    if (!!div) {
-      div.remove();
-    }
-    const svg = figure.select('svg');
-    if (!!svg) {
-      svg.remove();
-    }
-  }
 
   ngOnInit(): void {
     if (isPlatformServer(this.platformId) || this.coDataNetwork === undefined) {

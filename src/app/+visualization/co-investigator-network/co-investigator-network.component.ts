@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { filter, Observable, Subscription } from 'rxjs';
+import { filter, Observable, Subscription, take } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { AppState } from '../../core/store';
@@ -24,38 +24,27 @@ export class CoInvestigatorNetworkComponent implements OnDestroy, OnInit {
 
   public coDataNetwork: Observable<CoDataNetwork>;
 
-  private subscriptions: Subscription[];
-
-  constructor(
-    private store: Store<AppState>,
-    private route: ActivatedRoute
-  ) {
-    this.subscriptions = [];
-  }
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    });
+    this.store.dispatch(new fromSdr.ClearResourcesAction('individual'));
   }
 
   ngOnInit() {
-    this.subscriptions.push(
-      this.route.parent.params.subscribe((params: Params) => {
-        if (params.id) {
-          this.document = this.store.pipe(
-            select(selectResourceById('individual', params.id)),
-            filter((document: SolrDocument) => document !== undefined)
-          );
-          this.coDataNetwork = this.store.pipe(
-            select(selectResourcesCoDataNetwork('individual')),
-            filter((document: CoDataNetwork) => document !== undefined),
-          );
+    this.route.parent.params.pipe(take(1)).subscribe((params: Params) => {
+      if (params.id) {
+        this.document = this.store.pipe(
+          select(selectResourceById('individual', params.id)),
+          filter((document: SolrDocument) => document !== undefined)
+        );
+        this.coDataNetwork = this.store.pipe(
+          select(selectResourcesCoDataNetwork('individual')),
+          filter((document: CoDataNetwork) => document !== undefined),
+        );
 
-          this.store.dispatch(new fromSdr.GetCoInvestigatorNetworkAction('individual', { id: params.id }));
-        }
-      })
-    );
+        this.store.dispatch(new fromSdr.GetCoInvestigatorNetworkAction('individual', { id: params.id }));
+      }
+    });
   }
 
 }
