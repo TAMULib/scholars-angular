@@ -29,7 +29,7 @@ import { createSdrRequest, buildDateYearFilterValue, buildNumberRangeFilterValue
 import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
 
 import { selectSdrState } from './';
-import { CoDataNetwork, SdrState } from './sdr.reducer';
+import { DataNetwork, SdrState } from './sdr.reducer';
 import { selectRouterState } from '../router';
 import { selectIsStompConnected, selectStompState } from '../stomp';
 
@@ -139,7 +139,7 @@ export class SdrEffects {
         .get(action.name)
         .getCoAuthorNetwork(action.payload.id)
         .pipe(
-          map((coDataNetwork: CoDataNetwork) => new fromSdr.GetCoAuthorNetworkSuccessAction(action.name, { coDataNetwork })),
+          map((dataNetwork: DataNetwork) => new fromSdr.GetCoAuthorNetworkSuccessAction(action.name, { dataNetwork })),
           catchError((response) =>
             scheduled(
               [
@@ -173,7 +173,7 @@ export class SdrEffects {
         .get(action.name)
         .getCoInvestigatorNetwork(action.payload.id)
         .pipe(
-          map((coDataNetwork: CoDataNetwork) => new fromSdr.GetCoInvestigatorNetworkSuccessAction(action.name, { coDataNetwork })),
+          map((dataNetwork: DataNetwork) => new fromSdr.GetCoInvestigatorNetworkSuccessAction(action.name, { dataNetwork })),
           catchError((response) =>
             scheduled(
               [

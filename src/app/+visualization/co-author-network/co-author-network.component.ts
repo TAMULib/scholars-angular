@@ -5,8 +5,8 @@ import { filter, Observable, take } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { AppState } from '../../core/store';
-import { selectResourceById, selectResourcesCoDataNetwork } from '../../core/store/sdr';
-import { CoDataNetwork } from '../../core/store/sdr/sdr.reducer';
+import { selectResourceById, selectResourcesDataNetwork } from '../../core/store/sdr';
+import { DataNetwork } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
@@ -22,7 +22,7 @@ export class CoAuthorNetworkComponent implements OnDestroy, OnInit {
 
   public document: Observable<SolrDocument>;
 
-  public coDataNetwork: Observable<CoDataNetwork>;
+  public dataNetwork: Observable<DataNetwork>;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
 
@@ -37,9 +37,9 @@ export class CoAuthorNetworkComponent implements OnDestroy, OnInit {
           select(selectResourceById('individual', params.id)),
           filter((document: SolrDocument) => document !== undefined)
         );
-        this.coDataNetwork = this.store.pipe(
-          select(selectResourcesCoDataNetwork('individual')),
-          filter((document: CoDataNetwork) => document !== undefined),
+        this.dataNetwork = this.store.pipe(
+          select(selectResourcesDataNetwork('individual')),
+          filter((document: DataNetwork) => document !== undefined),
         );
         this.store.dispatch(new fromSdr.GetCoAuthorNetworkAction('individual', { id: params.id }));
       }

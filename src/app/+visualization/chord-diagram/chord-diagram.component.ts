@@ -1,12 +1,13 @@
 import { isPlatformServer } from '@angular/common';
 import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3-shape';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { CoDataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
+import { DataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
 
 @Component({
   selector: 'scholars-chord-diagram',
@@ -15,7 +16,7 @@ import { CoDataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
 })
 export class ChordDiagramComponent implements OnInit {
 
-  @Input() coDataNetwork: CoDataNetwork;
+  @Input() dataNetwork: DataNetwork;
 
   @Input() action = 'author';
 
@@ -39,17 +40,21 @@ export class ChordDiagramComponent implements OnInit {
 
   public id = uuidv4();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: string) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: string, private router: Router) { }
 
   ngOnInit(): void {
-    if (isPlatformServer(this.platformId) || this.coDataNetwork === undefined) {
+    if (isPlatformServer(this.platformId) || this.dataNetwork === undefined) {
       return;
     }
 
     setTimeout(() => {
-      const { data } = this.coDataNetwork;
+      const { data, lookup } = this.dataNetwork;
 
-      const names = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
+      if (data.length === 0) {
+        return;
+      }
+
+      const names: string[] = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
 
       const matrix = this.build(data, names);
 
@@ -93,11 +98,11 @@ export class ChordDiagramComponent implements OnInit {
           tooltip.transition()
             .style('opacity', 1);
 
-          if (names[d.index] === this.coDataNetwork.name) {
-            const numOfLinks = Object.keys(this.coDataNetwork.linkCounts).length;
+          if (names[d.index] === this.dataNetwork.name) {
+            const numOfLinks = Object.keys(this.dataNetwork.linkCounts).length;
             tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
           } else {
-            const linkCount = this.coDataNetwork.linkCounts[names[d.index]];
+            const linkCount = this.dataNetwork.linkCounts[names[d.index]];
             tooltip.html(`<span>${names[d.index]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
           }
       };
@@ -107,6 +112,10 @@ export class ChordDiagramComponent implements OnInit {
 
         tooltip.transition()
           .style('opacity', 0);
+      };
+
+      const clickIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
+        this.router.navigate(['/display', lookup[names[d.index]]]);
       };
 
       const figure = d3.select('figure');
@@ -141,22 +150,24 @@ export class ChordDiagramComponent implements OnInit {
         .attr('dy', '.35em')
         .attr('transform', d => `rotate(${(d.value * 180 / Math.PI - 90)}) translate(${innerRadius + 26}) ${d.value > Math.PI ? 'rotate(180)' : ''}`)
         .attr('text-anchor', d => d.value > Math.PI ? 'end' : null)
-        .attr('font-weight', d => names[d.index] === this.coDataNetwork.name ? 'bold' : 'normal')
+        .attr('font-weight', d => names[d.index] === this.dataNetwork.name ? 'bold' : 'normal')
         .style("cursor", "pointer")
         .text(d => names[d.index])
         .on('mouseover', mouseOverIndividual)
         .on('mousemove', positionTooltip)
-        .on('mouseout', mouseOutIndividual);
+        .on('mouseout', mouseOutIndividual)
+        .on('click', clickIndividual);
 
       const groupPath = group
         .join('g')
         .call(g => g.append('path')
           .attr('d', arc)
-          .attr('fill', d => names[d.index] === this.coDataNetwork.name ? 'black' : color(d.index))
+          .attr('fill', d => names[d.index] === this.dataNetwork.name ? 'black' : color(d.index))
           .attr('stroke', '#fff')
           .on('mouseover', mouseOverIndividual)
           .on('mousemove', positionTooltip)
-          .on('mouseout', mouseOutIndividual));
+          .on('mouseout', mouseOutIndividual))
+          .on('click', clickIndividual);
 
       const ribbons = svg.append('g')
         .attr('fill-opacity', this.defaultOpacity)
@@ -196,7 +207,7 @@ export class ChordDiagramComponent implements OnInit {
     });
   }
 
-  private build = (data, names) => {
+  private build = (data: DirectedData[], names: string[]) => {
     const index = new Map<string, number>(names.map((name, i) => [name, i]));
     const matrix: number[][] = Array.from(index, () => new Array(names.length).fill(0));
     for (const { source, target, count } of data) {

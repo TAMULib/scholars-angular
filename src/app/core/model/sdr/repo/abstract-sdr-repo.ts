@@ -7,7 +7,7 @@ import { RestService } from '../../../service/rest.service';
 import { SdrRepo } from './sdr-repo';
 
 import { AppConfig, APP_CONFIG } from '../../../../app.config';
-import { CoDataNetwork } from '../../../store/sdr/sdr.reducer';
+import { DataNetwork } from '../../../store/sdr/sdr.reducer';
 import { Boostable, Facetable, Filterable, SdrRequest, Sort } from '../../request';
 import { Count } from '../count';
 import { SdrCollection } from '../sdr-collection';
@@ -46,12 +46,12 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     return this.restService.get<R>(`${this.appConfig.serviceUrl}/${this.path()}/${id}`);
   }
 
-  public getCoAuthorNetwork(id: string | number): Observable<CoDataNetwork> {
-    return this.restService.get<CoDataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-author-network`);
+  public getCoAuthorNetwork(id: string | number): Observable<DataNetwork> {
+    return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-author-network`);
   }
 
-  public getCoInvestigatorNetwork(id: string | number): Observable<CoDataNetwork> {
-    return this.restService.get<CoDataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-investigator-network`);
+  public getCoInvestigatorNetwork(id: string | number): Observable<DataNetwork> {
+    return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-investigator-network`);
   }
 
   public findByIdIn(ids: string[]): Observable<SdrCollection> {

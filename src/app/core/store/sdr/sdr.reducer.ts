@@ -14,8 +14,9 @@ export interface DirectedData {
   count: number;
 };
 
-export interface CoDataNetwork {
+export interface DataNetwork {
   name: string;
+  lookup: Map<string, string>;
   linkCounts: Map<string, number>;
   yearCounts: Map<string, number>;
   data: DirectedData[];
@@ -27,7 +28,7 @@ export interface SdrState<R extends SdrResource> extends EntityState<R> {
   counts: {};
   links: SdrCollectionLinks;
   recentlyUpdated: SdrResource[];
-  coDataNetwork: CoDataNetwork;
+  dataNetwork: DataNetwork;
   counting: boolean;
   loading: boolean;
   dereferencing: boolean;
@@ -48,7 +49,7 @@ export const getSdrInitialState = <R extends SdrResource>(key: string) => {
     counts: {},
     links: undefined,
     recentlyUpdated: [],
-    coDataNetwork: undefined,
+    dataNetwork: undefined,
     counting: false,
     loading: false,
     dereferencing: false,
@@ -174,10 +175,10 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
         });
       case getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK_SUCCESS, name):
       case getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_SUCCESS, name):
-        const coDataNetwork = action.payload.coDataNetwork;
+        const dataNetwork = action.payload.dataNetwork;
         return {
           ...state,
-          coDataNetwork,
+          dataNetwork,
           loading: false,
           error: undefined,
         };
@@ -297,7 +298,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           page: undefined,
           facets: [],
           links: undefined,
-          coDataNetwork: undefined,
+          dataNetwork: undefined,
           loading: false,
           updating: false,
           error: undefined,
@@ -324,4 +325,4 @@ export const getCountByLabel = (label: string) => <R extends SdrResource>(state:
 export const getFacets = <R extends SdrResource>(state: SdrState<R>) => state.facets;
 export const getLinks = <R extends SdrResource>(state: SdrState<R>) => state.links;
 export const getRecentlyUpdated = <R extends SdrResource>(state: SdrState<R>) => state.recentlyUpdated;
-export const getCoDataNetwork = <R extends SdrResource>(state: SdrState<R>) => state.coDataNetwork;
+export const getDataNetwork = <R extends SdrResource>(state: SdrState<R>) => state.dataNetwork;

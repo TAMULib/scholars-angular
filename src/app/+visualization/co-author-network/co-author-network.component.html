@@ -9,9 +9,8 @@
   </div>
   <div class="h1"><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></div>
   <div class="h2">Co-author Network</div>
-  <div *ngIf="coDataNetwork | async; let coDataNetwork" class="mb-4">
-    <scholars-chord-diagram [coDataNetwork]="coDataNetwork"></scholars-chord-diagram>
-
+  <div *ngIf="dataNetwork | async; let dataNetwork" class="mb-4">
+    <scholars-chord-diagram [dataNetwork]="dataNetwork"></scholars-chord-diagram>
     <div class="row">
       <div class="col">
         <div class="alert alert-warning" role="alert">
@@ -36,7 +35,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let count of coDataNetwork.yearCounts | keyvalue: asIsOrder">
+                <tr *ngFor="let count of dataNetwork.yearCounts | keyvalue: asIsOrder">
                   <td>{{ count.key }}</td>
                   <td>{{ count.value }}</td>
                 </tr>
@@ -57,7 +56,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let count of coDataNetwork.linkCounts | keyvalue: asIsOrder">
+                <tr *ngFor="let count of dataNetwork.linkCounts | keyvalue: asIsOrder">
                   <td>{{ count.key }}</td>
                   <td>{{ count.value }}</td>
                 </tr>
