@@ -166,8 +166,7 @@ export class ChordDiagramComponent implements OnInit {
           .attr('stroke', '#fff')
           .on('mouseover', mouseOverIndividual)
           .on('mousemove', positionTooltip)
-          .on('mouseout', mouseOutIndividual))
-          .on('click', clickIndividual);
+          .on('mouseout', mouseOutIndividual));
 
       const ribbons = svg.append('g')
         .attr('fill-opacity', this.defaultOpacity)
