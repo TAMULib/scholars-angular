@@ -41,7 +41,12 @@ export class CoAuthorNetworkComponent implements OnDestroy, OnInit {
           select(selectResourcesDataNetwork('individual')),
           filter((document: DataNetwork) => document !== undefined),
         );
-        this.store.dispatch(new fromSdr.GetCoAuthorNetworkAction('individual', { id: params.id }));
+        this.store.dispatch(new fromSdr.GetNetworkAction('individual', {
+          id: params.id,
+          dateField: 'publicationDate',
+          dataFields: ['authors'],
+          typeFilter: 'class:Document'
+        }));
       }
     });
   }

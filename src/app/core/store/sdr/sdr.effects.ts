@@ -132,18 +132,18 @@ export class SdrEffects {
     map((action: fromSdr.GetOneResourceFailureAction) => this.alert.getOneFailureAlert(action.payload))
   ));
 
-  getCoAuthorNetwork = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_AUTHOR_NETWORK)),
-    switchMap((action: fromSdr.GetCoAuthorNetworkAction) =>
+  getNetwork = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_NETWORK)),
+    switchMap((action: fromSdr.GetNetworkAction) =>
       this.repos
         .get(action.name)
-        .getCoAuthorNetwork(action.payload.id)
+        .getNetwork(action.payload.id, action.payload.dateField, action.payload.dataFields, action.payload.typeFilter)
         .pipe(
-          map((dataNetwork: DataNetwork) => new fromSdr.GetCoAuthorNetworkSuccessAction(action.name, { dataNetwork })),
+          map((dataNetwork: DataNetwork) => new fromSdr.GetNetworkSuccessAction(action.name, { dataNetwork })),
           catchError((response) =>
             scheduled(
               [
-                new fromSdr.GetCoAuthorNetworkFailureAction(action.name, {
+                new fromSdr.GetNetworkFailureAction(action.name, {
                   response,
                 }),
               ],
@@ -154,50 +154,16 @@ export class SdrEffects {
     )
   ));
 
-  getCoAuthorNetworkSuccess = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_AUTHOR_NETWORK_SUCCESS)),
-    switchMap((action: fromSdr.GetCoAuthorNetworkSuccessAction) => this.waitForStompConnection(action.name)),
+  getNetworkSuccess = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_NETWORK_SUCCESS)),
+    switchMap((action: fromSdr.GetNetworkSuccessAction) => this.waitForStompConnection(action.name)),
     withLatestFrom(this.store.pipe(select(selectStompState))),
     map(([combination, stomp]) => this.subscribeToResourceQueue(combination[0], stomp))
   ), { dispatch: false });
 
-  getCoAuthorNetworkFailure = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_AUTHOR_NETWORK_FAILURE)),
-    map((action: fromSdr.GetCoAuthorNetworkFailureAction) => this.alert.getCoAuthorNetworkFailureAlert(action.payload))
-  ));
-
-  getCoInvestigatorNetwork = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK)),
-    switchMap((action: fromSdr.GetCoInvestigatorNetworkAction) =>
-      this.repos
-        .get(action.name)
-        .getCoInvestigatorNetwork(action.payload.id)
-        .pipe(
-          map((dataNetwork: DataNetwork) => new fromSdr.GetCoInvestigatorNetworkSuccessAction(action.name, { dataNetwork })),
-          catchError((response) =>
-            scheduled(
-              [
-                new fromSdr.GetCoInvestigatorNetworkFailureAction(action.name, {
-                  response,
-                }),
-              ],
-              asapScheduler
-            )
-          )
-        )
-    )
-  ));
-
-  getCoInvestigatorNetworkSuccess = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_SUCCESS)),
-    switchMap((action: fromSdr.GetCoInvestigatorNetworkSuccessAction) => this.waitForStompConnection(action.name)),
-    withLatestFrom(this.store.pipe(select(selectStompState))),
-    map(([combination, stomp]) => this.subscribeToResourceQueue(combination[0], stomp))
-  ), { dispatch: false });
-
-  getCoInvestigatorNetworkFailure = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_FAILURE)),
-    map((action: fromSdr.GetCoInvestigatorNetworkFailureAction) => this.alert.getCoInvestigatorNetworkFailureAlert(action.payload))
+  getNetworkFailure = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_NETWORK_FAILURE)),
+    map((action: fromSdr.GetNetworkFailureAction) => this.alert.getNetworkFailureAlert(action.payload))
   ));
 
   findByIdIn = createEffect(() => this.actions.pipe(

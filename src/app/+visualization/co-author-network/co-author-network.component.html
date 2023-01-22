@@ -1,6 +1,6 @@
 <div *ngIf="document | async; let individual" [@fadeIn]>
   <div class="float-right">
-    <div class="text-nowrap">
+    <div class="text-nowrap" *ngIf="individual.researcherOn !== undefined">
       <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="investigator network icon">
       <span class="ml-2">
         <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']">Co-investigator Network</a>

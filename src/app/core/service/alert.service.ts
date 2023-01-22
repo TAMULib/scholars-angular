@@ -112,7 +112,7 @@ export class AlertService {
     return this.alert(AlertLocation.MAIN, AlertType.DANGER, `(${payload.response.status}) ${payload.response.message}`, true, 15000);
   }
 
-  public getCoAuthorNetworkFailureAlert(payload: { response: any }): fromAlert.AlertActions {
+  public getNetworkFailureAlert(payload: { response: any }): fromAlert.AlertActions {
     return this.alert(AlertLocation.MAIN, AlertType.DANGER, `(${payload.response.status}) ${payload.response.message}`, true, 15000);
   }
 

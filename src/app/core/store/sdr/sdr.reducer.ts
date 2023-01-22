@@ -146,8 +146,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
       case getSdrAction(SdrActionTypes.FIND_BY_ID_IN, name):
       case getSdrAction(SdrActionTypes.PAGE, name):
       case getSdrAction(SdrActionTypes.SEARCH, name):
-      case getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK, name):
-      case getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK, name):
+      case getSdrAction(SdrActionTypes.GET_NETWORK, name):
       case getSdrAction(SdrActionTypes.RECENTLY_UPDATED, name):
         return {
           ...state,
@@ -173,8 +172,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           loading: false,
           error: undefined,
         });
-      case getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK_SUCCESS, name):
-      case getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_SUCCESS, name):
+      case getSdrAction(SdrActionTypes.GET_NETWORK_SUCCESS, name):
         const dataNetwork = action.payload.dataNetwork;
         return {
           ...state,
@@ -245,8 +243,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
         };
       case getSdrAction(SdrActionTypes.GET_ALL_FAILURE, name):
       case getSdrAction(SdrActionTypes.GET_ONE_FAILURE, name):
-      case getSdrAction(SdrActionTypes.GET_CO_AUTHOR_NETWORK_FAILURE, name):
-      case getSdrAction(SdrActionTypes.GET_CO_INVESTIGATOR_NETWORK_FAILURE, name):
+      case getSdrAction(SdrActionTypes.GET_NETWORK_FAILURE, name):
       case getSdrAction(SdrActionTypes.FIND_BY_ID_IN_FAILURE, name):
       case getSdrAction(SdrActionTypes.FIND_BY_TYPES_IN_FAILURE, name):
       case getSdrAction(SdrActionTypes.FETCH_LAZY_REFERENCE_FAILURE, name):

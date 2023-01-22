@@ -46,8 +46,13 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     return this.restService.get<R>(`${this.appConfig.serviceUrl}/${this.path()}/${id}`);
   }
 
-  public getCoAuthorNetwork(id: string | number): Observable<DataNetwork> {
-    return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-author-network`);
+  public getNetwork(
+    id: string | number,
+    dateField: string,
+    dataFields: string[],
+    typeFilter: string
+    ): Observable<DataNetwork> {
+    return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/network?dateField=${dateField}&dataFields=${dataFields.join(',')}&typeFilter=${typeFilter}`);
   }
 
   public getCoInvestigatorNetwork(id: string | number): Observable<DataNetwork> {
