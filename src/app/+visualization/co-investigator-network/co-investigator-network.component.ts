@@ -44,7 +44,7 @@ export class CoInvestigatorNetworkComponent implements OnDestroy, OnInit {
         this.store.dispatch(new fromSdr.GetNetworkAction('individual', {
           id: params.id,
           dateField: 'dateTimeIntervalStart',
-          dataFields: ['contributors', 'principalInvestigators', 'coPrincipalInvestigators'],
+          dataFields: ['principalInvestigators', 'coPrincipalInvestigators', 'contributors'],
           typeFilter: 'class:Relationship AND type:Grant'
         }));
       }
