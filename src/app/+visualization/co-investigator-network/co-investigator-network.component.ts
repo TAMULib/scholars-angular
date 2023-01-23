@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { filter, Observable, Subscription, take } from 'rxjs';
+import { filter, Observable, take } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { AppState } from '../../core/store';
