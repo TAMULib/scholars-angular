@@ -15,7 +15,7 @@ export interface DirectedData {
 };
 
 export interface DataNetwork {
-  name: string;
+  id: string;
   lookup: Map<string, string>;
   linkCounts: Map<string, number>;
   yearCounts: Map<string, number>;

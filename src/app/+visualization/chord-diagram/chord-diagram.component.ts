@@ -54,16 +54,16 @@ export class ChordDiagramComponent implements OnInit {
         return;
       }
 
-      const names: string[] = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
+      const ids: string[] = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
 
-      const matrix = this.build(data, names);
+      const matrix = this.build(data, ids);
 
-      const labelLength = Math.max(...(names.map(n => n.length))) * this.labelFontSize / 1.5;
+      const labelLength = Math.max(...(ids.map(n => lookup[n].length))) * this.labelFontSize / 1.5;
 
       const innerRadius = Math.min(this.width, this.height) * .5 - (labelLength + this.outerPadding);
       const outerRadius = innerRadius + this.shellWidth;
 
-      const color = (i: number) => d3.scaleOrdinal(names, d3.schemeCategory10)(names[i]);
+      const color = (i: number) => d3.scaleOrdinal(ids, d3.schemeCategory10)(ids[i]);
 
       const ribbon = d3.ribbon()
         .radius(innerRadius - this.shellGap)
@@ -98,12 +98,12 @@ export class ChordDiagramComponent implements OnInit {
           tooltip.transition()
             .style('opacity', 1);
 
-          if (names[d.index] === this.dataNetwork.name) {
+          if (ids[d.index] === this.dataNetwork.id) {
             const numOfLinks = Object.keys(this.dataNetwork.linkCounts).length;
-            tooltip.html(`<span>${names[d.index]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
+            tooltip.html(`<span>${lookup[ids[d.index]]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
           } else {
-            const linkCount = this.dataNetwork.linkCounts[names[d.index]];
-            tooltip.html(`<span>${names[d.index]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
+            const linkCount = this.dataNetwork.linkCounts[ids[d.index]];
+            tooltip.html(`<span>${lookup[ids[d.index]]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
           }
       };
 
@@ -115,7 +115,7 @@ export class ChordDiagramComponent implements OnInit {
       };
 
       const clickIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
-        this.router.navigate(['/display', lookup[names[d.index]]]);
+        this.router.navigate(['/display', lookup[ids[d.index]]]);
       };
 
       const figure = d3.select('figure');
@@ -150,9 +150,9 @@ export class ChordDiagramComponent implements OnInit {
         .attr('dy', '.35em')
         .attr('transform', d => `rotate(${(d.value * 180 / Math.PI - 90)}) translate(${innerRadius + 26}) ${d.value > Math.PI ? 'rotate(180)' : ''}`)
         .attr('text-anchor', d => d.value > Math.PI ? 'end' : null)
-        .attr('font-weight', d => names[d.index] === this.dataNetwork.name ? 'bold' : 'normal')
+        .attr('font-weight', d => ids[d.index] === this.dataNetwork.id ? 'bold' : 'normal')
         .style("cursor", "pointer")
-        .text(d => names[d.index])
+        .text(d => lookup[ids[d.index]])
         .on('mouseover', mouseOverIndividual)
         .on('mousemove', positionTooltip)
         .on('mouseout', mouseOutIndividual)
@@ -162,7 +162,7 @@ export class ChordDiagramComponent implements OnInit {
         .join('g')
         .call(g => g.append('path')
           .attr('d', arc)
-          .attr('fill', d => names[d.index] === this.dataNetwork.name ? 'black' : color(d.index))
+          .attr('fill', d => ids[d.index] === this.dataNetwork.id ? 'black' : color(d.index))
           .attr('stroke', '#fff')
           .on('mouseover', mouseOverIndividual)
           .on('mousemove', positionTooltip)
@@ -188,7 +188,7 @@ export class ChordDiagramComponent implements OnInit {
           tooltip.transition()
             .style('opacity', 1);
 
-          tooltip.html(`<span>${names[d.source.index]} co-${this.actionPastTense} ${d.target.value} time${d.target.value > 1 ? 's' : ''} with ${names[d.target.index]}</span>`);
+          tooltip.html(`<span>${lookup[ids[d.source.index]]} co-${this.actionPastTense} ${d.target.value} time${d.target.value > 1 ? 's' : ''} with ${lookup[ids[d.target.index]]}</span>`);
         })
         .on('mousemove', positionTooltip)
         .on('mouseout', () => {
@@ -206,9 +206,9 @@ export class ChordDiagramComponent implements OnInit {
     });
   }
 
-  private build = (data: DirectedData[], names: string[]) => {
-    const index = new Map<string, number>(names.map((name, i) => [name, i]));
-    const matrix: number[][] = Array.from(index, () => new Array(names.length).fill(0));
+  private build = (data: DirectedData[], ids: string[]) => {
+    const index = new Map<string, number>(ids.map((id, i) => [id, i]));
+    const matrix: number[][] = Array.from(index, () => new Array(ids.length).fill(0));
     for (const { source, target, count } of data) {
       matrix[index.get(source)][index.get(target)] += count;
     }
