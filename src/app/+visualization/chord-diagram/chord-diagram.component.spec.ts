@@ -21,7 +21,7 @@ describe('ChordDiagramComponent', () => {
     fixture = TestBed.createComponent(ChordDiagramComponent);
     component = fixture.componentInstance;
     component.dataNetwork = {
-      name: 'test',
+      id: 'n00000001',
       lookup: new Map<string, string>(),
       linkCounts: new Map<string, number>(),
       yearCounts: new Map<string, number>(),
