@@ -60,6 +60,32 @@
       "COPIED": "Embeddable snippet copied!"
     }
   },
+  "VISUALIZATION": {
+    "COMMON": {
+      "TABLES": "Tables",
+      "YEAR": "Year"
+    },
+    "COAUTHOR_NETWORK": {
+      "LABEL": "Co-author Network",
+      "ICON_ALT": "Co-author network icon",
+      "NOTE": "Note: This information is based solely on publications that have been loaded into the VIVO system. This may only be a small sample of the person's total work.",
+      "PUBLICATIONS_PER_YEAR": "Publications per year",
+      "PUBLICATIONS": "Publications",
+      "COAUTHOR": "Co-authors",
+      "AUTHOR": "Author",
+      "PUBLICATIONS_WITH": "Publications with"
+    },
+    "COINVESTIGATOR_NETWORK": {
+      "LABEL": "Co-investigator Network",
+      "ICON_ALT": "Co-investigator network icon",
+      "NOTE": "Note: This information is based solely on grants that have been loaded into the VIVO system. This may only be a small sample of the person's total work.",
+      "GRANTS_PER_YEAR": "Grants per year",
+      "GRANTS": "Grants",
+      "COINVESTIGATOR": "Co-investigators",
+      "INVESTIGATOR": "Investigator",
+      "GRANTS_WITH": "Grants with"
+    }
+  },
   "HEADER": {
     "BANNER": {
       "LOGO_ALT": "Scholars at Texas A&M University logo"
