@@ -1,6 +1,7 @@
 import { isPlatformServer } from '@angular/common';
 import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3-shape';
@@ -18,11 +19,9 @@ export class ChordDiagramComponent implements OnInit {
 
   @Input() dataNetwork: DataNetwork;
 
-  @Input() action = 'author';
-
-  @Input() actionPastTense = 'authored';
-
-  @Input() type = 'Publication';
+  @Input() sourceTooltipKey = 'VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.SOURCE';
+  @Input() targetTooltipKey = 'VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.TARGET';
+  @Input() ribbonTooltipKey = 'VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.RIBBON';
 
   @Input() height = 1024;
   @Input() width = 1024;
@@ -40,7 +39,11 @@ export class ChordDiagramComponent implements OnInit {
 
   public id = uuidv4();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: string, private router: Router) { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: string,
+    private router: Router,
+    private translate: TranslateService
+  ) { }
 
   ngOnInit(): void {
     if (isPlatformServer(this.platformId) || this.dataNetwork === undefined) {
@@ -95,16 +98,23 @@ export class ChordDiagramComponent implements OnInit {
       const mouseOverIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
         fade(this.hoverOpacity)(e, d);
 
-          tooltip.transition()
-            .style('opacity', 1);
+        tooltip.transition()
+          .style('opacity', 1);
 
-          if (ids[d.index] === this.dataNetwork.id) {
-            const numOfLinks = Object.keys(this.dataNetwork.linkCounts).length;
-            tooltip.html(`<span>${lookup[ids[d.index]]}</span><br/><span>${numOfLinks} Co-${this.action}${numOfLinks > 1 ? 's' : ''}</span>`);
-          } else {
-            const linkCount = this.dataNetwork.linkCounts[ids[d.index]];
-            tooltip.html(`<span>${lookup[ids[d.index]]}</span><br/><span>${linkCount} Joint ${this.type}${linkCount > 1 ? 's' : ''}</span>`);
-          }
+        const name = lookup[ids[d.index]];
+        if (ids[d.index] === this.dataNetwork.id) {
+          const count = Object.keys(this.dataNetwork.linkCounts).length;
+          tooltip.html(this.translate.instant(this.sourceTooltipKey, {
+            name,
+            count
+          }));
+        } else {
+          const count = this.dataNetwork.linkCounts[ids[d.index]];
+          tooltip.html(this.translate.instant(this.targetTooltipKey, {
+            name,
+            count
+          }));
+        }
       };
 
       const mouseOutIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
@@ -115,7 +125,7 @@ export class ChordDiagramComponent implements OnInit {
       };
 
       const clickIndividual = (e: SVGPathElement, d: d3.ChordGroup) => {
-        this.router.navigate(['/display', lookup[ids[d.index]]]);
+        this.router.navigate(['/display', ids[d.index]]);
       };
 
       const figure = d3.select('figure');
@@ -188,7 +198,11 @@ export class ChordDiagramComponent implements OnInit {
           tooltip.transition()
             .style('opacity', 1);
 
-          tooltip.html(`<span>${lookup[ids[d.source.index]]} co-${this.actionPastTense} ${d.target.value} time${d.target.value > 1 ? 's' : ''} with ${lookup[ids[d.target.index]]}</span>`);
+          tooltip.html(this.translate.instant(this.ribbonTooltipKey, {
+            source: lookup[ids[d.source.index]],
+            target: lookup[ids[d.target.index]],
+            value: d.target.value
+          }));
         })
         .on('mousemove', positionTooltip)
         .on('mouseout', () => {

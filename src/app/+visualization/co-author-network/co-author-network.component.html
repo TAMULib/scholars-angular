@@ -1,20 +1,25 @@
 <div *ngIf="document | async; let individual" [@fadeIn]>
   <div class="float-right">
     <div class="text-nowrap" *ngIf="individual.researcherOn !== undefined">
-      <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.ICON_ALT' | translate }}n">
+      <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.ICON_ALT' | translate }}n">
       <span class="ml-2">
-        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.LABEL' | translate }}</a>
+        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</a>
       </span>
     </div>
   </div>
   <div class="h1"><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></div>
-  <div class="h2">{{ 'VISUALIZATION.COAUTHOR_NETWORK.LABEL' | translate }}</div>
+  <div class="h2">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</div>
   <div *ngIf="dataNetwork | async; let dataNetwork" class="mb-4">
-    <scholars-chord-diagram [dataNetwork]="dataNetwork"></scholars-chord-diagram>
+    <scholars-chord-diagram
+      [dataNetwork]="dataNetwork"
+      sourceTooltipKey="VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.SOURCE"
+      targetTooltipKey="VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.TARGET"
+      ribbonTooltipKey="VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.RIBBON"
+    ></scholars-chord-diagram>
     <div class="row">
       <div class="col">
         <div class="alert alert-warning" role="alert">
-          <p>{{ 'VISUALIZATION.COAUTHOR_NETWORK.NOTE' | translate }}</p>
+          <p>{{ 'VISUALIZATION.NETWORK.COAUTHOR.NOTE' | translate }}</p>
         </div>
       </div>
     </div>
@@ -22,13 +27,13 @@
     <div class="row">
       <div class="col-6">
         <div class="card">
-          <div class="card-header">{{ 'VISUALIZATION.COAUTHOR_NETWORK.PUBLICATIONS_PER_YEAR' | translate }}</div>
+          <div class="card-header">{{ 'VISUALIZATION.NETWORK.COAUTHOR.OBJECTS_PER_YEAR' | translate }}</div>
           <div class="card-body">
             <table class="table table-sm">
               <thead>
                 <tr>
                   <th scope="col">{{ 'VISUALIZATION.COMMON.YEAR' | translate }}</th>
-                  <th scope="col">{{ 'VISUALIZATION.COAUTHOR_NETWORK.PUBLICATIONS' | translate }}</th>
+                  <th scope="col">{{ 'VISUALIZATION.NETWORK.COAUTHOR.OBJECTS' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -43,13 +48,13 @@
       </div>
       <div class="col-6">
         <div class="card">
-          <div class="card-header">{{ 'VISUALIZATION.COAUTHOR_NETWORK.COAUTHOR' | translate }}</div>
+          <div class="card-header">{{ 'VISUALIZATION.NETWORK.COAUTHOR.COPARTICIPANT' | translate }}</div>
           <div class="card-body">
             <table class="table table-sm">
               <thead>
                 <tr>
-                  <th scope="col">{{ 'VISUALIZATION.COAUTHOR_NETWORK.AUTHOR' | translate }}</th>
-                  <th scope="col">{{ 'VISUALIZATION.COAUTHOR_NETWORK.PUBLICATIONS_WITH' | translate }}</th>
+                  <th scope="col">{{ 'VISUALIZATION.NETWORK.COAUTHOR.PARTICIPANT' | translate }}</th>
+                  <th scope="col">{{ 'VISUALIZATION.NETWORK.COAUTHOR.OBJECTS_WITH' | translate }}</th>
                 </tr>
               </thead>
               <tbody>

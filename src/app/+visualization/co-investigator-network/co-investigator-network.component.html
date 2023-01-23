@@ -1,20 +1,25 @@
 <div *ngIf="document | async; let individual" [@fadeIn]>
   <div class="float-right">
     <div class="text-nowrap">
-      <img src="assets/images/co_author_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.COAUTHOR_NETWORK.ICON_ALT' | translate }}">
+      <img src="assets/images/co_author_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COAUTHOR.ICON_ALT' | translate }}">
       <span class="ml-2">
-        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']">{{ 'VISUALIZATION.COAUTHOR_NETWORK.LABEL' | translate }}</a>
+        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</a>
       </span>
     </div>
   </div>
   <div class="h1"><a [routerLink]="['/display', individual.id]">{{individual.name}}</a></div>
-  <div class="h2">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.LABEL' | translate }}</div>
+  <div class="h2">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</div>
   <div *ngIf="dataNetwork | async; let dataNetwork" class="mb-4">
-    <scholars-chord-diagram [dataNetwork]="dataNetwork"></scholars-chord-diagram>
+    <scholars-chord-diagram
+      [dataNetwork]="dataNetwork"
+      sourceTooltipKey="VISUALIZATION.NETWORK.COINVESTIGATOR.TOOLTIP.SOURCE"
+      targetTooltipKey="VISUALIZATION.NETWORK.COINVESTIGATOR.TOOLTIP.TARGET"
+      ribbonTooltipKey="VISUALIZATION.NETWORK.COINVESTIGATOR.TOOLTIP.RIBBON"
+    ></scholars-chord-diagram>
     <div class="row">
       <div class="col">
         <div class="alert alert-warning" role="alert">
-          <p>{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.NOTE' | translate }}</p>
+          <p>{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.NOTE' | translate }}</p>
         </div>
       </div>
     </div>
@@ -22,13 +27,13 @@
     <div class="row">
       <div class="col-6">
         <div class="card">
-          <div class="card-header">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.GRANTS_PER_YEAR' | translate }}</div>
+          <div class="card-header">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.OBJECTS_PER_YEAR' | translate }}</div>
           <div class="card-body">
             <table class="table table-sm">
               <thead>
                 <tr>
                   <th scope="col">{{ 'VISUALIZATION.COMMON.YEAR' | translate }}</th>
-                  <th scope="col">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.GRANTS' | translate }}</th>
+                  <th scope="col">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.OBJECTS' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -43,13 +48,13 @@
       </div>
       <div class="col-6">
         <div class="card">
-          <div class="card-header">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.COINVESTIGATOR' | translate }}</div>
+          <div class="card-header">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.COPARTICIPANT' | translate }}</div>
           <div class="card-body">
             <table class="table table-sm">
               <thead>
                 <tr>
-                  <th scope="col">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.INVESTIGATOR' | translate }}</th>
-                  <th scope="col">{{ 'VISUALIZATION.COINVESTIGATOR_NETWORK.GRANTS_WITH' | translate }}</th>
+                  <th scope="col">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.PARTICIPANT' | translate }}</th>
+                  <th scope="col">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.OBJECTS_WITH' | translate }}</th>
                 </tr>
               </thead>
               <tbody>

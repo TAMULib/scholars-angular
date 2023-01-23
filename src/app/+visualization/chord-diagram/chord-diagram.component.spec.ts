@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { VisualizationModule } from '../visualization.module';
 import { ChordDiagramComponent } from './chord-diagram.component';
@@ -10,9 +11,11 @@ describe('ChordDiagramComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        VisualizationModule,
+        TranslateModule.forRoot(),
+        VisualizationModule
       ],
       providers: [
+        TranslateService
       ],
     }).compileComponents();
   }));
