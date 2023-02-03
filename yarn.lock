@@ -1481,12 +1481,21 @@
     jsdom "20.0.2"
     tslib "^2.3.0"
 
-"@nguniversal/express-engine@15.0.0":
-  version "15.0.0"
-  resolved "https://registry.npmjs.org/@nguniversal/express-engine/-/express-engine-15.0.0.tgz"
-  integrity sha512-tWk2/oMTQo703VsTGpHakm+2BH1bXQbmD43BcYUcmASJDIDmxSBCEY6zwT1TjrYST0keBChJD9jAoKesvSPB/w==
+"@nguniversal/common@15.1.0":
+  version "15.1.0"
+  resolved "https://registry.yarnpkg.com/@nguniversal/common/-/common-15.1.0.tgz#3903c3e30a6530edf20ca3fa36092ccaa88c3711"
+  integrity sha512-NcZByxhO4VELZutuFL6/uvY0/dp7BJ7zu0AGUS1apNF4aAPmW6DjlbrVCPcqLOzrd1cPIOh0HJI3H1J2+dqRsA==
   dependencies:
-    "@nguniversal/common" "15.0.0"
+    critters "0.0.16"
+    jsdom "21.0.0"
+    tslib "^2.3.0"
+
+"@nguniversal/express-engine@15.1.0":
+  version "15.1.0"
+  resolved "https://registry.yarnpkg.com/@nguniversal/express-engine/-/express-engine-15.1.0.tgz#7d068c967abff51e0150491b507da1472a62bae6"
+  integrity sha512-BwasYI7Zv3RLLmHLSFH/V0zTer+WN0VVpBIZLSQUvmUPMEgKweiNHnapUXW0Ns4ibyEBSIvK4hOQmPhBSutPuQ==
+  dependencies:
+    "@nguniversal/common" "15.1.0"
     tslib "^2.3.0"
 
 "@ngx-translate/core@14.0.0":
@@ -2148,6 +2157,11 @@ acorn@^8.1.0, acorn@^8.2.4, acorn@^8.4.1, acorn@^8.5.0, acorn@^8.7.1, acorn@^8.8
   version "8.8.1"
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.8.1.tgz"
   integrity sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==
+
+acorn@^8.8.1:
+  version "8.8.2"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.2.tgz#1b2f25db02af965399b9776b0c2c391276d37c4a"
+  integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
 
 adjust-sourcemap-loader@^4.0.0:
   version "4.0.0"
@@ -3202,7 +3216,7 @@ debug@^3.2.6:
   dependencies:
     ms "^2.1.1"
 
-decimal.js@^10.2.1, decimal.js@^10.4.1:
+decimal.js@^10.2.1, decimal.js@^10.4.1, decimal.js@^10.4.2:
   version "10.4.3"
   resolved "https://registry.npmjs.org/decimal.js/-/decimal.js-10.4.3.tgz"
   integrity sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==
@@ -5217,6 +5231,38 @@ jsdom@20.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
     ws "^8.9.0"
+    xml-name-validator "^4.0.0"
+
+jsdom@21.0.0:
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-21.0.0.tgz#33e22f2fc44286e50ac853c7b7656c8864a4ea45"
+  integrity sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==
+  dependencies:
+    abab "^2.0.6"
+    acorn "^8.8.1"
+    acorn-globals "^7.0.0"
+    cssom "^0.5.0"
+    cssstyle "^2.3.0"
+    data-urls "^3.0.2"
+    decimal.js "^10.4.2"
+    domexception "^4.0.0"
+    escodegen "^2.0.0"
+    form-data "^4.0.0"
+    html-encoding-sniffer "^3.0.0"
+    http-proxy-agent "^5.0.0"
+    https-proxy-agent "^5.0.1"
+    is-potential-custom-element-name "^1.0.1"
+    nwsapi "^2.2.2"
+    parse5 "^7.1.1"
+    saxes "^6.0.0"
+    symbol-tree "^3.2.4"
+    tough-cookie "^4.1.2"
+    w3c-xmlserializer "^4.0.0"
+    webidl-conversions "^7.0.0"
+    whatwg-encoding "^2.0.0"
+    whatwg-mimetype "^3.0.0"
+    whatwg-url "^11.0.0"
+    ws "^8.11.0"
     xml-name-validator "^4.0.0"
 
 jsdom@^16.4.0:
@@ -7997,6 +8043,13 @@ w3c-xmlserializer@^3.0.0:
   dependencies:
     xml-name-validator "^4.0.0"
 
+w3c-xmlserializer@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/w3c-xmlserializer/-/w3c-xmlserializer-4.0.0.tgz#aebdc84920d806222936e3cdce408e32488a3073"
+  integrity sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==
+  dependencies:
+    xml-name-validator "^4.0.0"
+
 watchpack@^2.4.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/watchpack/-/watchpack-2.4.0.tgz"
@@ -8279,6 +8332,11 @@ ws@^7.4.6:
   version "7.5.9"
   resolved "https://registry.npmjs.org/ws/-/ws-7.5.9.tgz"
   integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
+
+ws@^8.11.0:
+  version "8.12.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.12.0.tgz#485074cc392689da78e1828a9ff23585e06cddd8"
+  integrity sha512-kU62emKIdKVeEIOIKVegvqpXMSTAMLJozpHZaJNDYqBjzlSYXQGviYwN1osDLJ9av68qHd4a2oSjd7yD4pacig==
 
 ws@^8.4.2, ws@^8.9.0:
   version "8.11.0"
