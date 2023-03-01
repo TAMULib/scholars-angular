@@ -29,9 +29,8 @@ const createUniversalStyleLoader = (document: Document, baseHref: string): Compu
       const stylesheet = styleLinkTag.getAttribute('href');
       const styles = readFileSync(`./dist/scholars-angular/browser/${stylesheet.replace(baseHref, '')}`, 'utf8');
       const root = styles.match(/:root.*{([^}]+)}/g)[0];
-      const cssTxt = root.replace(/\/\*(.|\s)*?\*\//g, ' ').replace(/\s+/g, ' ');
       // tslint:disable-next-line:one-variable-per-declaration
-      const style = {}, [, ruleName, rule] = cssTxt.match(/ ?(.*?) ?{([^}]*)}/) || [, , cssTxt];
+      const style = {}, [, ruleName, rule] = root.match(/ ?(.*?) ?{([^}]*)}/) || [, , root];
       const properties = rule.split(';').map((o) => o.split(':').map((x) => x && x.trim()));
       for (const [property, value] of properties) {
         if (value) {
