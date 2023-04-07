@@ -1529,10 +1529,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@ngrx/effects@15.3.0":
-  version "15.3.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-15.3.0.tgz#96af2d8121384d782e278a08b8b3643c1d08ae82"
-  integrity sha512-L+Ie4XFrzYBJOV7hNQvR5hUvG1PSCDd6niwOOJg5nm9zEjSnAxveJ/a3B52pRwge6EYOnrQne97jyArxOzPCJA==
+"@ngrx/effects@15.4.0":
+  version "15.4.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-15.4.0.tgz#31e80aa2ef13953772607b9c6dcb12efce2e1da5"
+  integrity sha512-/8gHhOM9aeGaw8OG2LLwi4I4p84xzG0EU9TqWrvQcW74wn8sFZONjLvUte5YOzJ5502PPFFrfXSOc+lHnVAJUA==
   dependencies:
     tslib "^2.0.0"
 
