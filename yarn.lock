@@ -1536,10 +1536,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@ngrx/entity@15.3.0":
-  version "15.3.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-15.3.0.tgz#572cc94fc4a593ad07bd73c1abea95ca682cb166"
-  integrity sha512-EUBRBNuwEl2tQ8CzOocEevqK7GTiAidsYuv6GJiEbtofFK1oqpEZuVlfMSyrRvtRZgTFBYKJOT3LN7CD2ggNyQ==
+"@ngrx/entity@15.4.0":
+  version "15.4.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-15.4.0.tgz#968745a807a3342ec523ce27a39afdba4ee601f1"
+  integrity sha512-DmfbbasV5bth9APAiwH9ovDwJ/rtEUm4pJvTd6Eds/kOJ6Ime9MZwEhtglXlk2jMwe7f08pl1jzFhYIjI277aQ==
   dependencies:
     tslib "^2.0.0"
 
