@@ -11,7 +11,6 @@ Scholars Angular is a frontend application for exposing VIVO content that is bei
 
 In addition to having [Docker](https://docs.docker.com/) installed, a running [Scholars Discovery](https://github.com/vivo-community/scholars-discovery) is also required.
 
-
 ### Docker Deployment
 
 1. [Install](https://docs.docker.com/install/) Docker
