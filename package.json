@@ -47,7 +47,7 @@
     "@ngrx/effects": "15.3.0",
     "@ngrx/entity": "15.3.0",
     "@ngrx/router-store": "15.3.0",
-    "@ngrx/store": "15.3.0",
+    "@ngrx/store": "15.4.0",
     "@nguniversal/express-engine": "15.2.0",
     "@ngx-translate/core": "14.0.0",
     "@ngx-translate/http-loader": "7.0.0",
