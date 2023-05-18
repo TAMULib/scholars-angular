@@ -45,7 +45,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# Dependency Lock files
-package-lock.json
-yarn.lock
