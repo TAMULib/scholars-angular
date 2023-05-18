@@ -9,8 +9,8 @@
   ],
   "engines": {
     "node": "^16.14.0 || >=18.10.0",
-    "yarn": ">=1.22.4 <2",
-    "npm": "Please use yarn instead of NPM to install dependencies"
+    "npm": "^6.11.0 || ^7.5.6 || >=8.0.0",
+    "yarn": ">=1.22.4 <2"
   },
   "repository": {
     "type": "git",
@@ -96,10 +96,5 @@
     "npm-check-updates": "^16.10.12",
     "ts-node": "10.9.1",
     "typescript": "4.9.5"
-  },
-  "overrides": {
-    "browser-sync": {
-      "ua-parser-js": "10.0.33"
-    }
   }
 }
