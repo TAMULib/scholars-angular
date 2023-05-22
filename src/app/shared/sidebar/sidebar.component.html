@@ -50,7 +50,7 @@
             </span>
 
             <span *ngSwitchCase="'ACTION'">
-              <span tabindex="0" class="link" (click)="dispatchAction(item.action)" (keyup.enter)="dispatchAction(item.action)">{{item.label }}</span>
+              <span tabindex="0" class="link" (click)="dispatchAction($event, item.action)" (keypress)="dispatchAction($event, item.action)">{{item.label }}</span>
             </span>
 
             <span *ngSwitchCase="'INFO'">

@@ -50,8 +50,10 @@ export class SidebarComponent implements OnInit {
     this.store.dispatch(new fromSidebar.ToggleCollapsibleSectionAction({ sectionIndex }));
   }
 
-  public dispatchAction(action: Action): void {
-    this.store.dispatch(action);
+  public dispatchAction(event: any, action: Action): void {
+    if (event instanceof MouseEvent || event instanceof KeyboardEvent && (event.key === 'Enter' || event.key === 'Space')) {
+      this.store.dispatch(action);
+    }
   }
 
   public isBrowserRendered(): boolean {
