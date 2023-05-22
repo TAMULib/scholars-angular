@@ -56,7 +56,7 @@
     "express": "4.18.2",
     "express-static-gzip": "2.1.7",
     "font-awesome": "4.7.0",
-    "rxjs": "7.8.0",
+    "rxjs": "7.8.1",
     "scholars-embed-utilities": "0.3.4",
     "tslib": "2.5.0",
     "uuid": "9.0.0",
