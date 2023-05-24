@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject, Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import { Observable, scheduled } from 'rxjs';
@@ -19,7 +19,7 @@ import * as fromAuth from '../store/auth/auth.actions';
 import * as fromRouter from '../store/router/router.actions';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthGuard  {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
