@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Params } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { DiscoveryView, OpKey } from 'src/app/core/model/view';
 import { AppState } from 'src/app/core/store';
 import { selectDiscoveryViewByClass, selectResourcesCountByLabel } from 'src/app/core/store/sdr';
@@ -16,7 +16,7 @@ import { getQueryParams } from '../utilities/view.utility';
 })
 export class SustainableDevelopmentGoalsComponent {
 
-  goals: { title: string, value: string, color: string, icon?: string }[] = [
+  goals: { title: string, value: string, color: string, icon?: string, profileCount?: number, researchCount?: number }[] = [
     { title: 'SDG 1', value: '1 No Poverty', color: '#E5243B' },
     { title: 'SDG 2', value: '2 Zero Hunger', color: '#DDA63A' },
     { title: 'SDG 3', value: '3 Good Health and Well-Being', color: '#4C9F38' },
@@ -50,13 +50,15 @@ export class SustainableDevelopmentGoalsComponent {
     });
   }
 
+  click(event: any): void {
+    event.target.dispatchEvent(new Event('click'));
+  }
+
   hidden(goal: any): void {
     goal.icon = `assets/images/goals/${goal.value}.png`;
   }
 
   shown(goal: any): void {
-    goal.icon = `assets/images/goals/${goal.value} Selected.png`;
-
     const profileTitle = `Profile ${goal.title}`;
 
     this.store.dispatch(
@@ -66,7 +68,10 @@ export class SustainableDevelopmentGoalsComponent {
       })
     );
 
-    this.profileCount = this.store.pipe(select(selectResourcesCountByLabel('individual', profileTitle)));
+    this.profileCount = this.store.pipe(
+      select(selectResourcesCountByLabel('individual', profileTitle)),
+      tap(profileCount => goal.profileCount = profileCount)
+    );
 
     this.profileDiscoveryView = this.store.pipe(
       select(selectDiscoveryViewByClass('Person')),
@@ -82,12 +87,17 @@ export class SustainableDevelopmentGoalsComponent {
       })
     );
 
-    this.researchCount = this.store.pipe(select(selectResourcesCountByLabel('individual', researchTitle)));
+    this.researchCount = this.store.pipe(
+      select(selectResourcesCountByLabel('individual', researchTitle)),
+      tap(researchCount => goal.researchCount = researchCount)
+    );
 
     this.researchDiscoveryView = this.store.pipe(
       select(selectDiscoveryViewByClass('Document')),
       filter((view: DiscoveryView) => view !== undefined)
     );
+
+    goal.icon = `assets/images/goals/${goal.value} Selected.png`;
   }
 
   getDiscoveryRouterLink(discoveryView: DiscoveryView): string[] {
