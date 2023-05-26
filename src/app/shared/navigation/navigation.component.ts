@@ -54,7 +54,7 @@ export class NavigationComponent implements OnInit {
   }
 
   public isActive(directoryView: DirectoryView, url: string): boolean {
-    return url.startsWith(`/directory/${directoryView.name}`);
+    return !!url && url.startsWith(`/directory/${directoryView.name}`);
   }
 
   public getDirectoryRouterLink(directoryView: DirectoryView): string[] {
