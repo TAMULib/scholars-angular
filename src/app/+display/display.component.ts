@@ -144,11 +144,13 @@ export class DisplayComponent implements OnDestroy, OnInit {
                 filter((displayView: DisplayView) => displayView !== undefined),
                 tap((displayView: DisplayView) => {
 
-                  this.store.dispatch(
-                    new fromMetadata.AddMetadataTagsAction({
-                      tags: this.buildDisplayMetaTags(displayView, document),
-                    })
-                  );
+                  setTimeout(() => {
+                    this.store.dispatch(
+                      new fromMetadata.AddMetadataTagsAction({
+                        tags: this.buildDisplayMetaTags(displayView, document),
+                      })
+                    );
+                  });
 
                   const tabCount = displayView.tabs.length - 1;
 
