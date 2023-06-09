@@ -116,6 +116,10 @@ export class AlertService {
     return this.alert(AlertLocation.MAIN, AlertType.DANGER, `(${payload.response.status}) ${payload.response.message}`, true, 15000);
   }
 
+  public getResearchAgeFailureAlert(payload: { response: any }): fromAlert.AlertActions {
+    return this.alert(AlertLocation.MAIN, AlertType.DANGER, `(${payload.response.status}) ${payload.response.message}`, true, 15000);
+  }
+
   public getCoInvestigatorNetworkFailureAlert(payload: { response: any }): fromAlert.AlertActions {
     return this.alert(AlertLocation.MAIN, AlertType.DANGER, `(${payload.response.status}) ${payload.response.message}`, true, 15000);
   }

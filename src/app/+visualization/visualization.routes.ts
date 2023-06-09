@@ -3,8 +3,23 @@ import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
 
 import { VisualizationComponent } from './visualization.component';
+import { ResearchAgeComponent } from './research-age/research-age.component';
 
 export const routes: Routes = [
+  {
+    path: 'unknown',
+    component: VisualizationComponent,
+    children: [
+      {
+        path: 'Research Age',
+        component: ResearchAgeComponent,
+        data: {
+          tags: [{ name: 'view', content: 'Histogram Scatter Plot Side by Side Semantic Zoom' }],
+        },
+      },
+      { path: '**', redirectTo: 'Research Age' },
+    ],
+  },
   {
     path: ':id',
     component: VisualizationComponent,

@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <p class="card-text">[]</p>
+        </div>
+      </div>
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body" *ngIf="researchAge | async; let researchAge">
+          <scholars-barplot scale="1" [input]="researchAge"></scholars-barplot>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <p class="card-text">[]</p>
+        </div>
+      </div>
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <!-- <scholars-barplot scale="1" [groups]="researcherAge"></scholars-barplot> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

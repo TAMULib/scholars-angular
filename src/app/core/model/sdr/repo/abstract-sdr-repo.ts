@@ -6,12 +6,13 @@ import { map } from 'rxjs/operators';
 import { RestService } from '../../../service/rest.service';
 import { SdrRepo } from './sdr-repo';
 
-import { AppConfig, APP_CONFIG } from '../../../../app.config';
-import { DataNetwork } from '../../../store/sdr/sdr.reducer';
+import { APP_CONFIG, AppConfig } from '../../../../app.config';
+import { DataNetwork, ResearchAge } from '../../../store/sdr/sdr.reducer';
 import { Boostable, Facetable, Filterable, SdrRequest, Sort } from '../../request';
 import { Count } from '../count';
 import { SdrCollection } from '../sdr-collection';
 import { SdrResource } from '../sdr-resource';
+import { Queryable } from '../../request/sdr.request';
 
 @Injectable({
   providedIn: 'root',
@@ -55,8 +56,14 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/network?dateField=${dateField}&dataFields=${dataFields.join(',')}&typeFilter=${typeFilter}`);
   }
 
-  public getCoInvestigatorNetwork(id: string | number): Observable<DataNetwork> {
-    return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/co-investigator-network`);
+  public getResearchAge(
+    query: Queryable,
+    filters: Filterable[],
+    dateField: string,
+    upperLimitInYears: number,
+    groupingIntervalInYears: number
+    ): Observable<ResearchAge> {
+    return this.restService.get<ResearchAge>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/researchAge${this.mapParameters({query, filters})}&dateField=${dateField}&upperLimitInYears=${upperLimitInYears}&groupingIntervalInYears=${groupingIntervalInYears}`);
   }
 
   public findByIdIn(ids: string[]): Observable<SdrCollection> {
