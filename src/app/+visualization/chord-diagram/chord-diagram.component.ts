@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3-shape';
 
-import { v4 as uuidv4 } from 'uuid';
+import { id } from '../../shared/utilities/id.utility';
 
 import { DataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
 
@@ -37,13 +37,15 @@ export class ChordDiagramComponent implements OnInit {
 
   @Input() labelFontSize = 14;
 
-  public id = uuidv4();
+  public id: string;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
     private router: Router,
     private translate: TranslateService
-  ) { }
+  ) {
+    this.id = id();
+  }
 
   ngOnInit(): void {
     if (isPlatformServer(this.platformId) || this.dataNetwork === undefined) {
@@ -128,7 +130,7 @@ export class ChordDiagramComponent implements OnInit {
         this.router.navigate(['/display', ids[d.index]]);
       };
 
-      const figure = d3.select('figure');
+      const figure = d3.select(`#${this.id}`);
 
       const tooltip = figure
         .append('div')

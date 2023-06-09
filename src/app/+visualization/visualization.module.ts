@@ -13,6 +13,8 @@ import { ChordDiagramComponent } from './chord-diagram/chord-diagram.component';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
 import { routes } from './visualization.routes';
+import { BarplotComponent } from './barplot/barplot.component';
+import { ResearchAgeComponent } from './research-age/research-age.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { routes } from './visualization.routes';
     ChordDiagramComponent,
     CoAuthorNetworkComponent,
     CoInvestigatorNetworkComponent,
+    BarplotComponent,
+    ResearchAgeComponent,
   ],
   imports: [
     CommonModule,
