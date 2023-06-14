@@ -10,6 +10,10 @@ import { Observable } from 'rxjs';
 import { Datum, ResearchAge } from '../../core/store/sdr/sdr.reducer';
 
 export interface BarplotInput {
+  labels: {
+    x: string;
+    y: string;
+  },
   data: Datum[],
 }
 
@@ -23,7 +27,7 @@ export class BarplotComponent implements OnInit {
   @Input() height = 586;
   @Input() width = 396;
 
-  @Input() input: BarplotInput;
+  @Input() input: Observable<BarplotInput>;
 
   public id: string;
 
@@ -40,11 +44,9 @@ export class BarplotComponent implements OnInit {
       return;
     }
 
-    console.log(this.input);
-
     setTimeout(() => {
 
-      const data = this.input.data.reverse();
+      let index = 0;
 
       // set the dimensions and margins of the graph
       const margin = {
@@ -57,75 +59,139 @@ export class BarplotComponent implements OnInit {
       const width = this.width - margin.left - margin.right;
       const height = this.height - margin.top - margin.bottom;
 
-      const max = d3.max(data.map((d: any) => d.value));
+      let svg, ageGroupScale;
 
-      // append the svg object to the body of the page
-      var svg = d3.select(`#${this.id}`)
-        .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
+      const subscription = this.input.subscribe((input: BarplotInput) => {
 
-      // researchers
-      var x = d3.scaleLinear()
-        .range([0, width])
-        .domain([0, max]);
+        if (index === 0) {
+          const data = input.data.reverse();
 
-      // research
-      var x2 = d3.scaleLinear()
-        .domain([0, 20000])
-        .range([0, width]);
+          const max = d3.max(data.map((d: any) => d.value));
 
-      // age groups
-      var y = d3.scaleBand()
-        .range([0, height])
-        .domain(data.map((d) => d.label))
-        .padding(.1);
+          // append the svg object to the body of the page
+          svg = d3.select(`#${this.id}`)
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
 
-      // bottom axis
-      svg.append('g')
-        .attr('transform', `translate(5,${height + 15})`)
-        .call(d3.axisBottom(x).ticks(max / 500).tickSize(0))
-        .call(g => g.select('.domain').remove())
-        .selectAll('text')
-        .style('text-anchor', 'end');
+          // researchers
+          const researcherScale = d3.scaleLinear()
+            .range([0, width])
+            .domain([0, max]);
 
-      // top axis
-      svg.append("g")
-        .attr("transform", "translate(5,-10)")
-        .call(d3.axisTop(x2).ticks(20000 / 5000).tickSize(0))
-        .call(g => g.select(".domain").remove())
-        .selectAll("text")
-        .style("text-anchor", "end");
+          // age groups
+          ageGroupScale = d3.scaleBand()
+            .range([0, height])
+            .domain(data.map((d) => d.label))
+            .padding(.1);
 
-      // left axis
-      svg.append('g')
-        .attr('transform', 'translate(-10,0)')
-        .call(d3.axisLeft(y).tickSize(0).tickFormat((d, i) => data[i].label))
-        .call(g => g.select('.domain').remove())
-        .selectAll('text')
-        .style('text-anchor', 'end');
+          // bottom axis
+          svg.append('g')
+            .attr('transform', `translate(5,${height + 15})`)
+            .call(d3.axisBottom(researcherScale).ticks(max / 500).tickSize(0))
+            .call(g => g.select('.domain').remove())
+            .selectAll('text')
+            .style('text-anchor', 'end');
 
-      const bar = svg.selectAll()
-        .data(data)
-        .enter()
-        .append("g");
+          // left axis
+          svg.append('g')
+            .attr('transform', 'translate(-10,0)')
+            .call(d3.axisLeft(ageGroupScale).tickSize(0).tickFormat((d, i) => data[i].label))
+            .call(g => g.select('.domain').remove())
+            .selectAll('text')
+            .style('text-anchor', 'end');
 
-      bar.append('rect')
-        .attr('x', x(0))
-        .attr('y', (d) => y(d.label))
-        .attr('width', (d) => x(d.value))
-        .attr('height', y.bandwidth())
-        .attr('fill', 'steelblue');
+          const bar = svg.selectAll()
+            .data(data)
+            .enter()
+            .append('g');
 
-      bar.append('text')
-        .attr("x", (d) => x(d.value) + 5)
-        .attr("y", (d) => y(d.label) + (y.bandwidth() / 2))
-        .attr("dy", ".35em")
-        .style("font", "12px times")
-        .attr('fill', 'steelblue')
-        .text((d) => d.value);
+          bar.append('rect')
+            .attr('x', researcherScale(0))
+            .attr('y', (d) => ageGroupScale(d.label))
+            .attr('width', (d) => researcherScale(d.value))
+            .attr('height', ageGroupScale.bandwidth())
+            .attr('fill', 'steelblue');
+
+          bar.append('text')
+            .attr('x', (d) => researcherScale(d.value) + 5)
+            .attr('y', (d) => ageGroupScale(d.label) + (ageGroupScale.bandwidth() / 2))
+            .attr('dy', '.35em')
+            .style('font', '12px times')
+            .attr('fill', 'steelblue')
+            .text((d) => d.value);
+
+        } else {
+          const data = input.data.reverse();
+
+          const max = d3.max(data.map((d: any) => d.value));
+
+          // research
+          const researchScale = d3.scaleLinear()
+            .domain([0, max])
+            .range([0, width]);
+
+          // top axis
+          svg.append('g')
+            .attr('transform', 'translate(5,-10)')
+            .call(d3.axisTop(researchScale).ticks(4).tickSize(0))
+            .call(g => g.select('.domain').remove())
+            .selectAll('text')
+            .style('text-anchor', 'end');
+
+          // Add the line
+          svg.append('path')
+            .datum(data)
+            .attr('fill', 'none')
+            .attr('stroke', 'orange')
+            .attr('stroke-width', 1.5)
+            .attr('d', d3.line()
+              .x(function (d, i) {
+                return researchScale(data[i].value);
+              })
+              .y(function (d, i) {
+                return ageGroupScale(data[i].label) + (ageGroupScale.bandwidth() / 2);
+              }));
+
+          // Add the points
+          svg
+            .append('g')
+            .selectAll('point')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('cx', (d) => {
+              return researchScale(d.value);
+            })
+            .attr('cy', (d) => {
+              return ageGroupScale(d.label) + (ageGroupScale.bandwidth() / 2);
+            })
+            .attr('fill', 'orange')
+            .attr('stroke', 'orange')
+            .attr('r', 2);
+
+          svg
+            .append('g')
+            .selectAll('text')
+            .data(data)
+            .enter()
+            .append('text')
+            .attr('x', (d) => researchScale(d.value) - 10)
+            .attr('y', (d) => ageGroupScale(d.label))
+            .attr('dy', '.35em')
+            .style('font', '12px times')
+            .attr('fill', 'orange')
+            .text((d) => d.value);
+
+          subscription.unsubscribe();
+        }
+
+        index++;
+
+      });
+
     });
 
   }

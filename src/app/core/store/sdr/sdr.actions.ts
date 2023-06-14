@@ -172,6 +172,7 @@ export class GetResearchAgeAction implements Action {
     query?: Queryable;
     filters?: Filterable[];
     dateField: string,
+    isMultivaluedField?: boolean,
     upperLimitInYears: number,
     groupingIntervalInYears: number
   }) { }

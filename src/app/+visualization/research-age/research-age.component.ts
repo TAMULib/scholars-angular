@@ -33,7 +33,6 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-
     this.researchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
       filter((ra: ResearchAge) => ra !== undefined),
@@ -56,9 +55,30 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
         }
       ],
       dateField: 'publicationDates',
+      isMultivaluedField: true,
       upperLimitInYears: 40,
       groupingIntervalInYears: 5
     }));
+
+    const subscription = this.researchAge.subscribe((data: any) => {
+      this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
+        query: {
+          expression: 'publicationDate:*'
+        },
+        filters: [
+          {
+            field: 'class',
+            value: 'Document OR type:creativeWork',
+            opKey: OpKey.EXPRESSION
+          }
+        ],
+        dateField: 'publicationDate',
+        upperLimitInYears: 40,
+        groupingIntervalInYears: 5
+      }));
+      subscription.unsubscribe();
+    });
+
   }
 
 }
