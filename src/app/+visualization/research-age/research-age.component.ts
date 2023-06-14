@@ -51,11 +51,11 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
         {
           field: 'class',
           value: 'Person',
-          opKey: OpKey.EXPRESSION
+          opKey: OpKey.EQUALS
         }
       ],
       dateField: 'publicationDates',
-      isMultivaluedField: true,
+      isMultivaluedField: false,
       upperLimitInYears: 40,
       groupingIntervalInYears: 5
     }));
@@ -63,16 +63,17 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
     const subscription = this.researchAge.subscribe((data: any) => {
       this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
         query: {
-          expression: 'publicationDate:*'
+          expression: 'publicationDates:*'
         },
         filters: [
           {
             field: 'class',
-            value: 'Document OR type:creativeWork',
-            opKey: OpKey.EXPRESSION
+            value: 'Person',
+            opKey: OpKey.EQUALS
           }
         ],
-        dateField: 'publicationDate',
+        dateField: 'publicationDates',
+        isMultivaluedField: true,
         upperLimitInYears: 40,
         groupingIntervalInYears: 5
       }));
