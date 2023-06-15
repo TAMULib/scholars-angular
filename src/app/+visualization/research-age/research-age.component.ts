@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, filter, map } from 'rxjs';
@@ -12,6 +12,17 @@ import { fadeIn } from '../../shared/utilities/animation.utility';
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import { BarplotInput } from '../barplot/barplot.component';
 
+const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
+  return {
+    label: researchAge.label,
+    labels: {
+      x: '',
+      y: ''
+    },
+    data: researchAge.groups
+  } as BarplotInput;
+}
+
 @Component({
   selector: 'scholars-research-age',
   templateUrl: './research-age.component.html',
@@ -19,6 +30,12 @@ import { BarplotInput } from '../barplot/barplot.component';
   animations: [fadeIn],
 })
 export class ResearchAgeComponent implements OnDestroy, OnInit {
+
+  @Input()
+  public upperLimitInYears = 40;
+
+  @Input()
+  public groupingIntervalInYears = 5;
 
   public researchAge: Observable<BarplotInput>;
 
@@ -31,41 +48,46 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    const rk = 'Researchers';
+    const pk = 'Publications';
+    const apk = 'Average publications';
     this.researchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
-      filter((ra: ResearchAge) => {
-        console.log(ra);
-        return ra !== undefined
-          && (
-            ra.label === 'Researchers'
-            || ra.label === 'Researcher Publications'
-          );
-      }),
-      map((ra: ResearchAge) => {
-        return {
-          data: ra.groups
-        } as BarplotInput;
-      })
+      filter((ra: ResearchAge) => ra !== undefined && ( ra.label === rk || ra.label === pk )),
+      map(researchAgeToBarplotInput)
     );
 
     this.averagePubRateResearchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
-      filter((ra: ResearchAge) => {
-        return ra !== undefined
-          && (
-            ra.label === 'Researchers'
-            || ra.label === 'Researcher Publications Average'
-          );
-      }),
-      map((ra: ResearchAge) => {
-        return {
-          data: ra.groups
-        } as BarplotInput;
-      })
+      filter((ra: ResearchAge) => ra !== undefined && ( ra.label === rk || ra.label === apk )),
+      map(researchAgeToBarplotInput)
     );
 
+    this.dispatch(rk, false, false);
+
+    const subscription = this.researchAge.subscribe((data: any) => {
+
+      setTimeout(() => {
+        this.dispatch(pk, true, false);
+      });
+
+      setTimeout(() => {
+        this.dispatch(apk, true, true);
+
+        subscription.unsubscribe();
+      }, 250);
+
+    });
+
+  }
+
+  private dispatch = (
+    label: string,
+    accumulateMultivaluedDate: boolean = false,
+    averageOverInterval: boolean = false,
+  ): void => {
     this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
-      label: 'Researchers',
+      label,
       query: {
         expression: 'publicationDates:*'
       },
@@ -77,60 +99,11 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
         }
       ],
       dateField: 'publicationDates',
-      accumulateMultivaluedDate: false,
-      averageOverInterval: false,
-      upperLimitInYears: 40,
-      groupingIntervalInYears: 5
+      accumulateMultivaluedDate,
+      averageOverInterval,
+      upperLimitInYears: this.upperLimitInYears,
+      groupingIntervalInYears: this.groupingIntervalInYears
     }));
-
-    const subscription = this.researchAge.subscribe((data: any) => {
-
-      setTimeout(() => {
-        this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
-          label: 'Researcher Publications',
-          query: {
-            expression: 'publicationDates:*'
-          },
-          filters: [
-            {
-              field: 'class',
-              value: 'Person',
-              opKey: OpKey.EQUALS
-            }
-          ],
-          dateField: 'publicationDates',
-          accumulateMultivaluedDate: true,
-          averageOverInterval: false,
-          upperLimitInYears: 40,
-          groupingIntervalInYears: 5
-        }));
-      });
-
-      setTimeout(() => {
-        this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
-          label: 'Researcher Publications Average',
-          query: {
-            expression: 'publicationDates:*'
-          },
-          filters: [
-            {
-              field: 'class',
-              value: 'Person',
-              opKey: OpKey.EQUALS
-            }
-          ],
-          dateField: 'publicationDates',
-          accumulateMultivaluedDate: true,
-          averageOverInterval: true,
-          upperLimitInYears: 40,
-          groupingIntervalInYears: 5
-        }));
-
-        subscription.unsubscribe();
-      }, 250);
-      
-    });
-
   }
 
 }
