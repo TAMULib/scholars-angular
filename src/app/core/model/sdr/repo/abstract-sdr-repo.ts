@@ -60,11 +60,11 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     query: Queryable,
     filters: Filterable[],
     dateField: string,
-    accumulateMinAge: boolean = false,
+    accumulateMultivaluedDate: boolean = false,
     upperLimitInYears: number,
     groupingIntervalInYears: number
     ): Observable<ResearchAge> {
-    return this.restService.get<ResearchAge>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/researchAge${this.mapParameters({query, filters})}&dateField=${dateField}&accumulateMinAge=${accumulateMinAge}&upperLimitInYears=${upperLimitInYears}&groupingIntervalInYears=${groupingIntervalInYears}`);
+    return this.restService.get<ResearchAge>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/researchAge${this.mapParameters({query, filters})}&dateField=${dateField}&accumulateMultivaluedDate=${accumulateMultivaluedDate}&upperLimitInYears=${upperLimitInYears}&groupingIntervalInYears=${groupingIntervalInYears}`);
   }
 
   public findByIdIn(ids: string[]): Observable<SdrCollection> {

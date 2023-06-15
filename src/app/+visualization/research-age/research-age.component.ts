@@ -55,7 +55,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
         }
       ],
       dateField: 'publicationDates',
-      accumulateMinAge: false,
+      accumulateMultivaluedDate: false,
       upperLimitInYears: 40,
       groupingIntervalInYears: 5
     }));
@@ -73,7 +73,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
           }
         ],
         dateField: 'publicationDates',
-        accumulateMinAge: true,
+        accumulateMultivaluedDate: true,
         upperLimitInYears: 40,
         groupingIntervalInYears: 5
       }));
