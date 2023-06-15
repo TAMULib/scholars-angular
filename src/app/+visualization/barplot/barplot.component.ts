@@ -5,9 +5,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import * as d3 from 'd3';
 
-import { id } from '../../shared/utilities/id.utility';
 import { Observable } from 'rxjs';
-import { Datum, ResearchAge } from '../../core/store/sdr/sdr.reducer';
+import { Datum } from '../../core/store/sdr/sdr.reducer';
+import { id } from '../../shared/utilities/id.utility';
 
 export interface BarplotInput {
   labels: {

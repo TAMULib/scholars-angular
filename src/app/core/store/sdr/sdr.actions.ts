@@ -174,6 +174,7 @@ export class GetResearchAgeAction implements Action {
     filters?: Filterable[];
     dateField: string,
     accumulateMultivaluedDate?: boolean,
+    averageOverInterval?: boolean,
     upperLimitInYears: number,
     groupingIntervalInYears: number
   }) { }
