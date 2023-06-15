@@ -10,10 +10,7 @@ import { Datum } from '../../core/store/sdr/sdr.reducer';
 import { id } from '../../shared/utilities/id.utility';
 
 export interface BarplotInput {
-  labels: {
-    x: string;
-    y: string;
-  },
+  label: string;
   data: Datum[],
 }
 
@@ -54,7 +51,7 @@ export class BarplotComponent implements OnInit {
       const margin = {
         top: 100,
         bottom: 100,
-        left: 70,
+        left: 100,
         right: 50,
       };
 
@@ -125,6 +122,24 @@ export class BarplotComponent implements OnInit {
             .attr('fill', 'steelblue')
             .text((d) => d.value);
 
+          svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -(height / 2))
+            .attr("y", -margin.left)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style('font', '12px times')
+            .text("Academic age group");
+
+          svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + (margin.top / 4) + 4)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style('font', '12px times')
+            .attr('fill', 'steelblue')
+            .text(input.label);
+
         } else {
 
           const max = d3.max(data.map((d: any) => d.value));
@@ -185,6 +200,15 @@ export class BarplotComponent implements OnInit {
             .style('font', '12px times')
             .attr('fill', 'orange')
             .text((d) => d.value);
+
+          svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -(margin.top / 3) - 6)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style('font', '12px times')
+            .attr('fill', 'orange')
+            .text(input.label);
 
           subscription.unsubscribe();
         }

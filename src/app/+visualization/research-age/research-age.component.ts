@@ -15,10 +15,6 @@ import { BarplotInput } from '../barplot/barplot.component';
 const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
   return {
     label: researchAge.label,
-    labels: {
-      x: '',
-      y: ''
-    },
     data: researchAge.groups
   } as BarplotInput;
 }
