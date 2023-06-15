@@ -117,26 +117,26 @@ export class BarplotComponent implements OnInit {
           bar.append('text')
             .attr('x', (d) => researcherScale(d.value) + 5)
             .attr('y', (d) => ageGroupScale(d.label) + (ageGroupScale.bandwidth() / 2))
-            .attr('dy', '.35em')
-            .style('font', '12px times')
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
             .attr('fill', 'steelblue')
             .text((d) => d.value);
 
           svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("x", -(height / 2))
-            .attr("y", -margin.left)
-            .attr("dy", "1em")
+            .attr("y", -margin.left + 10)
             .style("text-anchor", "middle")
-            .style('font', '12px times')
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
             .text("Academic age group");
 
           svg.append("text")
             .attr("x", width / 2)
-            .attr("y", height + (margin.top / 4) + 4)
-            .attr("dy", "1em")
+            .attr("y", height + (margin.top / 2))
             .style("text-anchor", "middle")
-            .style('font', '12px times')
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
             .attr('fill', 'steelblue')
             .text(input.label);
 
@@ -162,7 +162,7 @@ export class BarplotComponent implements OnInit {
             .datum(data)
             .attr('fill', 'none')
             .attr('stroke', 'orange')
-            .attr('stroke-width', 1.5)
+            .attr('stroke-width', 1.25)
             .attr('d', d3.line()
               .x(function (d, i) {
                 return researchScale(data[i].value);
@@ -196,17 +196,17 @@ export class BarplotComponent implements OnInit {
             .append('text')
             .attr('x', (d) => researchScale(d.value) - 10)
             .attr('y', (d) => ageGroupScale(d.label))
-            .attr('dy', '.35em')
-            .style('font', '12px times')
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
             .attr('fill', 'orange')
             .text((d) => d.value);
 
           svg.append("text")
             .attr("x", width / 2)
-            .attr("y", -(margin.top / 3) - 6)
-            .attr("dy", "1em")
+            .attr("y", -(margin.top/3))
             .style("text-anchor", "middle")
-            .style('font', '12px times')
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
             .attr('fill', 'orange')
             .text(input.label);
 
