@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, Subject, filter, map, tap } from 'rxjs';
 
 import { OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
@@ -33,11 +33,18 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   @Input()
   public groupingIntervalInYears = 5;
 
+  public mean: Subject<number>;
+
+  public median: Subject<number>;
+
   public researchAge: Observable<BarplotInput>;
 
   public averagePubRateResearchAge: Observable<BarplotInput>;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+    this.mean = new Subject<number>();
+    this.median = new Subject<number>();
+  }
 
   ngOnDestroy() {
     this.store.dispatch(new fromSdr.ClearResourcesAction('individual'));
@@ -50,6 +57,12 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
     this.researchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
       filter((ra: ResearchAge) => ra !== undefined && ( ra.label === rk || ra.label === pk )),
+      tap((ra: ResearchAge) => {
+        if (ra.label === rk) {
+          this.mean.next(ra.mean);
+          this.median.next(ra.median);
+        }
+      }),
       map(researchAgeToBarplotInput)
     );
 
@@ -65,13 +78,13 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
       setTimeout(() => {
         this.dispatch(pk, true, false);
-      });
+      }, 250);
 
       setTimeout(() => {
         this.dispatch(apk, true, true);
 
         subscription.unsubscribe();
-      }, 250);
+      }, 500);
 
     });
 

@@ -4,7 +4,7 @@
       <div class="card shadow bg-white rounded m-1">
         <div class="card-body">
           <div class="card-text">
-            <div class="text-center h2">9.8</div>
+            <div class="text-center h2">{{mean | async}}</div>
             <div class="text-center">Average academic age of affiliated researchers 🛈</div>
           </div>
         </div>
@@ -20,7 +20,7 @@
       <div class="card shadow bg-white rounded m-1">
         <div class="card-body">
           <div class="card-text">
-            <div class="text-center h2">5</div>
+            <div class="text-center h2">{{median | async}}</div>
             <div class="text-center">Median academic age of affiliated researchers 🛈</div>
           </div>
         </div>

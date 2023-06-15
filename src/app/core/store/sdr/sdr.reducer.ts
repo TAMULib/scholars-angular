@@ -31,7 +31,9 @@ export interface ResearchAge {
   label: string;
   dateField: string;
   ranges: Map<string, string>;
-  groups: Datum[]
+  groups: Datum[],
+  mean: number;
+  median: number;
 }
 
 export interface SdrState<R extends SdrResource> extends EntityState<R> {
