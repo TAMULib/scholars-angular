@@ -27,6 +27,8 @@ export class BarplotComponent implements OnInit {
   @Input() height = 586;
   @Input() width = 396;
 
+  @Input() maxOverride: number;
+
   @Input() input: Observable<BarplotInput>;
 
   public id: string;
@@ -66,7 +68,7 @@ export class BarplotComponent implements OnInit {
         const data = [...input.data].reverse();
 
         if (index === 0) {
-          const max = d3.max(data.map((d: any) => d.value));
+          const max = this.maxOverride ? this.maxOverride : d3.max(data.map((d: any) => d.value));
 
           // append the svg object to the body of the page
           svg = d3.select(`#${this.id}`)
