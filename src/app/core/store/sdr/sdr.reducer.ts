@@ -28,6 +28,7 @@ export interface Datum {
 }
 
 export interface ResearchAge {
+  label: string;
   dateField: string;
   ranges: Map<string, string>;
   groups: Datum[]

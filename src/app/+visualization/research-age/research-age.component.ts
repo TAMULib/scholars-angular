@@ -37,6 +37,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
       select(selectResourcesResearchAge('individual')),
       filter((ra: ResearchAge) => ra !== undefined),
       map((ra: ResearchAge) => {
+        console.log(ra);
         return {
           data: ra.groups
         } as BarplotInput;
@@ -44,6 +45,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
     );
 
     this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
+      label: 'Researchers',
       query: {
         expression: 'publicationDates:*'
       },
@@ -62,6 +64,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
     const subscription = this.researchAge.subscribe((data: any) => {
       this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
+        label: 'Researcher Publications',
         query: {
           expression: 'publicationDates:*'
         },

@@ -169,6 +169,7 @@ export class GetNetworkFailureAction implements Action {
 export class GetResearchAgeAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.GET_RESEARCH_AGE, this.name);
   constructor(public name: string, public payload: {
+    label: string;
     query?: Queryable;
     filters?: Filterable[];
     dateField: string,

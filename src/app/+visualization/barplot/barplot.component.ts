@@ -63,9 +63,9 @@ export class BarplotComponent implements OnInit {
 
       const subscription = this.input.subscribe((input: BarplotInput) => {
 
-        if (index === 0) {
-          const data = input.data.reverse();
+        const data = [...input.data].reverse();
 
+        if (index === 0) {
           const max = d3.max(data.map((d: any) => d.value));
 
           // append the svg object to the body of the page
@@ -124,7 +124,6 @@ export class BarplotComponent implements OnInit {
             .text((d) => d.value);
 
         } else {
-          const data = input.data.reverse();
 
           const max = d3.max(data.map((d: any) => d.value));
 
