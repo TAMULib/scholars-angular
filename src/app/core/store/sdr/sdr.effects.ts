@@ -171,7 +171,7 @@ export class SdrEffects {
     switchMap((action: fromSdr.GetResearchAgeAction) =>
       this.repos
         .get(action.name)
-        .getResearchAge(action.payload.query, action.payload.filters, action.payload.dateField, action.payload.isMultivaluedField, action.payload.upperLimitInYears, action.payload.groupingIntervalInYears)
+        .getResearchAge(action.payload.query, action.payload.filters, action.payload.dateField, action.payload.accumulateMinAge, action.payload.upperLimitInYears, action.payload.groupingIntervalInYears)
         .pipe(
           map((researchAge: ResearchAge) => new fromSdr.GetResearchAgeSuccessAction(action.name, { researchAge })),
           catchError((response) =>
