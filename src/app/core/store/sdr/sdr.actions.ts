@@ -152,13 +152,13 @@ export class GetNetworkAction implements Action {
     id: string | number,
     dateField: string,
     dataFields: string[],
-    typeFilter: string
+    typeFilter: string,
   }) { }
 }
 
 export class GetNetworkSuccessAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.GET_NETWORK_SUCCESS, this.name);
-  constructor(public name: string, public payload: any) { }
+  constructor(public name: string, public payload: any, public actions: Array<Action> = []) { }
 }
 
 export class GetNetworkFailureAction implements Action {
@@ -176,7 +176,8 @@ export class GetResearchAgeAction implements Action {
     accumulateMultivaluedDate?: boolean,
     averageOverInterval?: boolean,
     upperLimitInYears: number,
-    groupingIntervalInYears: number
+    groupingIntervalInYears: number,
+    queue: Array<Action>,
   }) { }
 }
 

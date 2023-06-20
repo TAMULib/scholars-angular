@@ -72,23 +72,47 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
       map(researchAgeToBarplotInput)
     );
 
-    this.dispatch(rk, false, false);
+    this.store.dispatch(
+      // dispatch initial request for stats and base distribution and chain the following
+      this.build(rk, false, false, [ // placed in both svg via means of above conditions *includes observable on mean and median
+        // dispatch request accumulating multivalued field
+        // i.e. Σ(person number of publications) λ with ranged age grouping 
+        this.build(pk, true, false, [
+          // dispatch request accumulating multivalued field averaging each grouping
+          this.build(apk, true, true, [
 
-    const subscription = this.researchAge.subscribe((data: any) => {
-
-      setTimeout(() => {
-        this.dispatch(pk, true, false);
-      }, 250);
-
-      setTimeout(() => {
-        this.dispatch(apk, true, true);
-
-        subscription.unsubscribe();
-      }, 500);
-
-    });
-
+          ])
+        ]),
+      ]));
   }
+
+  private build = (
+      label: string,
+      accumulateMultivaluedDate: boolean = false,
+      averageOverInterval: boolean = false,
+      queue: fromSdr.GetResearchAgeAction[] = []
+  ): fromSdr.GetResearchAgeAction => {
+    // throttle somewhere
+    return new fromSdr.GetResearchAgeAction('individual', {
+      label,
+      query: {
+        expression: 'publicationDates:*'
+      },
+      filters: [
+        {
+          field: 'class',
+          value: 'Person',
+          opKey: OpKey.EQUALS
+        }
+      ],
+      dateField: 'publicationDates',
+      accumulateMultivaluedDate,
+      averageOverInterval,
+      upperLimitInYears: this.upperLimitInYears,
+      groupingIntervalInYears: this.groupingIntervalInYears,
+      queue,
+    });
+  };
 
   private dispatch = (
     label: string,
@@ -111,7 +135,8 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
       accumulateMultivaluedDate,
       averageOverInterval,
       upperLimitInYears: this.upperLimitInYears,
-      groupingIntervalInYears: this.groupingIntervalInYears
+      groupingIntervalInYears: this.groupingIntervalInYears,
+      queue: []
     }));
   }
 
