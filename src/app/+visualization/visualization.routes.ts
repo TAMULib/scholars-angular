@@ -21,8 +21,6 @@ export const individualResolver: ResolveFn<Individual> = (
 
   const id = route.params.id;
 
-  console.log(id);
-
   store.dispatch(new fromSdr.GetOneResourceAction('individual', { id }));
 
   return store.pipe(
