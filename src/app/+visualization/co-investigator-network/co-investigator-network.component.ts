@@ -31,25 +31,27 @@ export class CoInvestigatorNetworkComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.route.parent.data.subscribe(data => {
-      if (data.document && data.document.id) {
-        const id = data.document.id;
-        this.document = this.store.pipe(
-          select(selectResourceById('individual', id)),
-          filter((document: SolrDocument) => document !== undefined)
-        );
-        this.dataNetwork = this.store.pipe(
-          select(selectResourcesDataNetwork('individual')),
-          filter((document: DataNetwork) => document !== undefined),
-        );
-        this.store.dispatch(new fromSdr.GetNetworkAction('individual', {
-          id,
-          dateField: 'dateTimeIntervalStart',
-          dataFields: ['contributors'],
-          typeFilter: 'class:Relationship AND type:Grant'
-        }));
-      }
-    });
+    if (this.route.parent && this.route.parent.data) {
+      this.route.parent.data.subscribe(data => {
+        if (data.document && data.document.id) {
+          const id = data.document.id;
+          this.document = this.store.pipe(
+            select(selectResourceById('individual', id)),
+            filter((document: SolrDocument) => document !== undefined)
+          );
+          this.dataNetwork = this.store.pipe(
+            select(selectResourcesDataNetwork('individual')),
+            filter((document: DataNetwork) => document !== undefined),
+          );
+          this.store.dispatch(new fromSdr.GetNetworkAction('individual', {
+            id,
+            dateField: 'dateTimeIntervalStart',
+            dataFields: ['contributors'],
+            typeFilter: 'class:Relationship AND type:Grant'
+          }));
+        }
+      });
+    }
   }
 
   asIsOrder(): number {

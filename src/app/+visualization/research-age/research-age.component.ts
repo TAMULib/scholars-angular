@@ -58,55 +58,57 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.document = this.route.parent.data.pipe(map(data => data.document));
+    if (this.route.parent && this.route.parent.data) {
+      this.document = this.route.parent.data.pipe(map(data => data.document));
 
-    this.route.parent.data.subscribe(data => {
-      const document = data.document;
+      this.route.parent.data.subscribe(data => {
+        const document = data.document;
 
-      const additionalFilters = [];
+        const additionalFilters = [];
 
-      if (document.id === 'n5d3837d6') {
-        this.maxOverride.next(3000);
-      }
+        if (document.id === 'n5d3837d6') {
+          this.maxOverride.next(3000);
+        }
 
-      if (document.id !== 'n5d3837d6' && !!document.name) {
-        additionalFilters.push({
-          field: 'positionOrganization',
-          value: document.name,
-          opKey: OpKey.EQUALS
-        });
-      }
+        if (document.id !== 'n5d3837d6' && !!document.name) {
+          additionalFilters.push({
+            field: 'positionOrganization',
+            value: document.name,
+            opKey: OpKey.EQUALS
+          });
+        }
 
-      const rk = 'Researchers';
-      const pk = 'Publications';
-      const apk = 'Average publications';
+        const rk = 'Researchers';
+        const pk = 'Publications';
+        const apk = 'Average publications';
 
-      this.researchAge = this.store.pipe(
-        select(selectResourcesResearchAge('individual')),
-        filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
-        tap((ra: ResearchAge) => {
-          if (ra.label === rk) {
-            this.mean.next(ra.mean);
-            this.median.next(ra.median);
-          }
-        }),
-        map(researchAgeToBarplotInput)
-      );
+        this.researchAge = this.store.pipe(
+          select(selectResourcesResearchAge('individual')),
+          filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
+          tap((ra: ResearchAge) => {
+            if (ra.label === rk) {
+              this.mean.next(ra.mean);
+              this.median.next(ra.median);
+            }
+          }),
+          map(researchAgeToBarplotInput)
+        );
 
-      this.averagePubRateResearchAge = this.store.pipe(
-        select(selectResourcesResearchAge('individual')),
-        filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
-        map(researchAgeToBarplotInput)
-      );
+        this.averagePubRateResearchAge = this.store.pipe(
+          select(selectResourcesResearchAge('individual')),
+          filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
+          map(researchAgeToBarplotInput)
+        );
 
-      this.store.dispatch(
-        this.build(rk, false, false, additionalFilters, [
-          this.build(pk, true, false, additionalFilters, [
-            this.build(apk, true, true, additionalFilters)
-          ])
-        ]));
+        this.store.dispatch(
+          this.build(rk, false, false, additionalFilters, [
+            this.build(pk, true, false, additionalFilters, [
+              this.build(apk, true, true, additionalFilters)
+            ])
+          ]));
 
-    });
+      });
+    }
   }
 
   private build = (

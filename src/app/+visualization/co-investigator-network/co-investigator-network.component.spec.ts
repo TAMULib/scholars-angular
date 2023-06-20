@@ -15,7 +15,8 @@ import { metaReducers, reducers } from '../../core/store';
 import { routes } from '../visualization.routes';
 
 import { testAppConfig } from '../../../test.config';
-import { APP_CONFIG } from 'src/app/app.config';
+import { APP_CONFIG } from '../../app.config';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CoInvestigatorNetworkComponent', () => {
   let component: CoInvestigatorNetworkComponent;
@@ -35,6 +36,7 @@ describe('CoInvestigatorNetworkComponent', () => {
           },
         }),
         RouterTestingModule.withRoutes(routes[0].children),
+        TranslateModule.forRoot(),
       ],
       providers: [
         { provide: APP_CONFIG, useValue: testAppConfig },
@@ -43,9 +45,11 @@ describe('CoInvestigatorNetworkComponent', () => {
           useValue: {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
+              data: scheduled([{ document: { id: 'test', name: 'Test' } }], queueScheduler)
             },
           },
         },
+        TranslateService
       ],
     }).compileComponents();
   }));

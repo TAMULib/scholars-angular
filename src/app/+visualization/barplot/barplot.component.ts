@@ -44,7 +44,6 @@ export class BarplotComponent implements OnInit {
     }
 
     setTimeout(() => {
-
       let index = 0;
 
       // set the dimensions and margins of the graph
@@ -214,11 +213,8 @@ export class BarplotComponent implements OnInit {
         }
 
         index++;
-
       });
-
     });
-
   }
 
 }

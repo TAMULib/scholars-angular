@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
 import { VisualizationModule } from '../visualization.module';
+import { routes } from '../visualization.routes';
 import { ChordDiagramComponent } from './chord-diagram.component';
 
 describe('ChordDiagramComponent', () => {
@@ -11,8 +16,18 @@ describe('ChordDiagramComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        StoreModule.forRoot(reducers(testAppConfig), {
+          metaReducers,
+          runtimeChecks: {
+            strictStateImmutability: false,
+            strictActionImmutability: false,
+            strictStateSerializability: false,
+            strictActionSerializability: false,
+          },
+        }),
         TranslateModule.forRoot(),
-        VisualizationModule
+        RouterTestingModule.withRoutes(routes),
+        VisualizationModule,
       ],
       providers: [
         TranslateService

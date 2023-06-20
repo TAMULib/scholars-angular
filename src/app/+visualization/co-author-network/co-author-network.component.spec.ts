@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { queueScheduler, scheduled } from 'rxjs';
 
 import { testAppConfig } from '../../../test.config';
@@ -19,7 +20,6 @@ describe('CoAuthorNetworkComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        VisualizationModule,
         StoreModule.forRoot(reducers(testAppConfig), {
           metaReducers,
           runtimeChecks: {
@@ -29,7 +29,9 @@ describe('CoAuthorNetworkComponent', () => {
             strictActionSerializability: false,
           },
         }),
-        RouterTestingModule.withRoutes(routes[0].children),
+        TranslateModule.forRoot(),
+        RouterTestingModule.withRoutes(routes),
+        VisualizationModule,
       ],
       providers: [
         { provide: APP_CONFIG, useValue: testAppConfig },
@@ -38,9 +40,11 @@ describe('CoAuthorNetworkComponent', () => {
           useValue: {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
+              data: scheduled([{ document: { id: 'test', name: 'Test' } }], queueScheduler)
             },
           },
         },
+        TranslateService
       ],
     }).compileComponents();
   }));
