@@ -7,20 +7,6 @@ import { ResearchAgeComponent } from './research-age/research-age.component';
 
 export const routes: Routes = [
   {
-    path: 'unknown',
-    component: VisualizationComponent,
-    children: [
-      {
-        path: 'Research Age',
-        component: ResearchAgeComponent,
-        data: {
-          tags: [{ name: 'view', content: 'Histogram Scatter Plot Side by Side Semantic Zoom' }],
-        },
-      },
-      { path: '**', redirectTo: 'Research Age' },
-    ],
-  },
-  {
     path: ':id',
     component: VisualizationComponent,
     children: [
@@ -38,7 +24,15 @@ export const routes: Routes = [
           tags: [{ name: 'view', content: 'Scholars Co-investigator Network' }],
         },
       },
-      { path: '**', redirectTo: 'Co-author Network' },
+      {
+        path: 'Research Age',
+        component: ResearchAgeComponent,
+        data: {
+          tags: [{ name: 'view', content: 'Organizational Research Age' }],
+        },
+      },
+      { path: '**', redirectTo: 'Research Age' },
     ],
   },
+  { path: '**', redirectTo: 'n5d3837d6/Research Age' },
 ];
