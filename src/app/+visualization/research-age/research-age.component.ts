@@ -57,7 +57,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
     const apk = 'Average publications';
     this.researchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
-      filter((ra: ResearchAge) => ra !== undefined && ( ra.label === rk || ra.label === pk )),
+      filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
       tap((ra: ResearchAge) => {
         if (ra.label === rk) {
           this.mean.next(ra.mean);
@@ -69,7 +69,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
     this.averagePubRateResearchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
-      filter((ra: ResearchAge) => ra !== undefined && ( ra.label === rk || ra.label === apk )),
+      filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
       map(researchAgeToBarplotInput)
     );
 
@@ -88,31 +88,28 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   private build = (
-      label: string,
-      accumulateMultivaluedDate: boolean = false,
-      averageOverInterval: boolean = false,
-      queue: fromSdr.GetResearchAgeAction[] = []
-  ): fromSdr.GetResearchAgeAction => {
-    // throttle somewhere
-    return new fromSdr.GetResearchAgeAction('individual', {
-      label,
-      query: {
-        expression: 'publicationDates:*'
-      },
-      filters: [
-        {
-          field: 'class',
-          value: 'Person',
-          opKey: OpKey.EQUALS
-        }
-      ],
-      dateField: 'publicationDates',
-      accumulateMultivaluedDate,
-      averageOverInterval,
-      upperLimitInYears: this.upperLimitInYears,
-      groupingIntervalInYears: this.groupingIntervalInYears,
-      queue,
-    });
-  };
+    label: string,
+    accumulateMultivaluedDate: boolean = false,
+    averageOverInterval: boolean = false,
+    queue: fromSdr.GetResearchAgeAction[] = []
+  ): fromSdr.GetResearchAgeAction => new fromSdr.GetResearchAgeAction('individual', {
+    label,
+    query: {
+      expression: 'publicationDates:*'
+    },
+    filters: [
+      {
+        field: 'class',
+        value: 'Person',
+        opKey: OpKey.EQUALS
+      }
+    ],
+    dateField: 'publicationDates',
+    accumulateMultivaluedDate,
+    averageOverInterval,
+    upperLimitInYears: this.upperLimitInYears,
+    groupingIntervalInYears: this.groupingIntervalInYears,
+    queue,
+  });
 
 }
