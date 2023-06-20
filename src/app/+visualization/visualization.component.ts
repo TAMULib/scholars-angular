@@ -27,7 +27,7 @@ export class VisualizationComponent implements OnInit {
   ngOnInit() {
     this.document = this.route.data.pipe(map(data => data.document));
 
-    this.route.parent.data.subscribe(data => {
+    this.route.data.subscribe(data => {
       if (data.document && data.document.id) {
         // on first defined document, get discovery view
         this.discoveryView = this.store.pipe(
