@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { filter, Observable, switchMap, take } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Store, select } from '@ngrx/store';
+import { Observable, filter, map, switchMap, take } from 'rxjs';
+
 import { SolrDocument } from '../core/model/discovery';
 import { DiscoveryView } from '../core/model/view';
 import { AppState } from '../core/store';
-
 import { selectDiscoveryViewByClass, selectResourceById } from '../core/store/sdr';
 import { fadeIn } from '../shared/utilities/animation.utility';
-
-import * as fromSdr from '../core/store/sdr/sdr.actions';
 
 @Component({
   selector: 'scholars-visualization',
@@ -27,20 +25,13 @@ export class VisualizationComponent implements OnInit {
   constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.params.pipe(take(1)).subscribe((params: Params) => {
-      if (params.id) {
+    this.document = this.route.data.pipe(map(data => data.document));
 
-        this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: params.id }));
-
-        // listen to document changes
-        this.document = this.store.pipe(
-          select(selectResourceById('individual', params.id)),
-          filter((document: SolrDocument) => document !== undefined)
-        );
-
+    this.route.parent.data.subscribe(data => {
+      if (data.document && data.document.id) {
         // on first defined document, get discovery view
         this.discoveryView = this.store.pipe(
-          select(selectResourceById('individual', params.id)),
+          select(selectResourceById('individual', data.document.id)),
           filter((document: SolrDocument) => document !== undefined),
           take(1),
           switchMap((document: SolrDocument) => {

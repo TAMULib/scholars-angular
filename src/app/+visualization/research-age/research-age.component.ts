@@ -1,17 +1,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable, Subject, filter, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, filter, map, take, tap } from 'rxjs';
 
+import { SolrDocument } from '../../core/model/discovery';
+import { Filterable } from '../../core/model/request';
 import { OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
-import { selectResourcesResearchAge } from '../../core/store/sdr';
+import { selectResourceById, selectResourcesResearchAge } from '../../core/store/sdr';
 import { ResearchAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotInput } from '../barplot/barplot.component';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
-
 
 const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
   return {
@@ -34,6 +35,8 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   @Input()
   public groupingIntervalInYears = 5;
 
+  public maxOverride: Subject<number>;
+
   public mean: Subject<number>;
 
   public median: Subject<number>;
@@ -42,7 +45,10 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
   public averagePubRateResearchAge: Observable<BarplotInput>;
 
+  public document: Observable<SolrDocument>;
+
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+    this.maxOverride = new BehaviorSubject<number>(undefined);
     this.mean = new Subject<number>();
     this.median = new Subject<number>();
   }
@@ -52,45 +58,62 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    const rk = 'Researchers';
-    const pk = 'Publications';
-    const apk = 'Average publications';
-    this.researchAge = this.store.pipe(
-      select(selectResourcesResearchAge('individual')),
-      filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
-      tap((ra: ResearchAge) => {
-        if (ra.label === rk) {
-          this.mean.next(ra.mean);
-          this.median.next(ra.median);
-        }
-      }),
-      map(researchAgeToBarplotInput)
-    );
+    this.document = this.route.parent.data.pipe(map(data => data.document));
 
-    this.averagePubRateResearchAge = this.store.pipe(
-      select(selectResourcesResearchAge('individual')),
-      filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
-      map(researchAgeToBarplotInput)
-    );
+    this.route.parent.data.subscribe(data => {
+      const document = data.document;
 
-    this.store.dispatch(
-      // dispatch initial request for stats and base distribution and chain the following
-      this.build(rk, false, false, [ // placed in both svg via means of above conditions *includes observable on mean and median
-        // dispatch request accumulating multivalued field
-        // i.e. Σ(person number of publications) λ with ranged age grouping 
-        this.build(pk, true, false, [
-          // dispatch request accumulating multivalued field averaging each grouping
-          this.build(apk, true, true, [
+      const additionalFilters = [];
 
+      if (document.id === 'n5d3837d6') {
+        this.maxOverride.next(3000);
+      }
+
+      if (document.id !== 'n5d3837d6' && !!document.name) {
+        additionalFilters.push({
+          field: 'positionOrganization',
+          value: document.name,
+          opKey: OpKey.EQUALS
+        });
+      }
+
+      const rk = 'Researchers';
+      const pk = 'Publications';
+      const apk = 'Average publications';
+
+      this.researchAge = this.store.pipe(
+        select(selectResourcesResearchAge('individual')),
+        filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
+        tap((ra: ResearchAge) => {
+          if (ra.label === rk) {
+            this.mean.next(ra.mean);
+            this.median.next(ra.median);
+          }
+        }),
+        map(researchAgeToBarplotInput)
+      );
+
+      this.averagePubRateResearchAge = this.store.pipe(
+        select(selectResourcesResearchAge('individual')),
+        filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
+        map(researchAgeToBarplotInput)
+      );
+
+      this.store.dispatch(
+        this.build(rk, false, false, additionalFilters, [
+          this.build(pk, true, false, additionalFilters, [
+            this.build(apk, true, true, additionalFilters)
           ])
-        ]),
-      ]));
+        ]));
+
+    });
   }
 
   private build = (
     label: string,
     accumulateMultivaluedDate: boolean = false,
     averageOverInterval: boolean = false,
+    additionalFilters: Filterable[] = [],
     queue: fromSdr.GetResearchAgeAction[] = []
   ): fromSdr.GetResearchAgeAction => new fromSdr.GetResearchAgeAction('individual', {
     label,
@@ -98,6 +121,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
       expression: 'publicationDates:*'
     },
     filters: [
+      ...additionalFilters,
       {
         field: 'class',
         value: 'Person',
