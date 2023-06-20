@@ -194,7 +194,7 @@ export class SdrEffects {
     // switchMap((action: fromSdr.GetResearchAgeSuccessAction) => this.waitForStompConnection(action.name)),
     // withLatestFrom(this.store.pipe(select(selectStompState))),
     map((action: fromSdr.GetResearchAgeSuccessAction) => {
-      if (action.payload.queue) {
+      if (action.payload.queue.length > 0) {
         this.store.dispatch(action.payload.queue.pop());
       }
     })
