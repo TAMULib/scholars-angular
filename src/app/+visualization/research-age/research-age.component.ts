@@ -8,9 +8,10 @@ import { AppState } from '../../core/store';
 import { selectResourcesResearchAge } from '../../core/store/sdr';
 import { ResearchAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
+import { BarplotInput } from '../barplot/barplot.component';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
-import { BarplotInput } from '../barplot/barplot.component';
+
 
 const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
   return {
@@ -113,31 +114,5 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
       queue,
     });
   };
-
-  private dispatch = (
-    label: string,
-    accumulateMultivaluedDate: boolean = false,
-    averageOverInterval: boolean = false,
-  ): void => {
-    this.store.dispatch(new fromSdr.GetResearchAgeAction('individual', {
-      label,
-      query: {
-        expression: 'publicationDates:*'
-      },
-      filters: [
-        {
-          field: 'class',
-          value: 'Person',
-          opKey: OpKey.EQUALS
-        }
-      ],
-      dateField: 'publicationDates',
-      accumulateMultivaluedDate,
-      averageOverInterval,
-      upperLimitInYears: this.upperLimitInYears,
-      groupingIntervalInYears: this.groupingIntervalInYears,
-      queue: []
-    }));
-  }
 
 }
