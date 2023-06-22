@@ -1,17 +1,16 @@
-import { isPlatformServer, isPlatformBrowser } from '@angular/common';
-import { Component, ViewChild, ElementRef, AfterViewInit, HostListener, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription, interval } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
-
-import { OpKey } from '../../core/model/view';
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
-import { fadeIn } from '../utilities/animation.utility';
-
+import { OpKey } from '../../core/model/view';
+import { AppState } from '../../core/store';
 import { selectResourcesRecentlyUpdated } from '../../core/store/sdr';
+import { fadeIn } from '../utilities/animation.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
@@ -42,7 +41,12 @@ export class RecentCarouselComponent implements AfterViewInit, OnInit, OnDestroy
 
   private subscriptions: Subscription[];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: string, private store: Store<AppState>, private translate: TranslateService) {
+  constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
+    @Inject(PLATFORM_ID) private platformId: string,
+    private store: Store<AppState>,
+    private translate: TranslateService
+  ) {
     this.items = new BehaviorSubject<ScrollItem[]>([]);
     this.subscriptions = [];
   }
@@ -58,7 +62,7 @@ export class RecentCarouselComponent implements AfterViewInit, OnInit, OnDestroy
           individuals.map((individual: Individual) => {
             return {
               // tslint:disable: no-string-literal
-              src: individual['thumbnail'] ? individual['thumbnail'] : 'assets/images/default-avatar.png',
+              src: individual['thumbnail'] ? `${this.appConfig.serviceUrl}${individual['thumbnail']}` : 'assets/images/default-avatar.png',
               link: [`display/${individual['id']}`],
               alt: individual['firstName'] ? individual['firstName'] + (individual['lastName'] ? ' ' + individual['lastName'] : '') : this.translate.instant('SHARED.RECENT_PUBLICATIONS.PERSON_IMAGE_ALT_FALLBACK'),
               modTime: individual['modTime'] ? individual['modTime'] : '',
