@@ -11,6 +11,7 @@ import { selectResourceById } from '../core/store/sdr';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
 import { ResearchAgeComponent } from './research-age/research-age.component';
+import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
 import { VisualizationComponent } from './visualization.component';
 
 import * as fromSdr from '../core/store/sdr/sdr.actions';
@@ -54,9 +55,17 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'Quantity Distribution',
+        component: QuantityDistributionComponent,
+        canActivate: [],
+        data: {
+          tags: [{ name: 'view', content: 'Quantity Distribution' }],
+        },
+      },
+      {
         path: 'Research Age',
         component: ResearchAgeComponent,
-        canActivate: [AuthGuard],
+        canActivate: [],
         data: {
           roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
           tags: [{ name: 'view', content: 'Organizational Research Age' }],

@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subject, filter, map, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, filter, map, tap } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
 import { OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
-import { selectResourceById, selectResourcesResearchAge } from '../../core/store/sdr';
+import { selectResourcesResearchAge } from '../../core/store/sdr';
 import { ResearchAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotInput } from '../barplot/barplot.component';
