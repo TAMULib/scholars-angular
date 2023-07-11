@@ -36,6 +36,17 @@ export interface ResearchAge {
   median: number;
 }
 
+export interface Slice {
+  label: string;
+  count: number;
+}
+
+export interface QuantityDistribution {
+  label: string;
+  field: string;
+  distribution: Slice[];
+}
+
 export interface SdrState<R extends SdrResource> extends EntityState<R> {
   page: SdrPage;
   facets: SdrFacet[];
@@ -44,6 +55,7 @@ export interface SdrState<R extends SdrResource> extends EntityState<R> {
   recentlyUpdated: SdrResource[];
   dataNetwork: DataNetwork;
   researchAge: ResearchAge;
+  quantityDistribution: QuantityDistribution;
   counting: boolean;
   loading: boolean;
   dereferencing: boolean;
@@ -66,6 +78,7 @@ export const getSdrInitialState = <R extends SdrResource>(key: string) => {
     recentlyUpdated: [],
     dataNetwork: undefined,
     researchAge: undefined,
+    quantityDistribution: undefined,
     counting: false,
     loading: false,
     dereferencing: false,
@@ -350,3 +363,4 @@ export const getLinks = <R extends SdrResource>(state: SdrState<R>) => state.lin
 export const getRecentlyUpdated = <R extends SdrResource>(state: SdrState<R>) => state.recentlyUpdated;
 export const getDataNetwork = <R extends SdrResource>(state: SdrState<R>) => state.dataNetwork;
 export const getResearchAge = <R extends SdrResource>(state: SdrState<R>) => state.researchAge;
+export const getQuantityDistribution = <R extends SdrResource>(state: SdrState<R>) => state.quantityDistribution;

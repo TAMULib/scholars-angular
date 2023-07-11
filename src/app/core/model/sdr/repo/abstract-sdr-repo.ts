@@ -7,12 +7,12 @@ import { RestService } from '../../../service/rest.service';
 import { SdrRepo } from './sdr-repo';
 
 import { APP_CONFIG, AppConfig } from '../../../../app.config';
-import { DataNetwork, ResearchAge } from '../../../store/sdr/sdr.reducer';
+import { DataNetwork, QuantityDistribution, ResearchAge } from '../../../store/sdr/sdr.reducer';
 import { Boostable, Facetable, Filterable, SdrRequest, Sort } from '../../request';
+import { Queryable } from '../../request/sdr.request';
 import { Count } from '../count';
 import { SdrCollection } from '../sdr-collection';
 import { SdrResource } from '../sdr-resource';
-import { Queryable } from '../../request/sdr.request';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +52,7 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     dateField: string,
     dataFields: string[],
     typeFilter: string
-    ): Observable<DataNetwork> {
+  ): Observable<DataNetwork> {
     return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/network?dateField=${dateField}&dataFields=${dataFields.join(',')}&typeFilter=${typeFilter}`);
   }
 
@@ -65,8 +65,17 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     averageOverInterval: boolean = false,
     upperLimitInYears: number,
     groupingIntervalInYears: number
-    ): Observable<ResearchAge> {
-    return this.restService.get<ResearchAge>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/researchAge${this.mapParameters({query, filters})}&label=${label}&dateField=${dateField}&accumulateMultivaluedDate=${accumulateMultivaluedDate}&averageOverInterval=${averageOverInterval}&upperLimitInYears=${upperLimitInYears}&groupingIntervalInYears=${groupingIntervalInYears}`);
+  ): Observable<ResearchAge> {
+    return this.restService.get<ResearchAge>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/researchAge${this.mapParameters({ query, filters })}&label=${label}&dateField=${dateField}&accumulateMultivaluedDate=${accumulateMultivaluedDate}&averageOverInterval=${averageOverInterval}&upperLimitInYears=${upperLimitInYears}&groupingIntervalInYears=${groupingIntervalInYears}`);
+  }
+
+  public getQuantityDistribution(
+    query: Queryable,
+    filters: Filterable[],
+    label: string,
+    field: string
+  ): Observable<QuantityDistribution> {
+    return this.restService.get<QuantityDistribution>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/quantityDistribution${this.mapParameters({ query, filters })}&label=${label}&field=${field}`);
   }
 
   public findByIdIn(ids: string[]): Observable<SdrCollection> {

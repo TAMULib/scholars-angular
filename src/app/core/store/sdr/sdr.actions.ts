@@ -28,6 +28,9 @@ export enum SdrActionTypes {
   GET_RESEARCH_AGE = 'get research age analytics for resource',
   GET_RESEARCH_AGE_SUCCESS = 'sucessfully got research age analytics for resource',
   GET_RESEARCH_AGE_FAILURE = 'failed getting research age analytics for resource',
+  GET_QUANTITY_DISTRIBUTION = 'get quantity distribution analytics for resource',
+  GET_QUANTITY_DISTRIBUTION_SUCCESS = 'sucessfully got quantity distribution analytics for resource',
+  GET_QUANTITY_DISTRIBUTION_FAILURE = 'failed getting quantity distribution analytics for resource',
   FIND_BY_ID_IN = 'find resource by id in',
   FIND_BY_ID_IN_SUCCESS = 'sucessfully found resource by id in',
   FIND_BY_ID_IN_FAILURE = 'failed finding resource by id is',
@@ -191,6 +194,27 @@ export class GetResearchAgeFailureAction implements Action {
   constructor(public name: string, public payload: any) { }
 }
 
+export class GetQuantityDistributionAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_QUANTITY_DISTRIBUTION, this.name);
+  constructor(public name: string, public payload: {
+    label: string;
+    query?: Queryable;
+    filters?: Filterable[];
+    field: string,
+    queue: Array<Action>,
+  }) { }
+}
+
+export class GetQuantityDistributionSuccessAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_QUANTITY_DISTRIBUTION_SUCCESS, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
+export class GetQuantityDistributionFailureAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_QUANTITY_DISTRIBUTION_FAILURE, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
 export class FindByIdInResourceAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.FIND_BY_ID_IN, this.name);
   constructor(public name: string, public payload: { ids: string[] }) { }
@@ -326,6 +350,9 @@ export type SdrActions =
   GetResearchAgeAction |
   GetResearchAgeSuccessAction |
   GetResearchAgeFailureAction |
+  GetQuantityDistributionAction |
+  GetQuantityDistributionSuccessAction |
+  GetQuantityDistributionFailureAction |
   FindByIdInResourceAction |
   FindByIdInResourceSuccessAction |
   FindByIdInResourceFailureAction |
