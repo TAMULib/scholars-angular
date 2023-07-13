@@ -81,6 +81,7 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
 
         const data = [...qd.distribution as any[]]
           .sort((s1, s2) => {
+            // TODO: pass in lookup methods to component
             const i1 = getUNSDGIndexByValue(s1.label);
             const i2 = getUNSDGIndexByValue(s2.label);
             return (i1 < i2) ? -1 : (i1 > i2) ? 1: 0;
