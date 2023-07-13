@@ -1,14 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable, filter, map, tap } from 'rxjs';
+import { Observable, filter, map, take } from 'rxjs';
+
+import * as d3 from 'd3';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { Filter, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
+import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/sustainable-development-goals/sustainable-development-goals.component';
 import { fadeIn } from '../../shared/utilities/animation.utility';
+import { id } from '../../shared/utilities/id.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
@@ -20,10 +25,19 @@ import * as fromSdr from '../../core/store/sdr/sdr.actions';
 })
 export class QuantityDistributionComponent implements OnDestroy, OnInit {
 
+  @Input() height = 394;
+  @Input() width = 986;
+
   public document: Observable<SolrDocument>;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+  public id: string;
 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: string,
+    private store: Store<AppState>,
+    private route: ActivatedRoute
+  ) {
+    this.id = id();
   }
 
   ngOnDestroy() {
@@ -31,25 +45,91 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    if (isPlatformServer(this.platformId)) {
+      return;
+    }
+
     this.store.pipe(
       select(selectResourcesQuantityDistribution('individual')),
       filter((qd: QuantityDistribution) => qd !== undefined),
-      // tap((qd: QuantityDistribution) => {
-      //   console.log(qd);
-      // }),
-      // map(researchAgeToBarplotInput)
-    ).subscribe((qd) => console.log('done', qd));
+      take(1)
+    ).subscribe((qd: QuantityDistribution) => {
+
+      setTimeout(() => {
+        let index = 0;
+
+        // set the dimensions and margins of the graph
+        const margin = {
+          top: 100,
+          bottom: 100,
+          left: 100,
+          right: 50,
+        };
+
+        const width = this.width - margin.left - margin.right;
+        const height = this.height - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        const svg = d3.select(`#${this.id}`)
+          .append('svg')
+          .attr('width', width + margin.left + margin.right)
+          .attr('height', height + margin.top + margin.bottom)
+          .append('g')
+          .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        const container = svg.append("g")
+          .classed("container", true);
+
+        const total = qd.total;
+
+        let position = 0;
+
+        const data = [...qd.distribution as any[]]
+          .sort((s1, s2) => {
+            const i1 = getUNSDGIndexByValue(s1.label);
+            const i2 = getUNSDGIndexByValue(s2.label);
+            return (i1 < i2) ? -1 : (i1 > i2) ? 1: 0;
+          }).map((s) => {
+            s.percentage = (s.count / total);
+            s.size = Math.floor(s.percentage * width);
+            s.position = position;
+            s.middle = s.position + (s.size / 2);
+            position += s.size;
+            return s;
+          });
+
+        svg.selectAll()
+          .data(data)
+          .enter()
+          .append('g').append('rect')
+          .attr('x', (d) => d.position)
+          .attr('y', () => 0)
+          .attr('width', (d) => d.size)
+          .attr('height', () => 100)
+          .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
+
+        svg.selectAll()
+          .data(data)
+          .enter()
+          .append('g').append('text')
+          .attr('x', (d) => d.middle - 4)
+          .attr('y', 50)
+          .style('font', '11px')
+          .style('font-family', '"Lato", Calibri, Arial, sans-serif')
+          .attr('fill', 'white')
+          .text((d) => d.count);
+      });
+    });
 
     const additionalFilters = [];
 
-    const pending = this.route.parent && this.route.parent.data;
+    const hasParentRouteData = this.route.parent && this.route.parent.data;
 
-    if (pending) {
+    if (hasParentRouteData) {
       this.document = this.route.parent.data.pipe(map(data => data.document));
 
       this.route.parent.data.subscribe(data => {
         const document = data.document;
-        console.log(document);
 
         if (document.class === 'Organization') {
           additionalFilters.push({
@@ -63,14 +143,14 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
       });
     }
 
-    if (!pending) {
+    if (!hasParentRouteData) {
       this.dispatch(additionalFilters);
     }
-    
+
   }
 
   private dispatch(additionalFilters: Filter[]): void {
-    console.log('dispatch', additionalFilters);
+    // console.log('dispatch', additionalFilters);
     this.store.dispatch(new fromSdr.GetQuantityDistributionAction('individual', {
       label: 'UN SDG',
       query: {

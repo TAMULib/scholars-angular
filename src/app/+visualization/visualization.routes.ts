@@ -59,6 +59,7 @@ export const routes: Routes = [
         component: QuantityDistributionComponent,
         canActivate: [],
         data: {
+          roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
           tags: [{ name: 'view', content: 'Quantity Distribution' }],
         },
       },

@@ -44,6 +44,7 @@ export interface Slice {
 export interface QuantityDistribution {
   label: string;
   field: string;
+  total: number;
   distribution: Slice[];
 }
 

@@ -1,7 +1,5 @@
 import { isPlatformServer } from '@angular/common';
 import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
 import * as d3 from 'd3';
 
@@ -30,11 +28,7 @@ export class BarplotComponent implements OnInit {
 
   public id: string;
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: string,
-    private router: Router,
-    private translate: TranslateService
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: string) {
     this.id = id();
   }
 
