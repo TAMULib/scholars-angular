@@ -11,7 +11,7 @@ import { Filter, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
-import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/sustainable-development-goals/sustainable-development-goals.component';
+import { UNSDG, getUNSDGByValue, getUNSDGIndexByValue, goals } from '../../shared/sustainable-development-goals/sustainable-development-goals.component';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { id } from '../../shared/utilities/id.utility';
 
@@ -98,26 +98,47 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
             return s;
           });
 
-        svg.selectAll()
+        const sections = svg.selectAll()
           .data(data)
-          .enter()
-          .append('g').append('rect')
-          .attr('x', (d) => d.position)
-          .attr('y', () => 0)
-          .attr('width', (d) => d.size)
-          .attr('height', () => 100)
-          .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
+          .enter();
 
-        svg.selectAll()
-          .data(data)
-          .enter()
+        sections
+          .append('g').append('rect')
+            .attr('x', (d) => d.position)
+            .attr('y', () => 0)
+            .attr('width', (d) => d.size)
+            .attr('height', () => 100)
+            .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
+
+        sections
           .append('g').append('text')
-          .attr('x', (d) => d.middle - 4)
-          .attr('y', 50)
-          .style('font', '11px')
-          .style('font-family', '"Lato", Calibri, Arial, sans-serif')
-          .attr('fill', 'white')
-          .text((d) => d.count);
+            .attr('x', (d) => d.middle - 4)
+            .attr('y', 50)
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
+            .attr('fill', 'white')
+            .text((d) => d.count);
+      
+        let x = 0;
+        let y = 115;
+        sections
+          .append('g').append('text')
+            .attr('x', (d) => x + 15)
+            .attr('y', (d) => (y += 15) - 5)
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
+            .attr('fill', 'black')
+            .text((d) => `SDG ${d.label}, ${d.count}`);
+
+        x = 0;
+        y = 115;
+        sections
+          .append('g').append('rect')
+            .attr('x', (d) => x)
+            .attr('y', (d) => (y += 15) - 15)
+            .attr('width', () => 10)
+            .attr('height', () => 10)
+            .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
       });
     });
 
