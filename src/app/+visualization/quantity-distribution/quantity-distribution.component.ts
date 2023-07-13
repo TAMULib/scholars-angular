@@ -11,9 +11,9 @@ import { Filter, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
-import { UNSDG, getUNSDGByValue, getUNSDGIndexByValue, goals } from '../../shared/sustainable-development-goals/sustainable-development-goals.component';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { id } from '../../shared/utilities/id.utility';
+import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/utilities/un-sdg.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
@@ -56,8 +56,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
     ).subscribe((qd: QuantityDistribution) => {
 
       setTimeout(() => {
-        let index = 0;
-
         // set the dimensions and margins of the graph
         const margin = {
           top: 100,
@@ -76,9 +74,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
           .attr('height', height + margin.top + margin.bottom)
           .append('g')
           .attr('transform', `translate(${margin.left},${margin.top})`);
-
-        const container = svg.append("g")
-          .classed("container", true);
 
         const total = qd.total;
 
