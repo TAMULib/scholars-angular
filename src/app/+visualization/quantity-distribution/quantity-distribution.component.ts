@@ -118,6 +118,16 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
         let x = 0;
         let y = 115;
         sections
+          .append('g').append('rect')
+            .attr('x', (d) => x)
+            .attr('y', (d) => (y += 15) - 15)
+            .attr('width', () => 10)
+            .attr('height', () => 10)
+            .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
+
+        x = 0;
+        y = 115;
+        sections
           .append('g').append('text')
             .attr('x', (d) => x + 15)
             .attr('y', (d) => (y += 15) - 5)
@@ -125,16 +135,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
             .style('font-family', '"Lato", Calibri, Arial, sans-serif')
             .attr('fill', 'black')
             .text((d) => `SDG ${d.label}, ${d.count}`);
-
-        x = 0;
-        y = 115;
-        sections
-          .append('g').append('rect')
-            .attr('x', (d) => x)
-            .attr('y', (d) => (y += 15) - 15)
-            .attr('width', () => 10)
-            .attr('height', () => 10)
-            .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
       });
     });
 
