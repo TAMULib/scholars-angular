@@ -15,6 +15,7 @@ import { RootStoreModule } from './core/store/root-store.module';
 import { FooterModule } from './footer/footer.module';
 import { HeaderModule } from './header/header.module';
 import { SharedModule } from './shared/shared.module';
+import { DataAnalyticsModule } from './+data-analytics/data-analytics.module';
 
 const getBaseHref = (document: Document, appConfig: AppConfig): string => {
   const baseTag = document.querySelector('head > base');
@@ -38,7 +39,8 @@ const getBaseHref = (document: Document, appConfig: AppConfig): string => {
     SharedModule,
     HeaderModule,
     FooterModule,
-    RootStoreModule
+    RootStoreModule,
+    DataAnalyticsModule
   ],
   bootstrap: [
     AppComponent
