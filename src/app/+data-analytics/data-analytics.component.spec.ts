@@ -1,5 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { testAppConfig } from '../../test.config';
+import { metaReducers, reducers } from '../core/store';
+import { SharedModule } from '../shared/shared.module';
+import { SidebarComponent } from '../shared/sidebar/sidebar.component';
+import { DataAnalyticsRoutingModule } from './data-analytics-routing.module';
 import { DataAnalyticsComponent } from './data-analytics.component';
 
 describe('DataAnalyticsComponent', () => {
@@ -8,7 +15,24 @@ describe('DataAnalyticsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DataAnalyticsComponent]
+      declarations: [
+        DataAnalyticsComponent,
+        SidebarComponent,
+      ],
+      imports: [
+        SharedModule,
+        StoreModule.forRoot(reducers(testAppConfig), {
+          metaReducers,
+          runtimeChecks: {
+            strictStateImmutability: false,
+            strictActionImmutability: false,
+            strictStateSerializability: false,
+            strictActionSerializability: false,
+          },
+        }),
+        TranslateModule.forRoot(),
+        DataAnalyticsRoutingModule,
+      ],
     });
     fixture = TestBed.createComponent(DataAnalyticsComponent);
     component = fixture.componentInstance;
