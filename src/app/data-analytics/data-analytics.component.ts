@@ -1,13 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable, map } from 'rxjs';
 
-import { AnalyticView } from '../core/model/view';
-import { APP_CONFIG, AppConfig } from '../app.config';
-import { Store, select } from '@ngrx/store';
-import { AppState } from '../core/store';
-import { ActivatedRoute, Router } from '@angular/router';
-import { selectAllResources } from '../core/store/sdr';
-import * as fromSdr from '../core/store/sdr/sdr.actions';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'scholars-data-analytics',
@@ -16,35 +10,17 @@ import * as fromSdr from '../core/store/sdr/sdr.actions';
 })
 export class DataAnalyticsComponent implements OnInit {
 
-  public analyticViews: Observable<AnalyticView[]>;
-
-  private subscriptions: Subscription[];
+  public view: Observable<string>;
 
   constructor(
-    @Inject(APP_CONFIG) private appConfig: AppConfig,
-    private store: Store<AppState>,
-    private router: Router,
     private route: ActivatedRoute
   ) {
-    this.subscriptions = [];
+
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    });
-  }
 
   ngOnInit(): void {
-    this.analyticViews = this.store.pipe(select(selectAllResources<AnalyticView>('analyticViews')));
-
-    this.analyticViews.subscribe((av: any) => {
-      console.log(av);
-    });
-  }
-
-  trackByIndex(index, item) {
-    return index;
+    this.view = this.route.params.pipe(map((params) => params.view));
   }
 
 }

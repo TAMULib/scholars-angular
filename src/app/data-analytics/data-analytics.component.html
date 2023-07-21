@@ -2,30 +2,10 @@
   <div class="container-fluid mt-2">
     <div class="row">
       <ol class="breadcrumb">
-        <li class="active">Data & Analytics</li>
+        <li class="active">{{ view | async }}</li>
       </ol>
     </div>
     <div class="row m-1">
-
-      <div class="card-deck">
-
-        <div class="card-columns">
-
-          <ng-template ngFor let-item [ngForOf]="analyticViews | async" let-i="item" [ngForTrackBy]="trackByIndex">
-            <div class="card">
-              <div class="card-header">
-                {{ item.name }}
-              </div>
-              <div class="card-body">
-
-              </div>
-            </div>
-          </ng-template>
-
-        </div>
-
-      </div>
-
       <router-outlet></router-outlet>
     </div>
   </div>
