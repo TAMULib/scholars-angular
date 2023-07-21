@@ -3,6 +3,7 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { testAppConfig } from '../../test.config';
+import { APP_CONFIG } from '../app.config';
 import { metaReducers, reducers } from '../core/store';
 import { SharedModule } from '../shared/shared.module';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
@@ -33,6 +34,7 @@ describe('DataAnalyticsComponent', () => {
         TranslateModule.forRoot(),
         DataAnalyticsRoutingModule,
       ],
+      providers: [{ provide: APP_CONFIG, useValue: testAppConfig }],
     });
     fixture = TestBed.createComponent(DataAnalyticsComponent);
     component = fixture.componentInstance;
