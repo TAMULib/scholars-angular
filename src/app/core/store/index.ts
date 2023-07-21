@@ -9,7 +9,7 @@ import { Individual } from '../model/discovery';
 import { Theme } from '../model/theme';
 import { User } from '../model/user';
 
-import { DirectoryView, DiscoveryView, DisplayView } from '../model/view';
+import { AnalyticView, DirectoryView, DiscoveryView, DisplayView } from '../model/view';
 
 import * as fromRouter from '@ngrx/router-store';
 
@@ -38,6 +38,7 @@ export interface AppState {
   individual: fromSdr.SdrState<Individual>;
   themes: fromSdr.SdrState<Theme>;
   users: fromSdr.SdrState<User>;
+  analyticViews: fromSdr.SdrState<AnalyticView>;
   directoryViews: fromSdr.SdrState<DirectoryView>;
   discoveryViews: fromSdr.SdrState<DiscoveryView>;
   displayViews: fromSdr.SdrState<DisplayView>;
@@ -63,6 +64,7 @@ export const reducers = (appConfig: AppConfig): ActionReducerMap<AppState> => {
     individual: fromSdr.getSdrReducer<Individual>('individual', additionalContext),
     themes: fromSdr.getSdrReducer<Theme>('themes', additionalContext),
     users: fromSdr.getSdrReducer<User>('users', additionalContext),
+    analyticViews: fromSdr.getSdrReducer<AnalyticView>('analyticViews', additionalContext),
     directoryViews: fromSdr.getSdrReducer<DirectoryView>('directoryViews', additionalContext),
     discoveryViews: fromSdr.getSdrReducer<DiscoveryView>('discoveryViews', additionalContext),
     displayViews: fromSdr.getSdrReducer<DisplayView>('displayViews', additionalContext),
