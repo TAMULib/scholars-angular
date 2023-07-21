@@ -99,7 +99,7 @@ export class SustainableDevelopmentGoalsComponent {
     return queryParams;
   }
 
-  trackByFn(index, item) {
+  trackByIndex(index, item) {
     return index;
   }
 
