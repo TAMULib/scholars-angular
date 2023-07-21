@@ -5,9 +5,8 @@ import { MissingTranslationHandler, TranslateModule } from '@ngx-translate/core'
 
 import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-translation.handler';
 import { SharedModule } from '../shared/shared.module';
-import { VisualizationModule } from '../visualization';
-import { routes } from './data-analytics.routes';
 import { DataAnalyticsComponent } from './data-analytics.component';
+import { routes } from './data-analytics.routes';
 
 @NgModule({
   declarations: [
@@ -24,7 +23,10 @@ import { DataAnalyticsComponent } from './data-analytics.component';
       isolate: false,
     }),
     RouterModule.forChild(routes),
-    VisualizationModule
   ]
 })
-export class DataAnalyticsModule { }
+export class DataAnalyticsModule {
+
+  public static routes = routes;
+
+}
