@@ -6,7 +6,7 @@ import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-
 import { SharedModule } from '../shared/shared.module';
 import { DataAnalyticsRoutingModule } from './data-analytics-routing.module';
 import { DataAnalyticsComponent } from './data-analytics.component';
-import { VisualizationModule } from '../+visualization';
+import { VisualizationModule } from '../visualization';
 
 @NgModule({
   declarations: [

@@ -7,7 +7,7 @@ import { Role } from './core/model/user';
 const routes: Routes = [
   {
     path: 'admin',
-    loadChildren: () => import('./+admin').then((m) => m.AdminModule),
+    loadChildren: () => import('./admin').then((m) => m.AdminModule),
     canActivate: [],
     data: {
       roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'data-analytics',
-    loadChildren: () => import('./+data-analytics').then((m) => m.DataAnalyticsModule),
+    loadChildren: () => import('./data-analytics').then((m) => m.DataAnalyticsModule),
     canActivate: [],
     data: {
       tags: [{ name: 'view', content: 'Scholars Data Analytics' }],
@@ -24,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'directory',
-    loadChildren: () => import('./+directory').then((m) => m.DirectoryModule),
+    loadChildren: () => import('./directory').then((m) => m.DirectoryModule),
     canActivate: [],
     data: {
       tags: [{ name: 'view', content: 'Scholars Directory' }],
@@ -32,7 +32,7 @@ const routes: Routes = [
   },
   {
     path: 'discovery',
-    loadChildren: () => import('./+discovery').then((m) => m.DiscoveryModule),
+    loadChildren: () => import('./discovery').then((m) => m.DiscoveryModule),
     canActivate: [],
     data: {
       tags: [{ name: 'view', content: 'Scholars Discovery' }],
@@ -40,7 +40,7 @@ const routes: Routes = [
   },
   {
     path: 'display',
-    loadChildren: () => import('./+display').then((m) => m.DisplayModule),
+    loadChildren: () => import('./display').then((m) => m.DisplayModule),
     canActivate: [],
     data: {
       tags: [{ name: 'view', content: 'Scholars Display' }],
@@ -48,7 +48,7 @@ const routes: Routes = [
   },
   {
     path: 'visualization',
-    loadChildren: () => import('./+visualization').then((m) => m.VisualizationModule),
+    loadChildren: () => import('./visualization').then((m) => m.VisualizationModule),
     canActivate: [],
     data: {
       tags: [{ name: 'view', content: 'Scholars Visualization' }],
@@ -56,7 +56,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./+dashboard').then((m) => m.DashboardModule),
+    loadChildren: () => import('./dashboard').then((m) => m.DashboardModule),
     canActivate: [],
     data: {
       tags: [{ name: 'title', content: 'Scholars' }],
