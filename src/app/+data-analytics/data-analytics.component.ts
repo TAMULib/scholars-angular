@@ -7,6 +7,7 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from '../core/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { selectAllResources } from '../core/store/sdr';
+import * as fromSdr from '../core/store/sdr/sdr.actions';
 
 @Component({
   selector: 'scholars-data-analytics',
@@ -40,6 +41,10 @@ export class DataAnalyticsComponent implements OnInit {
     this.analyticViews.subscribe((av: any) => {
       console.log(av);
     });
+  }
+
+  trackByIndex(index, item) {
+    return index;
   }
 
 }

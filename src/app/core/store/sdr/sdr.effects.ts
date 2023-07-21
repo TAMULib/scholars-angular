@@ -669,6 +669,7 @@ export class SdrEffects {
   ), { dispatch: false });
 
   initViews = createEffect(() => defer(() => scheduled([
+    new fromSdr.GetAllResourcesAction('analyticViews'),
     new fromSdr.GetAllResourcesAction('directoryViews'),
     new fromSdr.GetAllResourcesAction('discoveryViews')
   ], asapScheduler)));
