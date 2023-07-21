@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -7,8 +8,9 @@ import { APP_CONFIG } from '../app.config';
 import { metaReducers, reducers } from '../core/store';
 import { SharedModule } from '../shared/shared.module';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
-import { DataAnalyticsRoutingModule } from './data-analytics-routing.module';
 import { DataAnalyticsComponent } from './data-analytics.component';
+
+import { routes } from './data-analytics.routes';
 
 describe('DataAnalyticsComponent', () => {
   let component: DataAnalyticsComponent;
@@ -32,7 +34,7 @@ describe('DataAnalyticsComponent', () => {
           },
         }),
         TranslateModule.forRoot(),
-        DataAnalyticsRoutingModule,
+        RouterTestingModule.withRoutes(routes),
       ],
       providers: [{ provide: APP_CONFIG, useValue: testAppConfig }],
     });

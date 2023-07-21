@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { MissingTranslationHandler, TranslateModule } from '@ngx-translate/core';
-import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-translation.handler';
 
+import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-translation.handler';
 import { SharedModule } from '../shared/shared.module';
-import { DataAnalyticsRoutingModule } from './data-analytics-routing.module';
-import { DataAnalyticsComponent } from './data-analytics.component';
 import { VisualizationModule } from '../visualization';
+import { routes } from './data-analytics.routes';
+import { DataAnalyticsComponent } from './data-analytics.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { VisualizationModule } from '../visualization';
       },
       isolate: false,
     }),
-    DataAnalyticsRoutingModule,
+    RouterModule.forChild(routes),
     VisualizationModule
   ]
 })
