@@ -1,9 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { ActivatedRoute, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { APP_CONFIG, AppConfig } from '../../app.config';
 import { AnalyticView } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectAllResources } from '../../core/store/sdr';
@@ -19,12 +17,7 @@ export class AnalyticsDashboardComponent implements OnInit {
 
   private subscriptions: Subscription[];
 
-  constructor(
-    @Inject(APP_CONFIG) private appConfig: AppConfig,
-    private store: Store<AppState>,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor(private store: Store<AppState>) {
     this.subscriptions = [];
   }
 
