@@ -38,15 +38,6 @@ import { routes } from './visualization.routes';
       isolate: false,
     }),
     RouterModule.forChild(routes),
-  ],
-  exports: [
-    VisualizationComponent,
-    ChordDiagramComponent,
-    CoAuthorNetworkComponent,
-    CoInvestigatorNetworkComponent,
-    BarplotComponent,
-    ResearchAgeComponent,
-    QuantityDistributionComponent
   ]
 })
 export class VisualizationModule {
