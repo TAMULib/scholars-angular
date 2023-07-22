@@ -26,8 +26,8 @@
         <li class="nav-item">
           <a class="nav-link" href="https://scholars.library.tamu.edu/vivo_editor/pages/about_scholars/">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link text-nowrap" [routerLink]="['/data-analytics']">Data Analytics</a>
+        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}">
+          <a class="nav-link text-nowrap" [routerLink]="['/data-analytics']">Data & Analytics</a>
         </li>
         <li *ngIf="vivoEditorUrl" class="nav-item d-sm-none">
           <a class="nav-link edit-profile-action" [href]="vivoEditorUrl" target="_blank">

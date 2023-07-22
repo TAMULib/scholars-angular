@@ -2,10 +2,15 @@
   <div [@fadeIn]>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">Data & Analytics</li>
+        <ng-template ngFor let-breadcrumb [ngForOf]="breadcrumbs | async" let-i="breadcrumb" [ngForTrackBy]="trackByIndex">
+          <li class="breadcrumb-item active" aria-current="page">
+            <a [routerLink]="breadcrumb.route">{{ breadcrumb.label }}</a>
+          </li>
+        </ng-template>
       </ol>
     </nav>
-    <div class="card-deck">
+
+    <div class="card-deck" *ngIf="isDashboard | async">
       <ng-template ngFor let-av [ngForOf]="analyticViews | async" let-i="av" [ngForTrackBy]="trackByIndex">
         <div class="card">
           <a [routerLink]="getRoute(av)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
@@ -19,6 +24,7 @@
         </div>
       </ng-template>
     </div>
+
     <router-outlet></router-outlet>
   </div>
 </scholars-sidebar>

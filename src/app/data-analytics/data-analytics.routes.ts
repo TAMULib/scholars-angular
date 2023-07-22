@@ -3,7 +3,8 @@ import { DataAnalyticsComponent } from './data-analytics.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: ':view',
     component: DataAnalyticsComponent
-  }
+  },
+  { path: '**', redirectTo: 'Dashboard' },
 ];
