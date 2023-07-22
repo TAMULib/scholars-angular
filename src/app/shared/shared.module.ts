@@ -30,6 +30,9 @@ import { FilterPipe } from './utilities/filter.pipe';
 import { FormalizePipe } from './utilities/formalize.pipe';
 import { SafeHtmlPipe } from './utilities/safe-html.pipe';
 import { SafeUrlPipe } from './utilities/safe-url.pipe';
+import { BarplotComponent } from './visualization/barplot/barplot.component';
+import { ResearchAgeComponent } from './visualization/research-age/research-age.component';
+import { QuantityDistributionComponent } from './visualization/quantity-distribution/quantity-distribution.component';
 
 const MODULES = [
   CommonModule,
@@ -65,7 +68,10 @@ const COMPONENTS = [
   StatsBoxComponent,
   SustainableDevelopmentGoalsComponent,
   TwitterComponent,
-  YouTubeComponent
+  YouTubeComponent,
+  BarplotComponent,
+  ResearchAgeComponent,
+  QuantityDistributionComponent
 ];
 
 const DIRECTIVES = [

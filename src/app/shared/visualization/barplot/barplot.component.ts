@@ -4,8 +4,9 @@ import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import * as d3 from 'd3';
 
 import { Observable } from 'rxjs';
-import { Datum } from '../../core/store/sdr/sdr.reducer';
-import { id } from '../../shared/utilities/id.utility';
+
+import { Datum } from '../../../core/store/sdr/sdr.reducer';
+import { id } from '../../utilities/id.utility';
 
 export interface BarplotInput {
   label: string;
