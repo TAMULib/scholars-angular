@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -20,6 +20,11 @@ export class DataAnalyticsComponent implements OnInit {
   public analyticViews: Observable<AnalyticView[]>;
 
   private subscriptions: Subscription[];
+
+  @HostListener('window:resize', ['$event'])
+  public onResize(event): void {
+    this.store.dispatch(new fromLayout.CloseSidebarAction());
+  }
 
   constructor(private store: Store<AppState>) {
     this.subscriptions = [];
