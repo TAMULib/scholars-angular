@@ -7,18 +7,10 @@ import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-
 import { SharedModule } from '../shared/shared.module';
 import { DataAnalyticsComponent } from './data-analytics.component';
 import { routes } from './data-analytics.routes';
-import { AcademicAgeGroupComponent } from './academic-age-group/academic-age-group.component';
-import { UnSdgComponent } from './un-sdg/un-sdg.component';
-import { ProfileSummaryComponent } from './profile-summary/profile-summary.component';
-import { AnalyticsDashboardComponent } from './analytics-dashboard/analytics-dashboard.component';
 
 @NgModule({
   declarations: [
     DataAnalyticsComponent,
-    AcademicAgeGroupComponent,
-    UnSdgComponent,
-    ProfileSummaryComponent,
-    AnalyticsDashboardComponent,
   ],
   imports: [
     CommonModule,

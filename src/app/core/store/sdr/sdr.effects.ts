@@ -21,7 +21,7 @@ import { AbstractSdrRepo } from '../../model/sdr/repo/abstract-sdr-repo';
 import { SdrResource, SdrCollection, SdrFacet, SdrFacetEntry, Count } from '../../model/sdr';
 import { SidebarMenu, SidebarSection, SidebarItem, SidebarItemType } from '../../model/sidebar';
 import { SolrDocument } from '../../model/discovery';
-import { Facet, DiscoveryView, DirectoryView, FacetType, OpKey } from '../../model/view';
+import { Facet, DiscoveryView, DirectoryView, FacetType, OpKey, AnalyticView } from '../../model/view';
 
 import { injectable, repos } from '../../model/repos';
 
@@ -435,6 +435,10 @@ export class SdrEffects {
           take(1)
         ),
         this.store.pipe(
+          select(selectSdrState('analyticViews')),
+          filter((directory: SdrState<DirectoryView>) => directory !== undefined)
+        ),
+        this.store.pipe(
           select(selectSdrState('directoryViews')),
           filter((directory: SdrState<DirectoryView>) => directory !== undefined)
         ),
@@ -448,8 +452,9 @@ export class SdrEffects {
       return this.searchSuccessHandler({
         action: latest[0],
         route: latest[1].state,
-        directory: latest[2] as SdrState<DirectoryView>,
-        discovery: latest[3] as SdrState<DiscoveryView>
+        analytic: latest[2] as SdrState<AnalyticView>,
+        directory: latest[3] as SdrState<DirectoryView>,
+        discovery: latest[4] as SdrState<DiscoveryView>
       });
     })
   ), { dispatch: false });
@@ -726,6 +731,7 @@ export class SdrEffects {
   private searchSuccessHandler(results: {
     action: fromSdr.SearchResourcesSuccessAction,
     route: CustomRouterState,
+    analytic: SdrState<AnalyticView>,
     directory: SdrState<DirectoryView>,
     discovery: SdrState<DiscoveryView>
   }): void {

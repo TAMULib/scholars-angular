@@ -1,12 +1,24 @@
 <scholars-sidebar>
-  <div class="container-fluid mt-2">
-    <div class="row">
+  <div>
+    <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="active">Data & Analytics</li>
+        <li class="breadcrumb-item active" aria-current="page">Data & Analytics</li>
       </ol>
+    </nav>
+    <div class="card-deck">
+      <ng-template ngFor let-av [ngForOf]="analyticViews | async" let-i="av" [ngForTrackBy]="trackByIndex">
+        <div class="card">
+          <a [routerLink]="getRoute(av)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <div class="card-header">
+              {{ av.name }}
+            </div>
+            <div class="card-body">
+
+            </div>
+          </a>
+        </div>
+      </ng-template>
     </div>
-    <div class="row m-1">
-      <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </scholars-sidebar>
