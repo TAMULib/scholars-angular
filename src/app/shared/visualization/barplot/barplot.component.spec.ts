@@ -1,13 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
-import { testAppConfig } from '../../../test.config';
-import { metaReducers, reducers } from '../../core/store';
-import { VisualizationModule } from '../visualization.module';
-import { routes } from '../visualization.routes';
+import { testAppConfig } from '../../../../test.config';
+import { metaReducers, reducers } from '../../../core/store';
 import { BarplotComponent } from './barplot.component';
 
 describe('BarplotComponent', () => {
@@ -18,7 +15,6 @@ describe('BarplotComponent', () => {
     TestBed.configureTestingModule({
       declarations: [BarplotComponent],
       imports: [
-        VisualizationModule,
         StoreModule.forRoot(reducers(testAppConfig), {
           metaReducers,
           runtimeChecks: {
@@ -28,7 +24,6 @@ describe('BarplotComponent', () => {
             strictActionSerializability: false,
           },
         }),
-        RouterTestingModule.withRoutes(routes),
         TranslateModule.forRoot(),
       ],
       providers: [

@@ -5,11 +5,9 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { queueScheduler, scheduled } from 'rxjs';
 
-import { testAppConfig } from '../../../test.config';
-import { APP_CONFIG } from '../../app.config';
-import { metaReducers, reducers } from '../../core/store';
-import { VisualizationModule } from '../visualization.module';
-import { routes } from '../visualization.routes';
+import { testAppConfig } from '../../../../test.config';
+import { APP_CONFIG } from '../../../app.config';
+import { metaReducers, reducers } from '../../../core/store';
 import { QuantityDistributionComponent } from './quantity-distribution.component';
 
 describe('QuantityDistributionComponent', () => {
@@ -20,7 +18,6 @@ describe('QuantityDistributionComponent', () => {
     TestBed.configureTestingModule({
       declarations: [QuantityDistributionComponent],
       imports: [
-        VisualizationModule,
         StoreModule.forRoot(reducers(testAppConfig), {
           metaReducers,
           runtimeChecks: {
@@ -30,7 +27,7 @@ describe('QuantityDistributionComponent', () => {
             strictActionSerializability: false,
           },
         }),
-        RouterTestingModule.withRoutes(routes),
+        RouterTestingModule.withRoutes([]),
         TranslateModule.forRoot(),
       ],
       providers: [

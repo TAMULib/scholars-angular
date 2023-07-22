@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -16,7 +16,7 @@ import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
   styleUrls: ['./data-analytics.component.scss'],
   animations: [fadeIn],
 })
-export class DataAnalyticsComponent implements OnInit {
+export class DataAnalyticsComponent implements OnDestroy, OnInit {
 
   public analyticViews: Observable<AnalyticView[]>;
 
