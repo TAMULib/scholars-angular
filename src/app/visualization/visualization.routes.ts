@@ -58,7 +58,7 @@ export const routes: Routes = [
         component: QuantityDistributionComponent,
         canActivate: [],
         data: {
-          roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
+          roles: [],
           tags: [{ name: 'view', content: 'Quantity Distribution' }],
         },
       },
@@ -67,12 +67,14 @@ export const routes: Routes = [
         component: ResearchAgeComponent,
         canActivate: [],
         data: {
-          roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
+          roles: [],
           tags: [{ name: 'view', content: 'Organizational Research Age' }],
         },
       },
       { path: '**', redirectTo: 'Research Age' },
     ],
   },
+  // hard coded organization id for TAMU
+  // manually redirect in component
   { path: '**', redirectTo: 'n5d3837d6/Research Age' },
 ];
