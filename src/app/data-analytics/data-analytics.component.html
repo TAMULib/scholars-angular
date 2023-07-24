@@ -20,11 +20,11 @@
             </div>
             <div class="card-body" [ngSwitch]="av.layout">
 
-              <div *ngSwitchCase="'CONTAINER'">CONTAINER</div>
-              <div *ngSwitchCase="'GRID'">GRID</div>
-              <div *ngSwitchCase="'LIST'">LIST</div>
+              <div *ngSwitchCase="'CONTAINER'">{{ av.type }}</div>
+              <div *ngSwitchCase="'GRID'">{{ av.layout }} Not Supported</div>
+              <div *ngSwitchCase="'LIST'">{{ av.layout }} Not Supported</div>
               <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
-    
+
             </div>
           </a>
         </div>
@@ -38,9 +38,9 @@
         </div>
         <div class="card-body" [ngSwitch]="av.layout">
 
-          <div *ngSwitchCase="'CONTAINER'">CONTAINER</div>
-          <div *ngSwitchCase="'GRID'">GRID</div>
-          <div *ngSwitchCase="'LIST'">LIST</div>
+          <div *ngSwitchCase="'CONTAINER'">{{ av.type }}</div>
+          <div *ngSwitchCase="'GRID'">{{ av.layout }} Not Supported</div>
+          <div *ngSwitchCase="'LIST'">{{ av.layout }} Not Supported</div>
           <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
 
         </div>

@@ -436,7 +436,7 @@ export class SdrEffects {
         ),
         this.store.pipe(
           select(selectSdrState('analyticViews')),
-          filter((directory: SdrState<DirectoryView>) => directory !== undefined)
+          filter((analytic: SdrState<AnalyticView>) => analytic !== undefined)
         ),
         this.store.pipe(
           select(selectSdrState('directoryViews')),
