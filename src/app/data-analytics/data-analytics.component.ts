@@ -43,12 +43,12 @@ export class DataAnalyticsComponent implements OnInit {
     this.analyticView = this.store.pipe(
       select(selectRouterState),
       withLatestFrom(this.analyticViews),
-      map(([router, avs]) => avs.find((av: AnalyticView) => av.name === router.state.params.view))
+      map(([router, avs]) => avs.find((av: AnalyticView) => !!router && av.name === router.state.params.view))
     );
 
     this.isDashboard = this.store.pipe(
       select(selectRouterState),
-      map((router: any) => router.state.url  === '/data-analytics')
+      map((router: any) => !!router && router.state.url  === '/data-analytics')
     );
 
   }

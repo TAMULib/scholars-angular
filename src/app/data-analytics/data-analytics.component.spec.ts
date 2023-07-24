@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,7 +9,6 @@ import { testAppConfig } from '../../test.config';
 import { APP_CONFIG } from '../app.config';
 import { metaReducers, reducers } from '../core/store';
 import { SharedModule } from '../shared/shared.module';
-import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { DataAnalyticsComponent } from './data-analytics.component';
 
 import { routes } from './data-analytics.routes';
@@ -35,7 +35,10 @@ describe('DataAnalyticsComponent', () => {
         TranslateModule.forRoot(),
         RouterTestingModule.withRoutes(routes),
       ],
-      providers: [{ provide: APP_CONFIG, useValue: testAppConfig }],
+      providers: [
+        { provide: APP_CONFIG, useValue: testAppConfig },
+        { provide: APP_BASE_HREF, useValue: '/' },
+      ],
     }).compileComponents();
   }));
 
