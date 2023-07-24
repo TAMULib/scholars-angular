@@ -64,7 +64,7 @@ describe('SubsectionComponent', () => {
       templateFunction: (resource: any) => '',
     };
     component.document = {
-      id: 1,
+      id: 'n1',
       type: ['Person'],
     };
     // tslint:disable-next-line: no-string-literal
