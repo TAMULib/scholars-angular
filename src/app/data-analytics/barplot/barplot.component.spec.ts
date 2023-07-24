@@ -3,8 +3,8 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
-import { testAppConfig } from '../../../../test.config';
-import { metaReducers, reducers } from '../../../core/store';
+import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
 import { BarplotComponent } from './barplot.component';
 
 describe('BarplotComponent', () => {

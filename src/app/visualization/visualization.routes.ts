@@ -4,11 +4,8 @@ import { Store, select } from '@ngrx/store';
 import { filter } from 'rxjs';
 
 import { Individual, SolrDocument } from '../core/model/discovery';
-import { Role } from '../core/model/user';
 import { AppState } from '../core/store';
 import { selectResourceById } from '../core/store/sdr';
-import { QuantityDistributionComponent } from '../shared/visualization/quantity-distribution/quantity-distribution.component';
-import { ResearchAgeComponent } from '../shared/visualization/research-age/research-age.component';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
 import { VisualizationComponent } from './visualization.component';
@@ -53,28 +50,7 @@ export const routes: Routes = [
           tags: [{ name: 'view', content: 'Scholars Co-investigator Network' }],
         },
       },
-      {
-        path: 'Quantity Distribution',
-        component: QuantityDistributionComponent,
-        canActivate: [],
-        data: {
-          roles: [],
-          tags: [{ name: 'view', content: 'Quantity Distribution' }],
-        },
-      },
-      {
-        path: 'Research Age',
-        component: ResearchAgeComponent,
-        canActivate: [],
-        data: {
-          roles: [],
-          tags: [{ name: 'view', content: 'Organizational Research Age' }],
-        },
-      },
-      { path: '**', redirectTo: 'Research Age' },
+      { path: '**', redirectTo: 'Co-author Network' },
     ],
   },
-  // hard coded organization id for TAMU
-  // manually redirect in component
-  { path: '**', redirectTo: 'n5d3837d6/Research Age' },
 ];

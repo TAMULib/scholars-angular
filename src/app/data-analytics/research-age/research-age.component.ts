@@ -3,17 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subject, filter, first, map, tap } from 'rxjs';
 
-import { APP_CONFIG, AppConfig } from '../../../../app/app.config';
-import { SolrDocument } from '../../../core/model/discovery';
-import { Filterable } from '../../../core/model/request';
-import { OpKey } from '../../../core/model/view';
-import { AppState } from '../../../core/store';
-import { selectResourceById, selectResourcesResearchAge } from '../../../core/store/sdr';
-import { ResearchAge } from '../../../core/store/sdr/sdr.reducer';
-import { fadeIn } from '../../utilities/animation.utility';
+import { APP_CONFIG, AppConfig } from '../../../app/app.config';
+import { SolrDocument } from '../../core/model/discovery';
+import { Filterable } from '../../core/model/request';
+import { OpKey } from '../../core/model/view';
+import { AppState } from '../../core/store';
+import { selectResourceById, selectResourcesResearchAge } from '../../core/store/sdr';
+import { ResearchAge } from '../../core/store/sdr/sdr.reducer';
+import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotInput } from '../barplot/barplot.component';
 
-import * as fromSdr from '../../../core/store/sdr/sdr.actions';
+import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
 const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
   return {

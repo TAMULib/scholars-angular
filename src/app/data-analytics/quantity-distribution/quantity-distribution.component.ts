@@ -6,16 +6,16 @@ import { Observable, filter, map, take } from 'rxjs';
 
 import * as d3 from 'd3';
 
-import { SolrDocument } from '../../../core/model/discovery';
-import { Filter, OpKey } from '../../../core/model/view';
-import { AppState } from '../../../core/store';
-import { selectResourcesQuantityDistribution } from '../../../core/store/sdr';
-import { QuantityDistribution } from '../../../core/store/sdr/sdr.reducer';
-import { fadeIn } from '../../utilities/animation.utility';
-import { id } from '../../utilities/id.utility';
-import { getUNSDGByValue, getUNSDGIndexByValue } from '../../utilities/un-sdg.utility';
+import { SolrDocument } from '../../core/model/discovery';
+import { Filter, OpKey } from '../../core/model/view';
+import { AppState } from '../../core/store';
+import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
+import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
+import { fadeIn } from '../../shared/utilities/animation.utility';
+import { id } from '../../shared/utilities/id.utility';
+import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/utilities/un-sdg.utility';
 
-import * as fromSdr from '../../../core/store/sdr/sdr.actions';
+import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
 @Component({
   selector: 'scholars-quantity-distribution',
