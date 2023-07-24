@@ -84,6 +84,8 @@ function run() {
   const VIVO_URL = process.env.VIVO_URL || 'http://localhost:8080/vivo';
   const VIVO_EDITOR_URL = process.env.VIVO_EDITOR_URL || 'http://localhost:8080/vivo_editor';
 
+  const ORGANIZATION_ID = process.env.ORGANIZATION_ID || 'n5d3837d6';
+
   const COLLECT_SEARCH_STATS = process.env.COLLECT_SEARCH_STATS === 'true';
 
   const appConfig: AppConfig = {
@@ -95,7 +97,8 @@ function run() {
     uiUrl: UI_URL,
     vivoUrl: VIVO_URL,
     vivoEditorUrl: VIVO_EDITOR_URL,
-    collectSearchStats: COLLECT_SEARCH_STATS
+    collectSearchStats: COLLECT_SEARCH_STATS,
+    organizationId: ORGANIZATION_ID
   };
 
   // Start up the Node server
