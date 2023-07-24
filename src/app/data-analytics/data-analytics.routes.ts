@@ -3,8 +3,14 @@ import { DataAnalyticsComponent } from './data-analytics.component';
 
 export const routes: Routes = [
   {
+    path: '',
+    component: DataAnalyticsComponent,
+  },{
     path: ':view',
-    component: DataAnalyticsComponent
+    component: DataAnalyticsComponent,
   },
-  { path: '**', redirectTo: 'Dashboard' },
+  {
+    path: ':view/:layout',
+    component: DataAnalyticsComponent,
+  },
 ];

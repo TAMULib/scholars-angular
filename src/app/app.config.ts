@@ -10,6 +10,7 @@ interface AppConfig {
   vivoUrl: string;
   vivoEditorUrl: string;
   collectSearchStats: boolean;
+  organizationId: string;
 }
 
 const APP_CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');

@@ -9,5 +9,6 @@ export const testAppConfig: AppConfig = {
   uiUrl: 'http://localhost:4200',
   vivoUrl: 'http://localhost:8080/vivo',
   vivoEditorUrl: 'http://localhost:8080/vivo_editor',
-  collectSearchStats: false
+  collectSearchStats: false,
+  organizationId: 'n1'
 };

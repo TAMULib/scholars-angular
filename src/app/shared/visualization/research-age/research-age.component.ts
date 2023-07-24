@@ -1,13 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subject, filter, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, filter, first, map, tap } from 'rxjs';
 
+import { APP_CONFIG, AppConfig } from '../../../../app/app.config';
 import { SolrDocument } from '../../../core/model/discovery';
 import { Filterable } from '../../../core/model/request';
 import { OpKey } from '../../../core/model/view';
 import { AppState } from '../../../core/store';
-import { selectResourcesResearchAge } from '../../../core/store/sdr';
+import { selectResourceById, selectResourcesResearchAge } from '../../../core/store/sdr';
 import { ResearchAge } from '../../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../utilities/animation.utility';
 import { BarplotInput } from '../barplot/barplot.component';
@@ -47,7 +48,11 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
   public document: Observable<SolrDocument>;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+  constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
+    private store: Store<AppState>,
+    private route: ActivatedRoute
+  ) {
     this.maxOverride = new BehaviorSubject<number>(undefined);
     this.mean = new Subject<number>();
     this.median = new Subject<number>();
@@ -58,19 +63,33 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+
     if (this.route.parent && this.route.parent.data) {
       this.document = this.route.parent.data.pipe(map(data => data.document));
+    } else {
+      this.document = this.store.pipe(
+        select(selectResourceById('individual', this.appConfig.organizationId)),
+        filter((document: SolrDocument) => document !== undefined)
+      );
+    }
+    if (!!this.document) {
+      this.document.pipe(first()).subscribe(document => {
+        this.render(document);
+      });
+    }
+  }
 
-      this.route.parent.data.subscribe(data => {
-        const document = data.document;
+  // is shadow variable of class property
+  private render(document: SolrDocument): void {
 
         const additionalFilters = [];
 
-        if (document.id === 'n5d3837d6') {
+        if (document.id === this.appConfig.organizationId) {
           this.maxOverride.next(3000);
         }
 
-        if (document.id !== 'n5d3837d6' && !!document.name) {
+        // not all documents have a name
+        if (document.id !== this.appConfig.organizationId && !!document.name) {
           additionalFilters.push({
             field: 'positionOrganization',
             value: document.name,
@@ -106,9 +125,6 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
               this.build(apk, true, true, additionalFilters)
             ])
           ]));
-
-      });
-    }
   }
 
   private build = (

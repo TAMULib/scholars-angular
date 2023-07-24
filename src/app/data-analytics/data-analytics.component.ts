@@ -1,6 +1,6 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subject, Subscription, map } from 'rxjs';
+import { Observable, map, withLatestFrom } from 'rxjs';
 
 import { AnalyticView } from '../core/model/view';
 import { AppState } from '../core/store';
@@ -17,25 +17,13 @@ import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
   styleUrls: ['./data-analytics.component.scss'],
   animations: [fadeIn],
 })
-export class DataAnalyticsComponent implements OnDestroy, OnInit {
-
-  private dashboardBreadcrumb: {
-    label: string;
-    route: string[]
-  } = {
-    label: 'Data Analytics Dashboard',
-    route: ['/data-analytics']
-  };
-
-  public breadcrumbs: BehaviorSubject<any>;
+export class DataAnalyticsComponent implements OnInit {
 
   public analyticViews: Observable<AnalyticView[]>;
 
   public isDashboard: Observable<boolean>;
 
-  public analyticView: Subject<AnalyticView>;
-
-  private subscriptions: Subscription[];
+  public analyticView: Observable<AnalyticView>;
 
   @HostListener('window:resize', ['$event'])
   public onResize(event): void {
@@ -43,60 +31,30 @@ export class DataAnalyticsComponent implements OnDestroy, OnInit {
   }
 
   constructor(private store: Store<AppState>) {
-    this.subscriptions = [];
-    this.breadcrumbs = new BehaviorSubject<any>([{
-      label: 'Data Analytics Dashboard',
-      route: ['/data-analytics']
-    }]);
-  }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    });
   }
 
   ngOnInit(): void {
+    this.store.dispatch(new fromLayout.CloseSidebarAction());
+    this.store.dispatch(new fromSidebar.UnloadSidebarAction());
+
+    this.store.pipe(select(selectRouterState)).subscribe((router: any) => {
+      console.log(router);
+    });
+
     this.analyticViews = this.store.pipe(select(selectAllResources<AnalyticView>('analyticViews')));
+
+    this.analyticView = this.store.pipe(
+      select(selectRouterState),
+      withLatestFrom(this.analyticViews),
+      map(([router, avs]) => avs.find((av: AnalyticView) => av.name === router.state.params.view))
+    );
 
     this.isDashboard = this.store.pipe(
       select(selectRouterState),
-      map((router: any) => {
-        console.log(router);
-        const isNotShadowDashboard = router.state.params.view === 'Dashboard';
-
-        if (isNotShadowDashboard) {
-          this.breadcrumbs.next(
-            [
-              this.dashboardBreadcrumb
-            ]
-          );
-        } else {
-          this.breadcrumbs.next(
-            [
-              this.dashboardBreadcrumb,
-              {
-                label: router.state.params.view,
-                route: [`/data-analytics/${router.state.params.view}`]
-              }
-            ]
-          );
-        }
-
-        return isNotShadowDashboard;
-      })
+      map((router: any) => router.state.url  === '/data-analytics')
     );
 
-    this.analyticViews.subscribe((av: any) => {
-      console.log(av);
-    });
-
-    this.store.dispatch(new fromLayout.CloseSidebarAction());
-    this.store.dispatch(new fromSidebar.UnloadSidebarAction());
-  }
-
-  getRoute(av: AnalyticView): string[] {
-    return ['../', av.name];
   }
 
   trackByIndex(index, item) {
