@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
@@ -17,12 +17,9 @@ describe('DataAnalyticsComponent', () => {
   let component: DataAnalyticsComponent;
   let fixture: ComponentFixture<DataAnalyticsComponent>;
 
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        DataAnalyticsComponent,
-        SidebarComponent,
-      ],
+      declarations: [DataAnalyticsComponent],
       imports: [
         NoopAnimationsModule,
         SharedModule,
@@ -39,7 +36,10 @@ describe('DataAnalyticsComponent', () => {
         RouterTestingModule.withRoutes(routes),
       ],
       providers: [{ provide: APP_CONFIG, useValue: testAppConfig }],
-    });
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(DataAnalyticsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

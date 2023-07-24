@@ -2,11 +2,12 @@
   <div [@fadeIn]>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <ng-template ngFor let-breadcrumb [ngForOf]="breadcrumbs | async" let-i="breadcrumb" [ngForTrackBy]="trackByIndex">
-          <li class="breadcrumb-item active" aria-current="page">
-            <a [routerLink]="breadcrumb.route">{{ breadcrumb.label }}</a>
-          </li>
-        </ng-template>
+        <li class="breadcrumb-item active" aria-current="page">
+          <a [routerLink]="['/data-analytics']">Data & Analytics</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="analyticView | async; let av">
+          <a [routerLink]="['/data-analytics', av.name]">{{ av.name }} </a>
+        </li>
       </ol>
     </nav>
 

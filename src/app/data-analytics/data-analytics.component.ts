@@ -38,10 +38,6 @@ export class DataAnalyticsComponent implements OnInit {
     this.store.dispatch(new fromLayout.CloseSidebarAction());
     this.store.dispatch(new fromSidebar.UnloadSidebarAction());
 
-    this.store.pipe(select(selectRouterState)).subscribe((router: any) => {
-      console.log(router);
-    });
-
     this.analyticViews = this.store.pipe(select(selectAllResources<AnalyticView>('analyticViews')));
 
     this.analyticView = this.store.pipe(
