@@ -9,8 +9,4 @@ export const routes: Routes = [
     path: ':view',
     component: DataAnalyticsComponent,
   },
-  {
-    path: ':view/:layout',
-    component: DataAnalyticsComponent,
-  },
 ];
