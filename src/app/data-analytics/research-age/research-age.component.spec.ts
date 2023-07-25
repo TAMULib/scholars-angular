@@ -5,11 +5,11 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { queueScheduler, scheduled } from 'rxjs';
 
-import { testAppConfig } from '../../../../test.config';
-import { APP_CONFIG } from '../../../app.config';
-import { metaReducers, reducers } from '../../../core/store';
-import { ResearchAgeComponent } from './research-age.component';
+import { testAppConfig } from '../../../test.config';
+import { APP_CONFIG } from '../../app.config';
+import { metaReducers, reducers } from '../../core/store';
 import { BarplotComponent } from '../barplot/barplot.component';
+import { ResearchAgeComponent } from './research-age.component';
 
 describe('ResearchAgeComponent', () => {
   let component: ResearchAgeComponent;

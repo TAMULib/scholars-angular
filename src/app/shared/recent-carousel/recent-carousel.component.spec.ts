@@ -1,14 +1,16 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { metaReducers, reducers } from '../../core/store';
 
-import { RecentCarouselComponent } from './recent-carousel.component';
 import { testAppConfig } from '../../../test.config';
 import { SharedModule } from '../shared.module';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_CONFIG } from 'src/app/app.config';
+import { RecentCarouselComponent } from './recent-carousel.component';
+
+import { APP_CONFIG } from '../../app.config';
 
 describe('RecentCarouselComponent', () => {
   let component: RecentCarouselComponent;

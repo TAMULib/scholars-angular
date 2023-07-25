@@ -1,10 +1,10 @@
 import { Params } from '@angular/router';
 
+import { Boostable, Direction, Facetable, Filterable, Highlightable, Pageable, SdrRequest, Sort } from '../../core/model/request';
+import { Queryable } from '../../core/model/request/sdr.request';
+import { SdrFacetEntry } from '../../core/model/sdr';
+import { Facet, FacetType, OpKey } from '../../core/model/view';
 import { CustomRouterState } from '../../core/store/router/router.reducer';
-import { SdrRequest, Pageable, Sort, Direction, Facetable, Filterable, Boostable, Highlightable } from '../../core/model/request';
-import { OpKey, Facet, FacetType } from '../../core/model/view';
-import { Queryable } from 'src/app/core/model/request/sdr.request';
-import { SdrFacetEntry } from 'src/app/core/model/sdr';
 
 export const FILTER_VALUE_DELIMITER = ';;';
 

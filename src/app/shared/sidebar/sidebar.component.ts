@@ -1,21 +1,21 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { Store, select, Action } from '@ngrx/store';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Params, Router } from '@angular/router';
+import { Action, Store, select } from '@ngrx/store';
 
 import { Observable } from 'rxjs';
 
-import { AppState } from '../../core/store';
 import { SidebarMenu, SidebarSection } from '../../core/model/sidebar';
+import { AppState } from '../../core/store';
 
 import { selectIsSidebarCollapsed } from '../../core/store/layout';
 import { selectMenu } from '../../core/store/sidebar';
 
+import { selectRouterUrl } from '../../core/store/router';
+import { selectResourceIsLoading } from '../../core/store/sdr';
 import { fadeIn } from '../utilities/animation.utility';
 
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
-import { Params, Router } from '@angular/router';
-import { selectRouterUrl } from 'src/app/core/store/router';
-import { selectResourceIsLoading } from 'src/app/core/store/sdr';
 
 @Component({
   selector: 'scholars-sidebar',

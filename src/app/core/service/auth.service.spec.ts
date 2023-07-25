@@ -8,7 +8,7 @@ import { RestService } from './rest.service';
 
 import { getRequest } from '../../app.browser.module';
 import { testAppConfig } from '../../../test.config';
-import { APP_CONFIG } from 'src/app/app.config';
+import { APP_CONFIG } from '../../app.config';
 
 describe('AuthService', () => {
   beforeEach(() => {

@@ -5,9 +5,9 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { queueScheduler, scheduled } from 'rxjs';
 
-import { testAppConfig } from '../../../../test.config';
-import { APP_CONFIG } from '../../../app.config';
-import { metaReducers, reducers } from '../../../core/store';
+import { testAppConfig } from '../../../test.config';
+import { APP_CONFIG } from '../../app.config';
+import { metaReducers, reducers } from '../../core/store';
 import { QuantityDistributionComponent } from './quantity-distribution.component';
 
 describe('QuantityDistributionComponent', () => {

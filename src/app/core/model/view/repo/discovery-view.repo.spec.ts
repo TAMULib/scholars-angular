@@ -10,9 +10,9 @@ import { DiscoveryViewRepo } from './discovery-view.repo';
 
 import { metaReducers, reducers } from '../../../store';
 
-import { getRequest } from '../../../../app.browser.module';
 import { testAppConfig } from '../../../../../test.config';
-import { APP_CONFIG } from 'src/app/app.config';
+import { getRequest } from '../../../../app.browser.module';
+import { APP_CONFIG } from '../../../../app.config';
 
 describe('DiscoveryViewRepo', () => {
   beforeEach(() => {
