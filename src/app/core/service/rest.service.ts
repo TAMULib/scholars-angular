@@ -30,7 +30,7 @@ export class RestService {
     }
   }
 
-  public get<T>(url: string, options: any = {}, cache = true): Observable<T> {
+  public get<T>(url: string, options: any = {}, cache = false): Observable<T> {
     const request = JSON.stringify({ url, options });
     if (this.cache.has(request)) {
       return of(this.cache.get(request));

@@ -71,7 +71,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
       select(selectResourceById('individual', this.appConfig.organizationId)),
       filter((document: SolrDocument) => document !== undefined)
     );
-  
+
     this.document.pipe(first()).subscribe(document => {
       this.render(document);
     });
@@ -80,7 +80,6 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   private render(document: SolrDocument): void {
-
         const additionalFilters = [];
 
         if (document.id === this.appConfig.organizationId) {
