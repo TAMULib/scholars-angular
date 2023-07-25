@@ -1,5 +1,5 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { isPlatformServer } from '@angular/common';
+import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subject, filter, first, map, tap } from 'rxjs';
 
@@ -49,9 +49,9 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   public document: Observable<SolrDocument>;
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: string,
     @Inject(APP_CONFIG) private appConfig: AppConfig,
-    private store: Store<AppState>,
-    private route: ActivatedRoute
+    private store: Store<AppState>
   ) {
     this.maxOverride = new BehaviorSubject<number>(undefined);
     this.mean = new Subject<number>();
@@ -63,23 +63,22 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    if (isPlatformServer(this.platformId)) {
+      return;
+    }
 
-    if (this.route.parent && this.route.parent.data) {
-      this.document = this.route.parent.data.pipe(map(data => data.document));
-    } else {
-      this.document = this.store.pipe(
-        select(selectResourceById('individual', this.appConfig.organizationId)),
-        filter((document: SolrDocument) => document !== undefined)
-      );
-    }
-    if (!!this.document) {
-      this.document.pipe(first()).subscribe(document => {
-        this.render(document);
-      });
-    }
+    this.document = this.store.pipe(
+      select(selectResourceById('individual', this.appConfig.organizationId)),
+      filter((document: SolrDocument) => document !== undefined)
+    );
+  
+    this.document.pipe(first()).subscribe(document => {
+      this.render(document);
+    });
+
+    this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: this.appConfig.organizationId }));
   }
 
-  // is shadow variable of class property
   private render(document: SolrDocument): void {
 
         const additionalFilters = [];

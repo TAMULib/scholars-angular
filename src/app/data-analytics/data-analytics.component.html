@@ -19,8 +19,22 @@
               {{ av.name }}
             </div>
             <div class="card-body" [ngSwitch]="av.layout">
-
-              <div *ngSwitchCase="'CONTAINER'">{{ av.type }}</div>
+              <div *ngSwitchCase="'CONTAINER'">
+                <div [ngSwitch]="av.type">
+                  <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
+                    <span>{{ av.type }} In Progress</span>
+                    <!-- <scholars-research-age></scholars-research-age> -->
+                  </div>
+                  <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
+                    <span>{{ av.type }} In Progress</span>
+                    <!-- <scholars-quantity-distribution></scholars-quantity-distribution> -->
+                  </div>
+                  <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
+                    <span>{{ av.type }} In Progress</span>
+                  </div>
+                  <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
+                </div>
+              </div>
               <div *ngSwitchCase="'GRID'">{{ av.layout }} Not Supported</div>
               <div *ngSwitchCase="'LIST'">{{ av.layout }} Not Supported</div>
               <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
@@ -37,12 +51,25 @@
           {{ av.name }}
         </div>
         <div class="card-body" [ngSwitch]="av.layout">
-
-          <div *ngSwitchCase="'CONTAINER'">{{ av.type }}</div>
+          <div *ngSwitchCase="'CONTAINER'">
+            <div [ngSwitch]="av.type">
+              <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
+                <span>{{ av.type }} In Progress</span>
+                <scholars-research-age></scholars-research-age>
+              </div>
+              <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
+                <span>{{ av.type }} In Progress</span>
+                <scholars-quantity-distribution></scholars-quantity-distribution>
+              </div>
+              <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
+                <span>{{ av.type }} In Progress</span>
+              </div>
+              <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
+            </div>
+          </div>
           <div *ngSwitchCase="'GRID'">{{ av.layout }} Not Supported</div>
           <div *ngSwitchCase="'LIST'">{{ av.layout }} Not Supported</div>
           <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
-
         </div>
       </div>
     </div>

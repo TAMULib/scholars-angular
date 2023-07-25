@@ -1,15 +1,15 @@
 import { isPlatformServer } from '@angular/common';
 import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable, filter, map, take } from 'rxjs';
+import { Observable, filter, first, take } from 'rxjs';
 
 import * as d3 from 'd3';
 
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { SolrDocument } from '../../core/model/discovery';
 import { Filter, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
-import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
+import { selectResourceById, selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { id } from '../../shared/utilities/id.utility';
@@ -34,8 +34,8 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
-    private store: Store<AppState>,
-    private route: ActivatedRoute
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
+    private store: Store<AppState>
   ) {
     this.id = id();
   }
@@ -138,32 +138,26 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
       });
     });
 
-    const additionalFilters = [];
+    this.document = this.store.pipe(
+      select(selectResourceById('individual', this.appConfig.organizationId)),
+      filter((document: SolrDocument) => document !== undefined)
+    );
 
-    const hasParentRouteData = this.route.parent && this.route.parent.data;
+    this.document.pipe(first()).subscribe(document => {
+      const additionalFilters = [];
+      console.log(document);
+      if (document.class === 'Organization') {
+        additionalFilters.push({
+          field: 'authorOrganization',
+          value: document.name,
+          opKey: OpKey.EQUALS
+        });
+      }
 
-    if (hasParentRouteData) {
-      this.document = this.route.parent.data.pipe(map(data => data.document));
-
-      this.route.parent.data.subscribe(data => {
-        const document = data.document;
-
-        if (document.class === 'Organization') {
-          additionalFilters.push({
-            field: 'authorOrganization',
-            value: document.name,
-            opKey: OpKey.EQUALS
-          });
-
-          this.dispatch(additionalFilters);
-        }
-      });
-    }
-
-    if (!hasParentRouteData) {
       this.dispatch(additionalFilters);
-    }
+    });
 
+    this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: this.appConfig.organizationId }));
   }
 
   private dispatch(additionalFilters: Filter[]): void {

@@ -136,7 +136,7 @@ export class RecentlyUpdatedResourcesFailureAction implements Action {
 
 export class GetOneResourceAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.GET_ONE, this.name);
-  constructor(public name: string, public payload: { id: number }) { }
+  constructor(public name: string, public payload: { id: number | string }) { }
 }
 
 export class GetOneResourceSuccessAction implements Action {
