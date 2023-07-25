@@ -3,32 +3,32 @@ import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angul
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subject, filter, first, map, tap } from 'rxjs';
 
-import { APP_CONFIG, AppConfig } from '../../../app/app.config';
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { SolrDocument } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
 import { OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectResourceById, selectResourcesResearchAge } from '../../core/store/sdr';
-import { ResearchAge } from '../../core/store/sdr/sdr.reducer';
+import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotInput } from '../barplot/barplot.component';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
-const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
+const researchAgeToBarplotInput = (academicAge: AcademicAge): BarplotInput => {
   return {
-    label: researchAge.label,
-    data: researchAge.groups
+    label: academicAge.label,
+    data: academicAge.groups
   } as BarplotInput;
 }
 
 @Component({
-  selector: 'scholars-research-age',
-  templateUrl: './research-age.component.html',
-  styleUrls: ['./research-age.component.scss'],
+  selector: 'scholars-academic-age',
+  templateUrl: './academic-age.component.html',
+  styleUrls: ['./academic-age.component.scss'],
   animations: [fadeIn],
 })
-export class ResearchAgeComponent implements OnDestroy, OnInit {
+export class AcademicAgeComponent implements OnDestroy, OnInit {
 
   @Input()
   public upperLimitInYears = 40;
@@ -42,7 +42,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
   public median: Subject<number>;
 
-  public researchAge: Observable<BarplotInput>;
+  public academicAge: Observable<BarplotInput>;
 
   public averagePubRateResearchAge: Observable<BarplotInput>;
 
@@ -99,10 +99,10 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
         const pk = 'Publications';
         const apk = 'Average publications';
 
-        this.researchAge = this.store.pipe(
+        this.academicAge = this.store.pipe(
           select(selectResourcesResearchAge('individual')),
-          filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
-          tap((ra: ResearchAge) => {
+          filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
+          tap((ra: AcademicAge) => {
             if (ra.label === rk) {
               this.mean.next(ra.mean);
               this.median.next(ra.median);
@@ -113,7 +113,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
         this.averagePubRateResearchAge = this.store.pipe(
           select(selectResourcesResearchAge('individual')),
-          filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
+          filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
           map(researchAgeToBarplotInput)
         );
 

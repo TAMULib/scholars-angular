@@ -1,4 +1,4 @@
-<div class="container mb-1" *ngIf="researchAge | async">
+<div class="container mb-1" *ngIf="academicAge | async">
   <div class="text-center h2">{{(document | async)?.name}}</div>
   <div class="row">
     <div class="col-xs">
@@ -13,7 +13,7 @@
       <div class="card shadow bg-white rounded m-1">
         <div class="card-body">
           <div class="h5">Researchers and publications per academic age group</div>
-          <scholars-barplot scale="1" [input]="researchAge" maxOverride="{{maxOverride | async}}"></scholars-barplot>
+          <scholars-barplot scale="1" [input]="academicAge" maxOverride="{{maxOverride | async}}"></scholars-barplot>
         </div>
       </div>
     </div>

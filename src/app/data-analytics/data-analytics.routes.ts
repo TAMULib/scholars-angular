@@ -5,7 +5,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DataAnalyticsComponent,
-  },{
+  }, {
     path: ':view',
     component: DataAnalyticsComponent,
   },

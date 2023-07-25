@@ -5,18 +5,18 @@ import { MissingTranslationHandler, TranslateModule } from '@ngx-translate/core'
 
 import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-translation.handler';
 import { SharedModule } from '../shared/shared.module';
+import { AcademicAgeComponent } from './academic-age/academic-age.component';
 import { BarplotComponent } from './barplot/barplot.component';
 import { DataAnalyticsComponent } from './data-analytics.component';
 import { routes } from './data-analytics.routes';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
-import { ResearchAgeComponent } from './research-age/research-age.component';
 
 @NgModule({
   declarations: [
-    DataAnalyticsComponent,
+    AcademicAgeComponent,
     BarplotComponent,
+    DataAnalyticsComponent,
     QuantityDistributionComponent,
-    ResearchAgeComponent
   ],
   imports: [
     CommonModule,
