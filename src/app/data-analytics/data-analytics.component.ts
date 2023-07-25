@@ -1,15 +1,17 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable, map, withLatestFrom } from 'rxjs';
+import { Observable, filter, map, withLatestFrom } from 'rxjs';
 
+import { SolrDocument } from '../core/model/discovery';
 import { AnalyticView } from '../core/model/view';
 import { AppState } from '../core/store';
 import { selectRouterState } from '../core/store/router';
-import { selectAllResources } from '../core/store/sdr';
+import { selectAllResources, selectResourceById } from '../core/store/sdr';
 import { fadeIn } from '../shared/utilities/animation.utility';
 
 import * as fromLayout from '../core/store/layout/layout.actions';
 import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
+import { APP_CONFIG, AppConfig } from '../app.config';
 
 @Component({
   selector: 'scholars-data-analytics',
@@ -25,16 +27,27 @@ export class DataAnalyticsComponent implements OnInit {
 
   public analyticView: Observable<AnalyticView>;
 
+  public document: Observable<SolrDocument>;
+
   @HostListener('window:resize', ['$event'])
   public onResize(event): void {
     this.store.dispatch(new fromLayout.CloseSidebarAction());
   }
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
+  ) {
 
   }
 
   ngOnInit(): void {
+    // TODO: get organization id from the theme
+    this.document = this.store.pipe(
+      select(selectResourceById('individual', this.appConfig.organizationId)),
+      filter((document: SolrDocument) => document !== undefined)
+    );
+
     this.store.dispatch(new fromLayout.CloseSidebarAction());
     this.store.dispatch(new fromSidebar.UnloadSidebarAction());
 

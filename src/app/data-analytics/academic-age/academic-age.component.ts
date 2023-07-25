@@ -30,6 +30,10 @@ const researchAgeToBarplotInput = (academicAge: AcademicAge): BarplotInput => {
 })
 export class AcademicAgeComponent implements OnDestroy, OnInit {
 
+  // required!
+  @Input()
+  public document: Observable<SolrDocument>;
+
   @Input()
   public upperLimitInYears = 40;
 
@@ -45,8 +49,6 @@ export class AcademicAgeComponent implements OnDestroy, OnInit {
   public academicAge: Observable<BarplotInput>;
 
   public averagePubRateResearchAge: Observable<BarplotInput>;
-
-  public document: Observable<SolrDocument>;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
@@ -75,8 +77,6 @@ export class AcademicAgeComponent implements OnDestroy, OnInit {
     this.document.pipe(first()).subscribe(document => {
       this.render(document);
     });
-
-    this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: this.appConfig.organizationId }));
   }
 
   private render(document: SolrDocument): void {

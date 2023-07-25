@@ -25,10 +25,12 @@ import * as fromSdr from '../../core/store/sdr/sdr.actions';
 })
 export class QuantityDistributionComponent implements OnDestroy, OnInit {
 
+  // required!
+  @Input()
+  public document: Observable<SolrDocument>;
+
   @Input() height = 394;
   @Input() width = 986;
-
-  public document: Observable<SolrDocument>;
 
   public id: string;
 
@@ -137,11 +139,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
             .text((d) => `SDG ${d.label}, ${d.count}`);
       });
     });
-
-    this.document = this.store.pipe(
-      select(selectResourceById('individual', this.appConfig.organizationId)),
-      filter((document: SolrDocument) => document !== undefined)
-    );
 
     this.document.pipe(first()).subscribe(document => {
       const additionalFilters = [];

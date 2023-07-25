@@ -18,16 +18,19 @@
             <div class="card-header">
               {{ av.name }}
             </div>
+
+
             <div class="card-body" [ngSwitch]="av.layout">
+
+
+
               <div *ngSwitchCase="'CONTAINER'">
                 <div [ngSwitch]="av.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
                     <span>{{ av.type }} In Progress</span>
-                    <scholars-academic-age thumbnail></scholars-academic-age>
                   </div>
                   <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
                     <span>{{ av.type }} In Progress</span>
-                    <scholars-quantity-distribution thumbnail></scholars-quantity-distribution>
                   </div>
                   <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
                     <span>{{ av.type }} In Progress</span>
@@ -54,11 +57,11 @@
             <div [ngSwitch]="av.type">
               <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
                 <span>{{ av.type }} In Progress</span>
-                <scholars-academic-age></scholars-academic-age>
+                <scholars-academic-age [document]="document"></scholars-academic-age>
               </div>
               <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
                 <span>{{ av.type }} In Progress</span>
-                <scholars-quantity-distribution></scholars-quantity-distribution>
+                <scholars-quantity-distribution [document]="document"></scholars-quantity-distribution>
               </div>
               <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
                 <span>{{ av.type }} In Progress</span>
