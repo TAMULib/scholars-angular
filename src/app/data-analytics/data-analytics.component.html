@@ -19,8 +19,6 @@
               {{ av.name }}
             </div>
             <div class="card-body" [ngSwitch]="av.layout">
-
-
               <div *ngSwitchCase="'CONTAINER'">
                 <div [ngSwitch]="av.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
@@ -50,6 +48,17 @@
           {{ av.name }}
         </div>
         <div class="card-body" [ngSwitch]="av.layout">
+
+          <form *ngIf="document | async; let document">
+            <div class="form-group">
+              <label for="Select hasSubOrganization">College</label>
+              <select class="form-control" id="college">
+                <option value="" disabled>- Select -</option>
+                <option *ngFor="let so of document.hasSubOrganizations" [ngValue]="so.id">{{ so.label }}</option>
+              </select>
+            </div>
+          </form>
+
           <div *ngSwitchCase="'CONTAINER'">
             <div [ngSwitch]="av.type">
               <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
