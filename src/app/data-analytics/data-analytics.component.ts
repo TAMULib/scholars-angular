@@ -2,6 +2,7 @@ import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, filter, map, withLatestFrom } from 'rxjs';
 
+import { APP_CONFIG, AppConfig } from '../app.config';
 import { SolrDocument } from '../core/model/discovery';
 import { AnalyticView } from '../core/model/view';
 import { AppState } from '../core/store';
@@ -10,8 +11,8 @@ import { selectAllResources, selectResourceById } from '../core/store/sdr';
 import { fadeIn } from '../shared/utilities/animation.utility';
 
 import * as fromLayout from '../core/store/layout/layout.actions';
+import * as fromSdr from '../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
-import { APP_CONFIG, AppConfig } from '../app.config';
 
 @Component({
   selector: 'scholars-data-analytics',
@@ -64,6 +65,7 @@ export class DataAnalyticsComponent implements OnInit {
       map((router: any) => !!router && router.state.url  === '/data-analytics')
     );
 
+    this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: this.appConfig.organizationId }));
   }
 
   trackByIndex(index, item) {

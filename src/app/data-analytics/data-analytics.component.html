@@ -18,10 +18,7 @@
             <div class="card-header">
               {{ av.name }}
             </div>
-
-
             <div class="card-body" [ngSwitch]="av.layout">
-
 
 
               <div *ngSwitchCase="'CONTAINER'">
@@ -48,7 +45,7 @@
     </div>
 
     <div class="card-deck" *ngIf="analyticView | async; let av">
-      <div class="card">
+      <div class="card"  *ngIf="document | async">
         <div class="card-header">
           {{ av.name }}
         </div>

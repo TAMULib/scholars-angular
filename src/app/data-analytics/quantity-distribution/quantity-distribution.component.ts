@@ -153,8 +153,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
 
       this.dispatch(additionalFilters);
     });
-
-    this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: this.appConfig.organizationId }));
   }
 
   private dispatch(additionalFilters: Filter[]): void {
