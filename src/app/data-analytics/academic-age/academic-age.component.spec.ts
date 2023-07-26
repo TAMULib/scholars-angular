@@ -9,17 +9,17 @@ import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
 import { metaReducers, reducers } from '../../core/store';
 import { BarplotComponent } from '../barplot/barplot.component';
-import { ResearchAgeComponent } from './academic-age.component';
+import { AcademicAgeComponent } from './academic-age.component';
 
-describe('ResearchAgeComponent', () => {
-  let component: ResearchAgeComponent;
-  let fixture: ComponentFixture<ResearchAgeComponent>;
+describe('AcademicAgeComponent', () => {
+  let component: AcademicAgeComponent;
+  let fixture: ComponentFixture<AcademicAgeComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         BarplotComponent,
-        ResearchAgeComponent
+        AcademicAgeComponent
       ],
       imports: [
         StoreModule.forRoot(reducers(testAppConfig), {
@@ -48,7 +48,7 @@ describe('ResearchAgeComponent', () => {
         TranslateService
       ],
     });
-    fixture = TestBed.createComponent(ResearchAgeComponent);
+    fixture = TestBed.createComponent(AcademicAgeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
