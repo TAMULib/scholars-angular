@@ -1,5 +1,6 @@
 <scholars-sidebar>
   <div [@fadeIn]>
+    <!-- view navigation -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item active" aria-current="page">
@@ -10,6 +11,20 @@
         </li>
       </ol>
     </nav>
+
+    <!-- organization navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          <a [routerLink]="['/data-analytics']">Texas A&M University</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" *ngIf="selectedOrganization | async; let so">
+          <a [routerLink]="['./', so.id]">{{ so.name }} </a>
+        </li>
+      </ol>
+    </nav>
+
+    {{ selectedOrganization | async | json }}
 
     <div class="card-columns" *ngIf="isDashboard | async">
       <ng-template ngFor let-av [ngForOf]="analyticViews | async" let-i="av" [ngForTrackBy]="trackByIndex">
@@ -49,20 +64,50 @@
         </div>
         <div class="card-body" [ngSwitch]="av.layout">
 
-          <form *ngIf="document | async; let document">
-            <div class="form-group">
-              <label for="Select hasSubOrganization">College</label>
-              <select class="form-control" id="college">
-                <option value="" disabled>- Select -</option>
-                <option *ngFor="let so of document.hasSubOrganizations" [ngValue]="so.id">{{ so.label }}</option>
-              </select>
+          {{selectedOrganization | async | json}}
+
+          <div class="row p-1">
+            <div class="col-4" *ngIf="document | async; let document">
+              <form [formGroup]="subOrganizationForm" (ngSubmit)="onSubmitSelectSubOrganization()">
+                <div class="form-group">
+                  <label for="Select hasSubOrganization">College</label>
+                  <select class="form-control" id="college" formControlName="selectedOrganization">
+                    <option value="" disabled selected>- Select -</option>
+                    <option *ngFor="let so of document.hasSubOrganizations | filter: {type: 'College'}" [value]="selectedOrganization">
+                      {{ so.label }}
+                    </option>
+                  </select>
+                </div>
+              </form>
             </div>
-          </form>
+            <!-- <div class="col-4">
+              <form *ngIf="document | async; let document">
+                <div class="form-group">
+                  <label for="Select hasSubOrganization">Department</label>
+                  <select class="form-control" id="college">
+                    <option value="" disabled selected>- Select -</option>
+                    <option *ngFor="let so of document.hasSubOrganizations | filter: {type: 'Department'}" [ngValue]="so.id">{{ so.label }}</option>
+                  </select>
+                </div>
+              </form>
+            </div> -->
+            <div class="col-4">
+              <form *ngIf="document | async; let document">
+                <div class="form-group">
+                  <label for="Select hasSubOrganization">Centers, Institutes, & Others</label>
+                  <select class="form-control" id="college">
+                    <option value="" disabled selected>- Select -</option>
+                    <option *ngFor="let so of document.hasSubOrganizations | filter: {type: '!College'}" [ngValue]="so.id">{{ so.label }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
 
           <div *ngSwitchCase="'CONTAINER'">
             <div [ngSwitch]="av.type">
               <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
-                <span>{{ av.type }} In Progress</span>
+                <!-- <span>{{ av.type }} In Progress</span> -->
                 <scholars-academic-age [document]="document"></scholars-academic-age>
               </div>
               <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">

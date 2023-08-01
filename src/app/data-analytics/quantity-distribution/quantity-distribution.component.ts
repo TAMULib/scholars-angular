@@ -5,11 +5,10 @@ import { Observable, filter, first, take } from 'rxjs';
 
 import * as d3 from 'd3';
 
-import { APP_CONFIG, AppConfig } from '../../app.config';
 import { SolrDocument } from '../../core/model/discovery';
 import { Filter, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
-import { selectResourceById, selectResourcesQuantityDistribution } from '../../core/store/sdr';
+import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { id } from '../../shared/utilities/id.utility';
@@ -36,7 +35,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
-    @Inject(APP_CONFIG) private appConfig: AppConfig,
     private store: Store<AppState>
   ) {
     this.id = id();

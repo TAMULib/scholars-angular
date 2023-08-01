@@ -15,8 +15,14 @@ export class FilterPipe implements PipeTransform {
     return items.filter((item: any) => {
       for (const key in filter) {
         if (filter.hasOwnProperty(key)) {
-          if (item[key] !== filter[key]) {
-            return false;
+          if (filter[key].startsWith('!')) {
+            if (filter[key].endsWith(item[key])) {
+              return false;
+            }
+          } else {
+            if (item[key] !== filter[key]) {
+              return false;
+            }
           }
         }
       }
