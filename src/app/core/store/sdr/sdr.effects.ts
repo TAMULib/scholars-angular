@@ -673,6 +673,39 @@ export class SdrEffects {
     })
   ), { dispatch: false });
 
+  // TODO
+  downloadProfile = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY)),
+    switchMap((action: fromSdr.DownloadProfileSummary) =>
+      this.repos
+        .get(action.name)
+        .delete(action.payload.id)
+        .pipe(
+          map(() => new fromSdr.DownloadProfileSummarySuccessAction(action.name)),
+          catchError((response) =>
+            scheduled(
+              [
+                new fromSdr.DownloadProfileSummaryFailureAction(action.name, {
+                  response,
+                }),
+              ],
+              asapScheduler
+            )
+          )
+        )
+    )
+  ));
+  // TODO
+  downloadProfileSuccess = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_SUCCESS)),
+    switchMap((action: fromSdr.DownloadProfileSummarySuccessAction) => [new fromDialog.CloseDialogAction(), this.alert.deleteSuccessAlert(action)])
+  ));
+  // TODO
+  downloadProfileFailure = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.DELETE_FAILURE)),
+    map((action: fromSdr.DeleteResourceFailureAction) => this.alert.deleteFailureAlert(action.payload))
+  ));
+
   initViews = createEffect(() => defer(() => scheduled([
     new fromSdr.GetAllResourcesAction('analyticViews'),
     new fromSdr.GetAllResourcesAction('directoryViews'),

@@ -10,6 +10,7 @@ import { BarplotComponent } from './barplot/barplot.component';
 import { DataAnalyticsComponent } from './data-analytics.component';
 import { routes } from './data-analytics.routes';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
+import { SummaryProfileExportComponent } from './summary-profile-export/summary-profile-export.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
     BarplotComponent,
     DataAnalyticsComponent,
     QuantityDistributionComponent,
+    SummaryProfileExportComponent,
   ],
   imports: [
     CommonModule,

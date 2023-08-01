@@ -116,6 +116,7 @@
               </div>
               <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
                 <span>{{ av.type }} In Progress</span>
+                <scholars-summary-profile-export [document]="document"></scholars-summary-profile-export>
               </div>
               <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
             </div>

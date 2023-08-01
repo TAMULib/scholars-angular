@@ -72,3 +72,5 @@ const findDisplayView = (displayViews, types: string[], defaultName: string): Di
 };
 
 export const selectDisplayViewByTypes = (types: string[]) => createSelector(selectResourceEntities<DisplayView>('displayViews'), (resources) => findDisplayView(resources, types, 'Default'));
+
+export const selectResourceIsDownloading = <R extends SdrResource>(id: string) => createSelector(selectSdrState<R>(id), fromSdr.isDownloading);

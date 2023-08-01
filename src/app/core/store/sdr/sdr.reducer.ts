@@ -1,6 +1,6 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 
-import { SdrActionTypes, SdrActions, getSdrAction } from './sdr.actions';
+import { DownloadProfileSummary, SdrActionTypes, SdrActions, getSdrAction } from './sdr.actions';
 import { SdrResource, SdrPage, SdrCollectionLinks, SdrFacet, SdrHighlight } from '../../model/sdr';
 
 import { keys } from '../../model/repos';
@@ -48,6 +48,11 @@ export interface QuantityDistribution {
   distribution: Slice[];
 }
 
+export interface DownloadProfileSummary {
+  label: string;
+  field: string;
+}
+
 export interface SdrState<R extends SdrResource> extends EntityState<R> {
   page: SdrPage;
   facets: SdrFacet[];
@@ -57,11 +62,13 @@ export interface SdrState<R extends SdrResource> extends EntityState<R> {
   dataNetwork: DataNetwork;
   academicAge: AcademicAge;
   quantityDistribution: QuantityDistribution;
+  downloadProfileSummary: DownloadProfileSummary;
   counting: boolean;
   loading: boolean;
   dereferencing: boolean;
   updating: boolean;
   error: any;
+  isDownloading: boolean;
 }
 
 export const getSdrAdapter = <R extends SdrResource>(key: string) => {
@@ -80,11 +87,13 @@ export const getSdrInitialState = <R extends SdrResource>(key: string) => {
     dataNetwork: undefined,
     academicAge: undefined,
     quantityDistribution: undefined,
+    downloadProfileSummary: undefined,
     counting: false,
     loading: false,
     dereferencing: false,
     updating: false,
     error: undefined,
+    isDownloading: false,
   });
 };
 
@@ -199,6 +208,11 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           dereferencing: true,
           error: undefined,
         };
+      case getSdrAction(SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY, name):
+        return {
+          ...state,
+          isDownloading: true
+        };
       case getSdrAction(SdrActionTypes.GET_ALL_SUCCESS, name):
         return getSdrAdapter<R>(keys[name]).setAll(getResources(action, name), {
           ...state,
@@ -254,6 +268,11 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
             error: undefined,
           }
         );
+      case getSdrAction(SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_SUCCESS, name):
+        return {
+          ...state,
+          isDownloading: false,
+        };
       case getSdrAction(SdrActionTypes.GET_ONE_SUCCESS, name):
       case getSdrAction(SdrActionTypes.FIND_BY_TYPES_IN_SUCCESS, name):
         return getSdrAdapter<R>(keys[name]).addOne(getResource(action, name), {
@@ -306,6 +325,13 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
         return {
           ...state,
           loading: false,
+          error: action.payload.response.error,
+        };
+      case getSdrAction(SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_FAILURE, name):
+        console.error(action);
+        return {
+          ...state,
+          isDownloading: false,
           error: action.payload.response.error,
         };
       case getSdrAction(SdrActionTypes.COUNT_FAILURE, name):
@@ -369,7 +395,7 @@ export const isLoading = <R extends SdrResource>(state: SdrState<R>) => state.lo
 export const isDereferencing = <R extends SdrResource>(state: SdrState<R>) => state.dereferencing;
 export const isUpdating = <R extends SdrResource>(state: SdrState<R>) => state.updating;
 export const isCounting = <R extends SdrResource>(state: SdrState<R>) => state.counting;
-
+export const isDownloading = <R extends SdrResource>(state: SdrState<R>) => state.isDownloading;
 export const getPage = <R extends SdrResource>(state: SdrState<R>) => state.page;
 export const getCounts = <R extends SdrResource>(state: SdrState<R>) => state.counts;
 export const getCountByLabel = (label: string) => <R extends SdrResource>(state: SdrState<R>) => state.counts[label];
@@ -379,3 +405,4 @@ export const getRecentlyUpdated = <R extends SdrResource>(state: SdrState<R>) =>
 export const getDataNetwork = <R extends SdrResource>(state: SdrState<R>) => state.dataNetwork;
 export const getResearchAge = <R extends SdrResource>(state: SdrState<R>) => state.academicAge;
 export const getQuantityDistribution = <R extends SdrResource>(state: SdrState<R>) => state.quantityDistribution;
+export const downloadProfileSummary = <R extends SdrResource>(state: SdrState<R>) => state.downloadProfileSummary;

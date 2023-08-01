@@ -53,6 +53,9 @@ export enum SdrActionTypes {
   DELETE_SUCCESS = 'sucessfully deleteed resource',
   DELETE_FAILURE = 'failed deleting resource',
   CLEAR = 'clear resources',
+  DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY = 'download profile summary by organization',
+  DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_SUCCESS = 'sucessfully downloaded profile summary by organization',
+  DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_FAILURE = 'failed downloading profile summary by organization',
 }
 
 export const getSdrAction = (actionType: SdrActionTypes, name: string): string => {
@@ -325,6 +328,25 @@ export class ClearResourcesAction implements Action {
   constructor(public name: string, public payload?: any) { }
 }
 
+export class DownloadProfileSummary implements Action {
+  readonly type = getSdrAction(SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY, this.name);
+  constructor(public name: string, public payload: {
+    id: string;
+    type: string;
+    name: string;
+  }) { }
+}
+
+export class DownloadProfileSummarySuccessAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_SUCCESS, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
+export class DownloadProfileSummaryFailureAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_FAILURE, this.name);
+  constructor(public name: string, public payload: any) { }
+}
+
 export type SdrActions =
   GetAllResourcesAction |
   GetAllResourcesSuccessAction |
@@ -374,4 +396,7 @@ export type SdrActions =
   DeleteResourceAction |
   DeleteResourceSuccessAction |
   DeleteResourceFailureAction |
-  ClearResourcesAction;
+  ClearResourcesAction |
+  DownloadProfileSummary |
+  DownloadProfileSummarySuccessAction |
+  DownloadProfileSummaryFailureAction;

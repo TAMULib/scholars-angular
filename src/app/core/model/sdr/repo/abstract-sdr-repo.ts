@@ -77,6 +77,14 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
   ): Observable<QuantityDistribution> {
     return this.restService.get<QuantityDistribution>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/quantityDistribution${this.mapParameters({ query, filters })}&label=${label}&field=${field}`);
   }
+  // TODO
+  // public downloadProfile (
+  //   id: string,
+  //   name: string,
+  //   type: string
+  // ): Observable<any> {
+  //   return this.restService.get<any>(`${this.appConfig.serviceUrl}/${this.path()}/analytics/quantityDistribution${this.mapParameters({ query, filters })}&label=${label}&field=${field}`);
+  // }
 
   public findByIdIn(ids: string[]): Observable<SdrCollection> {
     const chunkSize = 100;
