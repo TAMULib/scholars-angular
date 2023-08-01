@@ -1,8 +1,8 @@
-<div class="container mb-1">
-  <div class="text-center h2">{{(document | async)?.name}}</div>
+<div class="container mb-1" *ngIf="document | async; let document">
+  <div class="text-center h2">{{document?.name}}</div>
 
-  <form>
-    <button type="submit" class="btn btn-primary" (click)="downloadSummary()">Download</button>
+  <form *ngIf="analyticView | async; let analyticView">
+    <button type="submit" class="btn btn-primary" (click)="downloadSummary(document, analyticView)">Download</button>
   </form>
 
 </div>

@@ -35,7 +35,7 @@ export const routes: Routes = [
   },
   {
     path: ':view',
-    component: DataAnalyticsComponent,
+    redirectTo: ':view/n5d3837d6'
   },
   {
     path: ':view/:organization',
