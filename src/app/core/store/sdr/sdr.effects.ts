@@ -4,7 +4,7 @@ import { Params } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 
-import { combineLatest, defer, Observable, scheduled } from 'rxjs';
+import { combineLatest, defer, Observable, of, scheduled } from 'rxjs';
 import { asapScheduler } from 'rxjs';
 import { catchError, filter, map, mergeMap, skipWhile, switchMap, take, withLatestFrom } from 'rxjs/operators';
 
@@ -673,15 +673,14 @@ export class SdrEffects {
     })
   ), { dispatch: false });
 
-  // TODO
   downloadProfile = createEffect(() => this.actions.pipe(
     ofType(...this.buildActions(fromSdr.SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY)),
     switchMap((action: fromSdr.DownloadProfileSummary) =>
-      this.repos
-        .get(action.name)
-        .delete(action.payload.id)
+      of()
         .pipe(
-          map(() => new fromSdr.DownloadProfileSummarySuccessAction(action.name)),
+          map(() => new fromSdr.DownloadProfileSummarySuccessAction(action.name, {
+            ...action.payload
+          })),
           catchError((response) =>
             scheduled(
               [
@@ -695,12 +694,12 @@ export class SdrEffects {
         )
     )
   ));
-  // TODO
+
   downloadProfileSuccess = createEffect(() => this.actions.pipe(
     ofType(...this.buildActions(fromSdr.SdrActionTypes.DOWNLOAD_ORGANIZATION_PROFILE_SUMMARY_SUCCESS)),
     switchMap((action: fromSdr.DownloadProfileSummarySuccessAction) => [new fromDialog.CloseDialogAction(), this.alert.deleteSuccessAlert(action)])
   ));
-  // TODO
+
   downloadProfileFailure = createEffect(() => this.actions.pipe(
     ofType(...this.buildActions(fromSdr.SdrActionTypes.DELETE_FAILURE)),
     map((action: fromSdr.DeleteResourceFailureAction) => this.alert.deleteFailureAlert(action.payload))

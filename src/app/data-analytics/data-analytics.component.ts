@@ -2,7 +2,7 @@ import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, filter, map, tap, withLatestFrom } from 'rxjs';
+import { Observable, filter, map, tap, withLatestFrom } from 'rxjs';
 
 import { APP_CONFIG, AppConfig } from '../app.config';
 import { SolrDocument } from '../core/model/discovery';

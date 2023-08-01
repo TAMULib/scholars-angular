@@ -1,6 +1,6 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 
-import { DownloadProfileSummary, SdrActionTypes, SdrActions, getSdrAction } from './sdr.actions';
+import { SdrActionTypes, SdrActions, getSdrAction } from './sdr.actions';
 import { SdrResource, SdrPage, SdrCollectionLinks, SdrFacet, SdrHighlight } from '../../model/sdr';
 
 import { keys } from '../../model/repos';

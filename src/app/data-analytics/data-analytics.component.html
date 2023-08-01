@@ -24,7 +24,7 @@
       </ol>
     </nav>
 
-    {{ selectedOrganization | async | json }}
+    <!-- {{ selectedOrganization | async | json }} -->
 
     <div class="card-columns" *ngIf="isDashboard | async">
       <ng-template ngFor let-av [ngForOf]="analyticViews | async" let-i="av" [ngForTrackBy]="trackByIndex">
@@ -64,7 +64,7 @@
         </div>
         <div class="card-body" [ngSwitch]="av.layout">
 
-          {{selectedOrganization | async | json}}
+          <!-- {{selectedOrganization | async | json}} -->
 
           <div class="row p-1">
             <div class="col-4" *ngIf="document | async; let document">
@@ -116,7 +116,6 @@
               </div>
               <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
                 <span>{{ av.type }} In Progress</span>
-                <scholars-summary-profile-export [document]="document"></scholars-summary-profile-export>
               </div>
               <div *ngSwitchDefault>{{ av.layout }} Unknown</div>
             </div>
