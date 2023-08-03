@@ -15,6 +15,7 @@ import { fadeIn } from '../shared/utilities/animation.utility';
 import * as fromLayout from '../core/store/layout/layout.actions';
 import * as fromSdr from '../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
+import { SidebarItemType } from '../core/model/sidebar';
 
 @Component({
   selector: 'scholars-data-analytics',
@@ -52,6 +53,53 @@ export class DataAnalyticsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // see sdr.effect.ts searchSuccessHandler
+    // just adding to analytic view on server side should also add search result facets but only show selected
+    const sections = (titles: string[], config: any) => {
+      return {
+        menu: {
+          sections: titles.map((title: string) => {
+            return {
+              collapsed: false,
+              items: config.ii ? [
+                {
+                  type: SidebarItemType.INFO,
+                  label: 'Success'
+                },
+                {
+                  type: SidebarItemType.INFO,
+                  label: 'Above Average'
+                },
+                {
+                  type: SidebarItemType.INFO,
+                  label: 'Average'
+                },
+                {
+                  type: SidebarItemType.INFO,
+                  label: 'Below Average'
+                },
+                {
+                  type: SidebarItemType.INFO,
+                  label: 'Failure'
+                }
+              ] : [],
+              title,
+              collapsible: false
+            };
+          }),
+          classes: `text-primary`
+        }
+      }
+    };
+    setTimeout(() => {
+      this.store.dispatch(new fromSidebar.LoadSidebarAction(sections(['Position Titles'], {ii: false})));
+    }, 1000);
+    setTimeout(() => {
+      this.store.dispatch(new fromSidebar.LoadSidebarAction(sections(['Position Titles', 'Journal Titles'], {ii: false})));
+    }, 2000);
+    setTimeout(() => {
+      this.store.dispatch(new fromSidebar.LoadSidebarAction(sections(['Position Titles', 'Journal Titles', 'Publishers'], {ii: false})));
+    }, 3000);
     this.route.data.pipe(
       tap(data => {
         console.log(data.selectedOrganization);
@@ -61,7 +109,7 @@ export class DataAnalyticsComponent implements OnInit {
         //     .patchValue({selectedOrganizationId: data.selectedOrganization.id})
         //   ; //.controls.selectedOrganizationId.setValue(data.selectedOrganization.id);
         // }
-        
+
       }),
       map(data => data.selectedOrganization)
     );
@@ -100,7 +148,7 @@ export class DataAnalyticsComponent implements OnInit {
 
     this.isDashboard = this.store.pipe(
       select(selectRouterState),
-      map((router: any) => !!router && router.state.url  === '/data-analytics')
+      map((router: any) => !!router && router.state.url === '/data-analytics')
     );
 
     // next incoming document to another subject before dispatching current organization
