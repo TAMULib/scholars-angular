@@ -16,8 +16,6 @@ export const individualSubOrganizationResolver: ResolveFn<Individual> = (
 ) => {
   const store = inject(Store<AppState>);
 
-  console.log(state, route);
-
   const id = route.params.organization;
 
   store.dispatch(new fromSdr.GetOneResourceAction('individual', { id }));
@@ -33,10 +31,10 @@ export const routes: Routes = [
     path: '',
     component: DataAnalyticsComponent,
   },
-  {
-    path: ':view',
-    redirectTo: ':view/n5d3837d6'
-  },
+  // {
+  //   path: ':view',
+  //   redirectTo: ':view/n5d3837d6'
+  // },
   {
     path: ':view/:organization',
     component: DataAnalyticsComponent,

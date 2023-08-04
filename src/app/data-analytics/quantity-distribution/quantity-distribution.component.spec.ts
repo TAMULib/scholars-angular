@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { EMPTY, queueScheduler, scheduled } from 'rxjs';
+import { queueScheduler, scheduled } from 'rxjs';
 
 import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
@@ -46,7 +46,6 @@ describe('QuantityDistributionComponent', () => {
     });
     fixture = TestBed.createComponent(QuantityDistributionComponent);
     component = fixture.componentInstance;
-    component.document = EMPTY;
     fixture.detectChanges();
   }));
 

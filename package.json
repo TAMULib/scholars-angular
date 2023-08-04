@@ -30,7 +30,8 @@
     "prerender": "ng run scholars-angular:prerender",
     "test:coverage": "ng test --no-watch --code-coverage",
     "test:ci": "yarn lint && yarn build:ssr && yarn test:coverage",
-    "dev:preview": "npm run ncu"
+    "dev:preview": "npm run ncu",
+    "version": "node -e console.log(require('./package.json').version);"
   },
   "dependencies": {
     "@angular/animations": "16.0.3",

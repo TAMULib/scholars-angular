@@ -8,7 +8,6 @@ import { AppState } from '../../core/store';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
-
 @Component({
   selector: 'scholars-summary-profile-export',
   templateUrl: './summary-profile-export.component.html',
@@ -34,7 +33,6 @@ export class SummaryProfileExportComponent {
         type: analyticView.type,
         name: analyticView.name
       }));
-
     }
 
 }

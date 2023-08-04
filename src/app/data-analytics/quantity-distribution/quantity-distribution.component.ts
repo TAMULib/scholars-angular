@@ -138,23 +138,25 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
       });
     });
 
-    this.document.pipe(first()).subscribe(document => {
-      const additionalFilters = [];
-      console.log(document);
-      if (document.class === 'Organization') {
-        additionalFilters.push({
-          field: 'authorOrganization',
-          value: document.name,
-          opKey: OpKey.EQUALS
-        });
-      }
-
-      this.dispatch(additionalFilters);
-    });
+    // @Input decorator not providing ability to prevent component OnInit
+    if (!!this.document) {
+      this.document.pipe(first()).subscribe(document => {
+        const additionalFilters = [];
+  
+        if (document.class === 'Organization') {
+          additionalFilters.push({
+            field: 'authorOrganization',
+            value: document.name,
+            opKey: OpKey.EQUALS
+          });
+        }
+  
+        this.dispatch(additionalFilters);
+      });
+    }
   }
 
   private dispatch(additionalFilters: Filter[]): void {
-    // console.log('dispatch', additionalFilters);
     this.store.dispatch(new fromSdr.GetQuantityDistributionAction('individual', {
       label: 'UN SDG',
       query: {

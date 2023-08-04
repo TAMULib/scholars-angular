@@ -52,82 +52,19 @@ export class DataAnalyticsComponent implements OnInit {
 
   }
 
+  // TODO: get organization id from the theme
   ngOnInit(): void {
-    // see sdr.effect.ts searchSuccessHandler
-    // just adding to analytic view on server side should also add search result facets but only show selected
-    const sections = (titles: string[], config: any) => {
-      return {
-        menu: {
-          sections: titles.map((title: string) => {
-            return {
-              collapsed: false,
-              items: config.ii ? [
-                {
-                  type: SidebarItemType.INFO,
-                  label: 'Success'
-                },
-                {
-                  type: SidebarItemType.INFO,
-                  label: 'Above Average'
-                },
-                {
-                  type: SidebarItemType.INFO,
-                  label: 'Average'
-                },
-                {
-                  type: SidebarItemType.INFO,
-                  label: 'Below Average'
-                },
-                {
-                  type: SidebarItemType.INFO,
-                  label: 'Failure'
-                }
-              ] : [],
-              title,
-              collapsible: false
-            };
-          }),
-          classes: `text-primary`
-        }
-      }
-    };
-    setTimeout(() => {
-      this.store.dispatch(new fromSidebar.LoadSidebarAction(sections(['Position Titles'], {ii: false})));
-    }, 1000);
-    setTimeout(() => {
-      this.store.dispatch(new fromSidebar.LoadSidebarAction(sections(['Position Titles', 'Journal Titles'], {ii: false})));
-    }, 2000);
-    setTimeout(() => {
-      this.store.dispatch(new fromSidebar.LoadSidebarAction(sections(['Position Titles', 'Journal Titles', 'Publishers'], {ii: false})));
-    }, 3000);
-    this.route.data.pipe(
-      tap(data => {
-        console.log(data.selectedOrganization);
-        // if (data.selectedOrganization) {
-        //   console.log('setting form');
-        //   this.subOrganizationForm
-        //     .patchValue({selectedOrganizationId: data.selectedOrganization.id})
-        //   ; //.controls.selectedOrganizationId.setValue(data.selectedOrganization.id);
-        // }
 
-      }),
-      map(data => data.selectedOrganization)
-    );
+    // console.log(this.route.pathFromRoot);
 
-    // TODO: get organization id from the theme
     this.document = this.store.pipe(
       select(selectResourceById('individual', this.appConfig.organizationId)),
       filter((document: SolrDocument) => document !== undefined),
-      // tap(console.log)
     );
 
-    // TODO: get organization id from the theme
     this.selectedOrganization = this.store.pipe(
       select(selectResourceById('individual', this.appConfig.organizationId)),
       withLatestFrom(this.route.data),
-      tap(([document, data]) => {
-        console.log(document, data.selectedOrganization);
-      }),
       filter(([document, data]) => !!document && !!data.selectedOrganization),
       map(([document, data]) => (document as any).hasSubOrganizations.find((so: any) => so.id === data.selectedOrganization.id)),
     );
@@ -140,9 +77,6 @@ export class DataAnalyticsComponent implements OnInit {
     this.analyticView = this.store.pipe(
       select(selectRouterState),
       withLatestFrom(this.analyticViews),
-      tap(([router, avs]) => {
-        // console.log(router, avs);
-      }),
       map(([router, avs]) => avs.find((av: AnalyticView) => !!router && av.name === router.state.params.view))
     );
 
@@ -151,10 +85,6 @@ export class DataAnalyticsComponent implements OnInit {
       map((router: any) => !!router && router.state.url === '/data-analytics')
     );
 
-    // next incoming document to another subject before dispatching current organization
-    // requires subscription to something in store
-    // async pipe is preferrence for subscribing to observable
-    // otherwise subscribe and unsubscribe or use rxjs operator that unsubscribes
     this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: this.appConfig.organizationId }));
   }
 
