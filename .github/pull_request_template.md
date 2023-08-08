@@ -2,7 +2,7 @@
 > Please provide only as much detail as needed to justify the changes.
 
 # Supporting Material
-> Please provide necessary links to support the claims made in description above.
+> Please provide the links necessary to support the claims made in description above.
 
 # Additional Comments
 > Please provide any additional feedback here.
