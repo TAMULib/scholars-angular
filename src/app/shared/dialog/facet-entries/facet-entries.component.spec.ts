@@ -1,23 +1,23 @@
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
 
 import { SharedModule } from '../../shared.module';
 
-import { RestService } from 'src/app/core/service/rest.service';
-import { IndividualRepo } from 'src/app/core/model/discovery/repo/individual.repo';
+import { IndividualRepo } from '../../../core/model/discovery/repo/individual.repo';
+import { RestService } from '../../../core/service/rest.service';
 
 import { FacetEntriesComponent } from './facet-entries.component';
 
-import { metaReducers, reducers } from '../../../core/store';
 import { testAppConfig } from '../../../../test.config';
+import { metaReducers, reducers } from '../../../core/store';
 
-import { getRequest } from 'src/app/app.browser.module';
-import { APP_CONFIG } from 'src/app/app.config';
+import { getRequest } from '../../../app.browser.module';
+import { APP_CONFIG } from '../../../app.config';
 
 describe('FacetEntriesComponent', () => {
   let component: FacetEntriesComponent;

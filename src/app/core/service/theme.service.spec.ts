@@ -7,11 +7,11 @@ import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { RestService } from './rest.service';
 import { ThemeService } from './theme.service';
 
-import { getRequest, createStyleLoader } from '../../app.browser.module';
+import { createStyleLoader, getRequest } from '../../app.browser.module';
 
-import { ComputedStyleLoader } from '../computed-style-loader';
 import { testAppConfig } from '../../../test.config';
-import { APP_CONFIG } from 'src/app/app.config';
+import { APP_CONFIG } from '../../app.config';
+import { ComputedStyleLoader } from '../computed-style-loader';
 
 describe('ThemeService', () => {
   beforeEach(() => {
