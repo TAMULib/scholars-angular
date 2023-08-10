@@ -15,6 +15,14 @@ const routes: Routes = [
     },
   },
   {
+    path: 'data-and-analytics',
+    loadChildren: () => import('./+data-and-analytics').then((m) => m.DataAndAnalyticsModule),
+    canActivate: [],
+    data: {
+      tags: [{ name: 'view', content: 'Scholars Data and Analytics' }],
+    },
+  },
+  {
     path: 'directory',
     loadChildren: () => import('./+directory').then((m) => m.DirectoryModule),
     canActivate: [],
