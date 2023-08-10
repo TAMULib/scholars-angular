@@ -29,7 +29,7 @@ import { createSdrRequest, buildDateYearFilterValue, buildNumberRangeFilterValue
 import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
 
 import { selectSdrState } from './';
-import { DataNetwork, QuantityDistribution, ResearchAge, SdrState } from './sdr.reducer';
+import { DataNetwork, QuantityDistribution, AcademicAge, SdrState } from './sdr.reducer';
 import { selectRouterState } from '../router';
 import { selectIsStompConnected, selectStompState } from '../stomp';
 
@@ -173,7 +173,7 @@ export class SdrEffects {
         .get(action.name)
         .getResearchAge(action.payload.query, action.payload.filters, action.payload.label, action.payload.dateField, action.payload.accumulateMultivaluedDate, action.payload.averageOverInterval, action.payload.upperLimitInYears, action.payload.groupingIntervalInYears)
         .pipe(
-          map((researchAge: ResearchAge) => new fromSdr.GetResearchAgeSuccessAction(action.name, { researchAge, queue: action.payload.queue })),
+          map((academicAge: AcademicAge) => new fromSdr.GetResearchAgeSuccessAction(action.name, { academicAge, queue: action.payload.queue })),
           catchError((response) =>
             scheduled(
               [
