@@ -12,7 +12,7 @@ export interface DisplaySubsectionView extends FieldView {
   templateFunction?: (document: any) => string;
 }
 
-export interface DisplaySectionView extends FieldView {
+export interface DisplayTabSectionView extends FieldView {
   readonly hidden: boolean;
   readonly shared: boolean;
   readonly paginated: boolean;
@@ -26,7 +26,7 @@ export interface DisplaySectionView extends FieldView {
 
 export interface DisplayTabView extends View {
   readonly hidden: boolean;
-  readonly sections: DisplaySectionView[];
+  readonly sections: DisplayTabSectionView[];
 }
 
 export interface DisplayView extends View {
