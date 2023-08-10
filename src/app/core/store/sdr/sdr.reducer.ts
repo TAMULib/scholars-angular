@@ -27,7 +27,7 @@ export interface Datum {
   value: number;
 }
 
-export interface ResearchAge {
+export interface AcademicAge {
   label: string;
   dateField: string;
   ranges: Map<string, string>;
@@ -55,7 +55,7 @@ export interface SdrState<R extends SdrResource> extends EntityState<R> {
   links: SdrCollectionLinks;
   recentlyUpdated: SdrResource[];
   dataNetwork: DataNetwork;
-  researchAge: ResearchAge;
+  academicAge: AcademicAge;
   quantityDistribution: QuantityDistribution;
   counting: boolean;
   loading: boolean;
@@ -78,7 +78,7 @@ export const getSdrInitialState = <R extends SdrResource>(key: string) => {
     links: undefined,
     recentlyUpdated: [],
     dataNetwork: undefined,
-    researchAge: undefined,
+    academicAge: undefined,
     quantityDistribution: undefined,
     counting: false,
     loading: false,
@@ -213,10 +213,10 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           error: undefined,
         };
       case getSdrAction(SdrActionTypes.GET_RESEARCH_AGE_SUCCESS, name):
-      const researchAge = action.payload.researchAge;
+      const academicAge = action.payload.academicAge;
       return {
         ...state,
-        researchAge,
+        academicAge,
         loading: false,
         error: undefined,
       };
@@ -373,5 +373,5 @@ export const getFacets = <R extends SdrResource>(state: SdrState<R>) => state.fa
 export const getLinks = <R extends SdrResource>(state: SdrState<R>) => state.links;
 export const getRecentlyUpdated = <R extends SdrResource>(state: SdrState<R>) => state.recentlyUpdated;
 export const getDataNetwork = <R extends SdrResource>(state: SdrState<R>) => state.dataNetwork;
-export const getResearchAge = <R extends SdrResource>(state: SdrState<R>) => state.researchAge;
+export const getResearchAge = <R extends SdrResource>(state: SdrState<R>) => state.academicAge;
 export const getQuantityDistribution = <R extends SdrResource>(state: SdrState<R>) => state.quantityDistribution;

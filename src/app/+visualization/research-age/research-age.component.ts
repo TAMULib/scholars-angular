@@ -8,16 +8,16 @@ import { Filterable } from '../../core/model/request';
 import { OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectResourcesResearchAge } from '../../core/store/sdr';
-import { ResearchAge } from '../../core/store/sdr/sdr.reducer';
+import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotInput } from '../barplot/barplot.component';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
-const researchAgeToBarplotInput = (researchAge: ResearchAge): BarplotInput => {
+const researchAgeToBarplotInput = (academicAge: AcademicAge): BarplotInput => {
   return {
-    label: researchAge.label,
-    data: researchAge.groups
+    label: academicAge.label,
+    data: academicAge.groups
   } as BarplotInput;
 }
 
@@ -41,7 +41,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
   public median: Subject<number>;
 
-  public researchAge: Observable<BarplotInput>;
+  public academicAge: Observable<BarplotInput>;
 
   public averagePubRateResearchAge: Observable<BarplotInput>;
 
@@ -82,10 +82,10 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
         const pk = 'Publications';
         const apk = 'Average publications';
 
-        this.researchAge = this.store.pipe(
+        this.academicAge = this.store.pipe(
           select(selectResourcesResearchAge('individual')),
-          filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
-          tap((ra: ResearchAge) => {
+          filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
+          tap((ra: AcademicAge) => {
             if (ra.label === rk) {
               this.mean.next(ra.mean);
               this.median.next(ra.median);
@@ -96,7 +96,7 @@ export class ResearchAgeComponent implements OnDestroy, OnInit {
 
         this.averagePubRateResearchAge = this.store.pipe(
           select(selectResourcesResearchAge('individual')),
-          filter((ra: ResearchAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
+          filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
           map(researchAgeToBarplotInput)
         );
 
