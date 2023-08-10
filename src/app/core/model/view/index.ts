@@ -1,6 +1,8 @@
-export { Boost, Layout, Export, FacetType, FacetSort, Facet, Filter, OpKey, Sort, CollectionView } from './collection-view';
-export { DisplayView, DisplayTabView, DisplayTabSectionView } from './display-view';
+export { Boost, CollectionView, Export, Facet, FacetSort, FacetType, Filter, Layout, OpKey, Sort } from './collection-view';
+export { DataAndAnalyticsView } from './data-and-analytics-view';
+export { DirectoryView, Index } from './directory-view';
 export { DiscoveryView } from './discovery-view';
-export { Index, DirectoryView } from './directory-view';
-export { View } from './view';
+export { DisplayTabSectionView, DisplayTabView, DisplayView } from './display-view';
 export { FieldView } from './field-view';
+export { View } from './view';
+
