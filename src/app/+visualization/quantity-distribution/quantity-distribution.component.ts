@@ -167,7 +167,6 @@ export class QuantityDistributionComponent implements OnDestroy, OnInit {
   }
 
   private dispatch(additionalFilters: Filter[]): void {
-    // console.log('dispatch', additionalFilters);
     this.store.dispatch(new fromSdr.GetQuantityDistributionAction('individual', {
       label: 'UN SDG',
       query: {

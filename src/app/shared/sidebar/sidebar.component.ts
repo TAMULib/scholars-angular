@@ -47,8 +47,12 @@ export class SidebarComponent implements OnInit {
     this.loading = this.store.pipe(select(selectResourceIsLoading('individual')));
   }
 
-  public toggleSectionCollapse(sectionIndex: number): void {
-    this.store.dispatch(new fromSidebar.ToggleCollapsibleSectionAction({ sectionIndex }));
+  public onSelectSection(section: SidebarSection, sectionIndex: number): void {
+    if (section.useDialog) {
+
+    } else {
+      this.store.dispatch(new fromSidebar.ToggleCollapsibleSectionAction({ sectionIndex }));
+    }
   }
 
   public dispatchAction(event: any, action: Action): void {
@@ -74,15 +78,12 @@ export class SidebarComponent implements OnInit {
     const expanded = tree.queryParams.expanded ? tree.queryParams.expanded.split(',') : [];
     const encodedTitle = encodeURIComponent(section.title);
     const index = expanded.indexOf(encodedTitle);
-    const isCollapsed = section.collapsed;
-    if (isCollapsed) {
-      if (index < 0) {
+    if (section.collapsed) {
+      if (section.expandable && index < 0) {
         expanded.push(encodedTitle);
       }
-    } else {
-      if (index >= 0) {
-        expanded.splice(index, 1);
-      }
+    } else if (section.collapsible && index >= 0) {
+      expanded.splice(index, 1);
     }
     if (expanded.length > 0) {
       tree.queryParams.expanded = expanded.join(',');

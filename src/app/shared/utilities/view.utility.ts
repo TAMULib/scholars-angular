@@ -9,13 +9,21 @@ import { FILTER_VALUE_DELIMITER } from './discovery.utility';
 const addFacetsToQueryParams = (queryParams: Params, collectionView: CollectionView): void => {
   if (collectionView.facets && collectionView.facets.length > 0) {
     queryParams.facets = '';
+    const expanded = [];
     collectionView.facets.forEach((facet: Facet) => {
       queryParams.facets += queryParams.facets.length > 0 ? `,${facet.field}` : facet.field;
       ['type', 'pageSize', 'pageNumber', 'rangeStart', 'rangeEnd', 'rangeGap'].forEach((key: string) => {
         queryParams[`${facet.field}.${key}`] = facet[key];
       });
       queryParams[`${facet.field}.sort`] = `${facet.sort},${facet.direction}`;
+
+      if (!facet.collapsed) {
+        expanded.push(encodeURIComponent(facet.name));
+      }
     });
+    if (expanded.length > 0) {
+      queryParams.expanded = expanded.join(',');
+    }
   }
 };
 
