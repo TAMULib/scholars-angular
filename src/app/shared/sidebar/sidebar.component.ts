@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
 
   public onSelectSection(section: SidebarSection, sectionIndex: number): void {
     if (section.useDialog) {
-      console.log('dispatch open dialog action');
+
     } else {
       this.store.dispatch(new fromSidebar.ToggleCollapsibleSectionAction({ sectionIndex }));
     }
