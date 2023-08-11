@@ -47,7 +47,10 @@ export interface Facet {
   readonly pageNumber: number;
   readonly sort: FacetSort;
   readonly direction: Direction;
+  readonly expandable: boolean;
+  readonly collapsible: boolean;
   readonly collapsed: boolean;
+  readonly useDialog: boolean;
   readonly hidden: boolean;
   readonly rangeStart?: string;
   readonly rangeEnd?: string;

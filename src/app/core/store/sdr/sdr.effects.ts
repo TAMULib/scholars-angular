@@ -761,8 +761,10 @@ export class SdrEffects {
             const sidebarSection: SidebarSection = {
               title: viewFacet.name,
               items: [],
-              collapsible: true,
-              collapsed: expanded.indexOf(encodeURIComponent(viewFacet.name)) >= 0 ? false : viewFacet.collapsed,
+              expandable: viewFacet.expandable,
+              collapsible: viewFacet.collapsible,
+              collapsed: expanded.indexOf(encodeURIComponent(viewFacet.name)) < 0,
+              useDialog: viewFacet.useDialog
             };
 
             const selectedFilterValues = [];
@@ -861,8 +863,10 @@ export class SdrEffects {
               queryParams: {},
             },
           ],
+          expandable: true,
           collapsible: false,
           collapsed: false,
+          useDialog: false
         });
       }
 
