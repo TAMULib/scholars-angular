@@ -45,6 +45,9 @@
       "GOALS_TEXT": "The Member States of the United Nations adopted the Sustainable Development Goals by General Assembly in September 2015. The aim of these goals is to end all forms of poverty, fighting inequalities and tackling climate change while ensuring that no one is left behind. Click on a goal to the right to discover how Texas A&M researchers and their work are contributing towards these goals."
     }
   },
+  "DATA_AND_ANALYTICS": {
+
+  },
   "DIRECTORY": {
     "ALL": "All",
     "EXPORT": "Export Directory"
@@ -189,7 +192,8 @@
       "TOGGLE": "Toggle navigation",
       "EDIT_PROFILE": "Edit my profile",
       "HOME": "Home",
-      "ABOUT": "About"
+      "ABOUT": "About",
+      "DATA_AND_ANALYTICS": "Data & Analytics"
     },
     "PAGINATION": {
       "FIRST": "First",
