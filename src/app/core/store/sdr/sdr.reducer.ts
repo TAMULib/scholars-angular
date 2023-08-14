@@ -114,6 +114,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
   const getResources = (action: SdrActions, key: string): R[] => {
     const resources = action.payload.collection._embedded !== undefined ? action.payload.collection._embedded[key] : [];
     switch (key) {
+      case 'dataAndAnalyticsViews':
       case 'directoryViews':
       case 'discoveryViews':
         resources.forEach((view: CollectionView) => augmentCollectionViewTemplates(view, additionalContext));
@@ -152,6 +153,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
   const getResource = (action: SdrActions, key: string): R => {
     const resource = action.payload.document;
     switch (key) {
+      case 'dataAndAnalyticsViews':
       case 'directoryViews':
       case 'discoveryViews':
         augmentCollectionViewTemplates(resource, additionalContext);
