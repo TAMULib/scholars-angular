@@ -12,6 +12,7 @@ export const selectIsLoadingActiveTheme = createSelector(selectThemeState, fromT
 export const selectActiveTheme = createSelector(selectThemeState, fromTheme.getActiveTheme);
 
 export const selectActiveThemeOrganization = createSelector(selectActiveTheme, (theme: Theme) => (theme ? theme.organization : undefined));
+export const selectActiveThemeOrganizationId = createSelector(selectActiveTheme, (theme: Theme) => (theme ? theme.organizationId : undefined));
 
 export const selectActiveThemeColors = createSelector(selectActiveTheme, (theme: Theme) => (theme ? theme.colors : []));
 export const selectActiveThemeVariants = createSelector(selectActiveTheme, (theme: Theme) => (theme ? theme.variants : []));

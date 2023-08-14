@@ -8,11 +8,15 @@ import { SharedModule } from '../shared/shared.module';
 import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-translation.handler';
 
 import { DataAndAnalyticsComponent } from './data-and-analytics.component';
+import { ProfileSummariesExportComponent } from './profile-summaries-export/profile-summaries-export.component';
 
 import { routes } from './data-and-analytics.routes';
 
 @NgModule({
-  declarations: [DataAndAnalyticsComponent],
+  declarations: [
+    DataAndAnalyticsComponent,
+    ProfileSummariesExportComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -24,7 +28,7 @@ import { routes } from './data-and-analytics.routes';
       isolate: false,
     }),
     RouterModule.forChild(routes),
-  ],
+  ]
 })
 export class DataAndAnalyticsModule {
 

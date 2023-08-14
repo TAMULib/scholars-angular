@@ -14,7 +14,8 @@ export enum OpKey {
 
 export enum Layout {
   LIST = 'LIST',
-  GRID = 'GRID'
+  GRID = 'GRID',
+  CONTAINER = 'CONTAINER'
 }
 
 export enum FacetType {

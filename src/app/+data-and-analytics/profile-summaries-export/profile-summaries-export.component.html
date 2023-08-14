@@ -1,0 +1,5 @@
+<div class="container mb-1" *ngIf="getSelectedExportView() | async; let selected">
+  <div *ngIf="document | async; let document">
+    <a class="btn btn-primary pull-right" [href]="getDownloadLink(document, selected)">Download</a>
+  </div>
+</div>
