@@ -14,7 +14,7 @@ import { Count, SdrCollection } from '../../sdr';
 })
 export class DataAndAnalyticsViewRepo extends AbstractSdrRepo<DataAndAnalyticsView> implements ViewRepo<DataAndAnalyticsView> {
   protected path(): string {
-    return 'directoryViews';
+    return 'dataAndAnalyticsViews';
   }
 
   public search(request: SdrRequest): Observable<SdrCollection> {
