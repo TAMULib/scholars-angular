@@ -65,16 +65,17 @@
             </div>
             <div class="card-body" [ngSwitch]="dataAndAnalyticsView.layout">
 
-              <div class="row p-1">
+              <div class="row p-1 mb-2">
                 <div class="col-12">
-                  <span class="h4 text-bold">{{ document.name }} ({{ document.people.length }})</span>
+                  <span class="h4 font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATION' | translate }}: </span>
+                  <span class="h4">{{ document.name }} ({{ document.people.length }})</span>
                 </div>
               </div>
 
               <div class="row p-1">
                 <div class="col-4" *ngIf="(colleges | async).length > 0">
                   <div class="form-group">
-                    <label for="Select sub organization">{{ 'DATA_AND_ANALYTICS.COLLEGE' | translate }}</label>
+                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.COLLEGE' | translate }}</label>
                     <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of colleges | async" [ngValue]="so.id">{{ so.label }}</option>
@@ -83,7 +84,7 @@
                 </div>
                 <div class="col-4" *ngIf="(departments | async).length > 0">
                   <div class="form-group">
-                    <label for="Select sub organization">{{ 'DATA_AND_ANALYTICS.DEPARTMENT' | translate }}</label>
+                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.DEPARTMENT' | translate }}</label>
                     <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of departments | async" [ngValue]="so.id">{{ so.label }}</option>
@@ -92,7 +93,7 @@
                 </div>
                 <div class="col-4" *ngIf="(others | async).length > 0">
                   <div class="form-group">
-                    <label for="Select sub organization">{{ 'DATA_AND_ANALYTICS.OTHERS' | translate }}</label>
+                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.OTHERS' | translate }}</label>
                     <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of others | async" [ngValue]="so.id">{{ so.label }}</option>

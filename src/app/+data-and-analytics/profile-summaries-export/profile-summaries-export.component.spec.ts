@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ProfileSummariesExportComponent } from './profile-summaries-export.component';
 
@@ -30,6 +31,7 @@ describe('ProfileSummariesExportComponent', () => {
           },
         }),
         RouterTestingModule.withRoutes([]),
+        TranslateModule.forRoot(),
       ]
     }).compileComponents();
   }));

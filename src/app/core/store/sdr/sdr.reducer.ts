@@ -342,7 +342,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           error: action.payload.response,
         };
       case getSdrAction(SdrActionTypes.CLEAR, name):
-        return {
+        return getSdrAdapter<R>(keys[name]).removeAll({
           ...state,
           page: undefined,
           facets: [],
@@ -351,7 +351,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           loading: false,
           updating: false,
           error: undefined,
-        };
+        });
       case getSdrAction(SdrActionTypes.CLEAR_RESOURCE_BY_ID, name):
         return getSdrAdapter<R>(keys[name]).removeOne(action.payload.id, {
           ...state,

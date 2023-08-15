@@ -101,10 +101,6 @@ export class DataAndAnalyticsComponent implements OnInit {
       })
     );
 
-    this.selectedOrganizationSubject.asObservable()
-      .pipe(filter(org => org !== undefined))
-      .subscribe(console.log);
-
     this.store.select(selectActiveThemeOrganizationId)
       .pipe(
         filter(id => id !== undefined),
