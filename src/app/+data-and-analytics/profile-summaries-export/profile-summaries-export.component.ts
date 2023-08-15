@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,7 +27,8 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
   @Input()
   public dataAndAnalyticsView: DataAndAnalyticsView;
 
-  public selected: Observable<ExportView>;
+  @Output()
+  public labelEvent: EventEmitter<string>;
 
   public selectedExportView: BehaviorSubject<ExportView>;
 
@@ -38,6 +39,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private translate: TranslateService
   ) {
+    this.labelEvent = new EventEmitter<string>();
     this.subscriptions = [];
   }
 
@@ -62,6 +64,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
                 if (selected) {
                   this.selectedExportView.next(exportView);
+                  this.labelEvent.next(this.translate.instant('DATA_AND_ANALYTICS.PROFILE_SUMMARIES', { timePeriod: exportView.name}));
                 }
 
                 return {

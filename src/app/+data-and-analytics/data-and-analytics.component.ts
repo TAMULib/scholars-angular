@@ -45,6 +45,8 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public selectedOrganization: Observable<SolrDocument>;
 
+  public labelSubject: BehaviorSubject<string>;
+
   public get colleges(): Observable<any[]> {
     return this.selectedOrganization.pipe(
       map((org: SolrDocument) => this.filterSubOrganization(org, ['College']))
@@ -63,6 +65,10 @@ export class DataAndAnalyticsComponent implements OnInit {
     );
   };
 
+  public get label(): Observable<string> {
+    return this.labelSubject.asObservable();
+  }
+
   @HostListener('window:resize', ['$event'])
   public onResize(event): void {
     this.store.dispatch(new fromLayout.CloseSidebarAction());
@@ -72,6 +78,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.selectedOrganizationSubject = new BehaviorSubject<SolrDocument>(undefined);
     this.selectedOrganization = this.selectedOrganizationSubject.asObservable()
       .pipe(filter((org: SolrDocument) => !!org));
+    this.labelSubject = new BehaviorSubject<string>('Test');
   }
 
   ngOnInit() {
@@ -162,6 +169,10 @@ export class DataAndAnalyticsComponent implements OnInit {
     }
 
     return queryParams;
+  }
+
+  public onLabelEvent(label: string): void {
+    this.labelSubject.next(label);
   }
 
   private filterSubOrganization(organization: any, types: string[]): any[] {

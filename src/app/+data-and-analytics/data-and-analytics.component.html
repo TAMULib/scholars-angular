@@ -67,6 +67,12 @@
 
               <div class="row p-1 mb-2">
                 <div class="col-12">
+                  <span class="h4 font-weight-bold">{{ label | async }}</span>
+                </div>
+              </div>
+
+              <div class="row p-1 mb-3">
+                <div class="col-12">
                   <span class="h4 font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATION' | translate }}: </span>
                   <span class="h4">{{ document.name }} ({{ document.people.length }})</span>
                 </div>
@@ -111,7 +117,12 @@
                     <span>{{ dataAndAnalyticsView.type }} In Progress</span>
                   </div>
                   <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
-                    <scholars-profile-summaries-export [document]="selectedOrganization | async" [displayView]="displayView" [dataAndAnalyticsView]="dataAndAnalyticsView"></scholars-profile-summaries-export>
+                    <scholars-profile-summaries-export
+                      [document]="selectedOrganization | async"
+                      [displayView]="displayView"
+                      [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      (labelEvent)="onLabelEvent($event)">
+                    </scholars-profile-summaries-export>
                   </div>
                   <div *ngSwitchDefault>{{ dataAndAnalyticsView.type }} Unknown</div>
                 </div>
