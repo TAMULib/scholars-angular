@@ -215,21 +215,21 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           error: undefined,
         };
       case getSdrAction(SdrActionTypes.GET_RESEARCH_AGE_SUCCESS, name):
-      const academicAge = action.payload.academicAge;
-      return {
-        ...state,
-        academicAge,
-        loading: false,
-        error: undefined,
-      };
+        const academicAge = action.payload.academicAge;
+        return {
+          ...state,
+          academicAge,
+          loading: false,
+          error: undefined,
+        };
       case getSdrAction(SdrActionTypes.GET_QUANTITY_DISTRIBUTION_SUCCESS, name):
-      const quantityDistribution = action.payload.quantityDistribution;
-      return {
-        ...state,
-        quantityDistribution,
-        loading: false,
-        error: undefined,
-      };
+        const quantityDistribution = action.payload.quantityDistribution;
+        return {
+          ...state,
+          quantityDistribution,
+          loading: false,
+          error: undefined,
+        };
       case getSdrAction(SdrActionTypes.RECENTLY_UPDATED_SUCCESS, name):
         const recentlyUpdated = action.payload.recentlyUpdated._embedded !== undefined ? action.payload.recentlyUpdated._embedded[name] : [];
         return {
@@ -342,7 +342,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           error: action.payload.response,
         };
       case getSdrAction(SdrActionTypes.CLEAR, name):
-        return {
+        return getSdrAdapter<R>(keys[name]).removeAll({
           ...state,
           page: undefined,
           facets: [],
@@ -351,7 +351,11 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           loading: false,
           updating: false,
           error: undefined,
-        };
+        });
+      case getSdrAction(SdrActionTypes.CLEAR_RESOURCE_BY_ID, name):
+        return getSdrAdapter<R>(keys[name]).removeOne(action.payload.id, {
+          ...state,
+        });
     }
     return state;
   };

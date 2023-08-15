@@ -7,6 +7,7 @@ import { Footer } from './footer';
 export interface Theme extends SdrResource {
   readonly name: string;
   readonly organization: string;
+  readonly organizationId: string;
   readonly active: boolean;
   readonly home: Home;
   readonly header: Header;

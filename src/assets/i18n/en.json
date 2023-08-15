@@ -46,7 +46,15 @@
     }
   },
   "DATA_AND_ANALYTICS": {
-
+    "LABEL": "Data & Analytics",
+    "ORGANIZATION": "Organization",
+    "TIME_PERIOD": "Time Period",
+    "PROFILE_SUMMARIES": "Profile Summaries for the {{timePeriod}}",
+    "COLLEGE": "College",
+    "DEPARTMENT": "Department",
+    "OTHERS": "Centers, Institutes, & Others",
+    "SELECT": "- Select -",
+    "DOWNLOAD": "Download"
   },
   "DIRECTORY": {
     "ALL": "All",

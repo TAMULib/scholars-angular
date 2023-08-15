@@ -2,10 +2,11 @@ import { Params } from '@angular/router';
 import { Action } from '@ngrx/store';
 
 export enum SidebarItemType {
-  FACET = 'FACET',
-  NUMBER_RANGE = 'NUMBER_RANGE',
   ACTION = 'ACTION',
+  FACET = 'FACET',
   INFO = 'INFO',
+  LINK = 'LINK',
+  NUMBER_RANGE = 'NUMBER_RANGE',
 }
 
 export interface SidebarItem {

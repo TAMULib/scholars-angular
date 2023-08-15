@@ -746,7 +746,7 @@ export class SdrEffects {
 
       const sdrFacets: SdrFacet[] = action.payload.collection.facets;
 
-      const sidebarMenu: SidebarMenu = {
+      const menu: SidebarMenu = {
         sections: [],
       };
 
@@ -770,7 +770,7 @@ export class SdrEffects {
 
             const selectedFilterValues = [];
 
-            sidebarMenu.sections.push(sidebarSection);
+            menu.sections.push(sidebarSection);
 
             sdrFacet.entries.content
               .filter((facetEntry: SdrFacetEntry) => facetEntry.value.length > 0)
@@ -849,7 +849,7 @@ export class SdrEffects {
         });
 
       if (action.payload.collection.page.totalElements === 0) {
-        sidebarMenu.sections.push({
+        menu.sections.push({
           title: this.translate.instant('SHARED.SIDEBAR.INFO.NO_RESULTS_LABEL', {
             view: route.params.view,
           }),
@@ -871,7 +871,7 @@ export class SdrEffects {
         });
       }
 
-      this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu: sidebarMenu }));
+      this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
     }
   }
 

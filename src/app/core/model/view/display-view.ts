@@ -1,4 +1,5 @@
 import { View } from './';
+import { ExportView } from './export-view';
 import { FieldView } from './field-view';
 
 export enum Side {
@@ -40,6 +41,7 @@ export interface DisplayView extends View {
   readonly asideTemplate: string;
   asideTemplateFunction?: (document: any) => string;
   readonly asideLocation: Side;
+  readonly exportViews: ExportView[];
   readonly metaTemplates: any;
   metaTemplateFunctions?: any;
   readonly tabs: DisplayTabView[];

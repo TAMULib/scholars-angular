@@ -1,0 +1,23 @@
+:host {
+  width: 100%;
+  .card-columns {
+    .card {
+      a:hover {
+        text-decoration: none;
+      }
+    }
+    .card:hover {
+      border-color:  rgba(82,168,236,.8);
+      box-shadow: 0 0px 0px rgba(82,168,236,.8) inset, 0 0 8px rgba(82,168,236,.8);
+      outline: 0 none;
+    }
+  }
+  .card-header {
+    color: black;
+  }
+  .breadcrumb-item {
+    a:hover {
+      cursor: pointer;
+    }
+  }
+}

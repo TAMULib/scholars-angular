@@ -3,6 +3,7 @@ export { DataAndAnalyticsView } from './data-and-analytics-view';
 export { DirectoryView, Index } from './directory-view';
 export { DiscoveryView } from './discovery-view';
 export { DisplayTabSectionView, DisplayTabView, DisplayView } from './display-view';
+export { ExportFieldView, ExportView } from './export-view';
 export { FieldView } from './field-view';
 export { View } from './view';
 
