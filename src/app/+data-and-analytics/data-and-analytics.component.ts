@@ -25,8 +25,6 @@ import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
 })
 export class DataAndAnalyticsComponent implements OnInit {
 
-  public document: Observable<SolrDocument>;
-
   public displayView: Observable<DisplayView>;
 
   public dataAndAnalyticsView: Observable<DataAndAnalyticsView>;
@@ -113,24 +111,23 @@ export class DataAndAnalyticsComponent implements OnInit {
         filter(id => id !== undefined),
         take(1)
       ).subscribe(id => {
-        this.document = this.store.pipe(
+        this.store.pipe(
           select(selectResourceById('individual', id)),
           filter((document: SolrDocument) => document !== undefined)
-        );
+        ).pipe(take(1))
+          .subscribe((document) => {
 
-        this.document.pipe(take(1)).subscribe((document) => {
+            this.displayView = this.store.pipe(
+              select(selectDisplayViewByTypes(document.type)),
+              filter((displayView: DisplayView) => displayView !== undefined)
+            );
 
-          this.displayView = this.store.pipe(
-            select(selectDisplayViewByTypes(document.type)),
-            filter((displayView: DisplayView) => displayView !== undefined)
-          );
-
-          this.store.dispatch(
-            new fromSdr.FindByTypesInResourceAction('displayViews', {
-              types: document.type,
-            })
-          );
-        });
+            this.store.dispatch(
+              new fromSdr.FindByTypesInResourceAction('displayViews', {
+                types: document.type,
+              })
+            );
+          });
 
         this.organization = this.store.select(selectResourceById('individual', id));
 
@@ -187,7 +184,7 @@ export class DataAndAnalyticsComponent implements OnInit {
       }
 
       return true;
-    })
+    });
   }
 
 }

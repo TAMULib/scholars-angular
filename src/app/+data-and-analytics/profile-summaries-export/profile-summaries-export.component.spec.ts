@@ -39,7 +39,7 @@ describe('ProfileSummariesExportComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProfileSummariesExportComponent);
     component = fixture.componentInstance;
-    component.document = {
+    component.organization = {
       id: 'n000001',
       type: ['Test']
     };

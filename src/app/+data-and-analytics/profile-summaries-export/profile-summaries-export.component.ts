@@ -19,7 +19,7 @@ import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   @Input()
-  public document: SolrDocument;
+  public organization: SolrDocument;
 
   @Input()
   public displayView: DisplayView;
@@ -94,9 +94,9 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     return this.selectedExportView.asObservable();
   }
 
-  public getDownloadLink(document: SolrDocument, exportView: ExportView): string {
+  public getDownloadLink(organization: SolrDocument, exportView: ExportView): string {
     const link = exportView.name.toLowerCase().replace(/ /g, '_');
-    return document._links[link].href;
+    return organization._links[link].href;
   }
 
 }

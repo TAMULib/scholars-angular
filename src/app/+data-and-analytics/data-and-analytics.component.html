@@ -23,14 +23,14 @@
   </nav>
 
   <div *ngIf="displayView | async; let displayView">
-    <div *ngIf="selectedOrganization | async; let document">
+    <div *ngIf="selectedOrganization | async; let organization">
 
       <div class="card-columns" *ngIf="isDashboard | async" [@fadeIn]>
         <ng-template ngFor let-view [ngForOf]="dataAndAnalyticsViews | async" let-i="view" [ngForTrackBy]="trackByIndex">
           <div class="card">
             <a [routerLink]="[view.name]" [queryParams]="getQueryParams(queryParams | async, displayView, view)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
               <div class="card-header">
-                <div class="h4 text-bold text-nowrap">{{ document.name }}</div>
+                <div class="h4 text-bold text-nowrap">{{ organization.name }}</div>
                 <div class="h5 text-bold">{{ view.name }}</div>
               </div>
               <div class="card-body" [ngSwitch]="view.layout">
@@ -74,7 +74,7 @@
               <div class="row p-1 mb-3">
                 <div class="col-12">
                   <span class="h4 font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATION' | translate }}: </span>
-                  <span class="h4">{{ document.name }} ({{ document.people.length }})</span>
+                  <span class="h4">{{ organization.name }} ({{ organization.people.length }})</span>
                 </div>
               </div>
 
@@ -118,7 +118,7 @@
                   </div>
                   <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
                     <scholars-profile-summaries-export
-                      [document]="selectedOrganization | async"
+                      [organization]="selectedOrganization | async"
                       [displayView]="displayView"
                       [dataAndAnalyticsView]="dataAndAnalyticsView"
                       (labelEvent)="onLabelEvent($event)">

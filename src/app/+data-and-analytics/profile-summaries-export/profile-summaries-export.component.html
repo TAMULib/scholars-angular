@@ -1,5 +1,3 @@
 <div class="container mb-1" *ngIf="getSelectedExportView() | async; let selected">
-  <div>
-    <a class="btn btn-primary pull-right" [href]="getDownloadLink(document, selected)">{{ 'DATA_AND_ANALYTICS.DOWNLOAD' | translate }}</a>
-  </div>
+  <a class="btn btn-primary pull-right" [href]="getDownloadLink(organization, selected)">{{ 'DATA_AND_ANALYTICS.DOWNLOAD' | translate }}</a>
 </div>
