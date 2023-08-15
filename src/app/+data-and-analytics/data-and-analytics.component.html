@@ -3,7 +3,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item active" aria-current="page">
-        <a [routerLink]="['/data-and-analytics']">Data & Analytics</a>
+        <a [routerLink]="['/data-and-analytics']">{{ 'DATA_AND_ANALYTICS.LABEL' | translate }}</a>
       </li>
       <li class="breadcrumb-item active" aria-current="page" *ngIf="dataAndAnalyticsView | async; let view">
         <a [routerLink]="['/data-and-analytics', view.name]">{{ view.name }} </a>
@@ -13,108 +13,116 @@
 
   <!-- organization navigation -->
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">
-        <a [routerLink]="['/data-analytics']">{{ (organization | async)?.name }}</a>
-      </li>
+    <ol class="breadcrumb" *ngIf="organizations | async; let organizations">
+      <ng-template ngFor let-organization [ngForOf]="organizations" let-i="organization"  let-index="index"  [ngForTrackBy]="trackByIndex">
+        <li class="breadcrumb-item active" aria-current="page">
+          <a (click)="onNavigateOrganization(organizations, index)">{{ organization.name }}</a>
+        </li>
+      </ng-template>
     </ol>
   </nav>
 
-  <div class="card-columns" *ngIf="isDashboard | async" [@fadeIn]>
-    <ng-template ngFor let-view [ngForOf]="dataAndAnalyticsViews | async" let-i="view" [ngForTrackBy]="trackByIndex">
-      <div class="card" *ngIf="displayView | async; let displayView">
-        <a [routerLink]="[view.name]"  [queryParams]="getQueryParams(queryParams | async, displayView, view)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <div class="card-header">
-            <div class="h4 text-bold text-nowrap">{{ (document | async)?.name }}</div>
-            <div class="h5 text-bold">{{ view.name }}</div>
-          </div>
-          <div class="card-body" [ngSwitch]="view.layout">
-            <div *ngSwitchCase="'CONTAINER'">
-              <div [ngSwitch]="view.type">
-                <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
-                  <span>{{ view.type }} In Progress</span>
+  <div *ngIf="displayView | async; let displayView">
+    <div *ngIf="selectedOrganization | async; let document">
+
+      <div class="card-columns" *ngIf="isDashboard | async" [@fadeIn]>
+        <ng-template ngFor let-view [ngForOf]="dataAndAnalyticsViews | async" let-i="view" [ngForTrackBy]="trackByIndex">
+          <div class="card">
+            <a [routerLink]="[view.name]" [queryParams]="getQueryParams(queryParams | async, displayView, view)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              <div class="card-header">
+                <div class="h4 text-bold text-nowrap">{{ document.name }}</div>
+                <div class="h5 text-bold">{{ view.name }}</div>
+              </div>
+              <div class="card-body" [ngSwitch]="view.layout">
+                <div *ngSwitchCase="'CONTAINER'">
+                  <div [ngSwitch]="view.type">
+                    <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
+                      <span>{{ view.type }}</span>
+                    </div>
+                    <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
+                      <span>{{ view.type }}</span>
+                    </div>
+                    <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
+                      <span>{{ view.type }}</span>
+                    </div>
+                    <div *ngSwitchDefault>{{ view.layout }} Unknown</div>
+                  </div>
                 </div>
-                <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
-                  <span>{{ view.type }} In Progress</span>
-                </div>
-                <div *ngSwitchCase="'SUMMARY_PROFILE_EXPORT'">
-                  <span>{{ view.type }} In Progress</span>
-                </div>
+                <div *ngSwitchCase="'GRID'">{{ view.layout }} Not Supported</div>
+                <div *ngSwitchCase="'LIST'">{{ view.layout }} Not Supported</div>
                 <div *ngSwitchDefault>{{ view.layout }} Unknown</div>
               </div>
-            </div>
-            <div *ngSwitchCase="'GRID'">{{ view.layout }} Not Supported</div>
-            <div *ngSwitchCase="'LIST'">{{ view.layout }} Not Supported</div>
-            <div *ngSwitchDefault>{{ view.layout }} Unknown</div>
+            </a>
           </div>
-        </a>
+        </ng-template>
       </div>
-    </ng-template>
-  </div>
 
-  <div [@fadeIn]>
-    <div class="card-deck" *ngIf="dataAndAnalyticsView | async; let view">
-      <div class="card"  *ngIf="document | async">
-        <div class="card-header">
-          {{ view.name }}
-        </div>
-        <div class="card-body" [ngSwitch]="view.layout">
+      <div [@fadeIn] *ngIf="dataAndAnalyticsView | async; let dataAndAnalyticsView">
+        <div class="card-deck">
+          <div class="card">
+            <div class="card-header">
+              {{ dataAndAnalyticsView.name }}
+            </div>
+            <div class="card-body" [ngSwitch]="dataAndAnalyticsView.layout">
 
-          <div class="row p-1">
-            <div class="col-4" *ngIf="(colleges | async).length > 0">
-              <form>
-                <div class="form-group">
-                  <label for="Select sub organization">College</label>
-                  <select class="form-control" id="college">
-                    <option value="" disabled selected>- Select -</option>
-                    <option *ngFor="let so of colleges | async" [ngValue]="so.id">{{ so.label }}</option>
-                  </select>
+              <div class="row p-1">
+                <div class="col-12">
+                  <span class="h4 text-bold">{{ document.name }} ({{ document.people.length }})</span>
                 </div>
-              </form>
-            </div>
-            <div class="col-4" *ngIf="(departments | async).length > 0">
-              <form>
-                <div class="form-group">
-                  <label for="Select sub organization">Department</label>
-                  <select class="form-control" id="college">
-                    <option value="" disabled selected>- Select -</option>
-                    <option *ngFor="let so of departments | async" [ngValue]="so.id">{{ so.label }}</option>
-                  </select>
+              </div>
+
+              <div class="row p-1">
+                <div class="col-4" *ngIf="(colleges | async).length > 0">
+                  <div class="form-group">
+                    <label for="Select sub organization">{{ 'DATA_AND_ANALYTICS.COLLEGE' | translate }}</label>
+                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
+                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
+                      <option *ngFor="let so of colleges | async" [ngValue]="so.id">{{ so.label }}</option>
+                    </select>
+                  </div>
                 </div>
-              </form>
-            </div>
-            <div class="col-4" *ngIf="(others | async).length > 0">
-              <form>
-                <div class="form-group">
-                  <label for="Select sub organization">Centers, Institutes, & Others</label>
-                  <select class="form-control" id="college">
-                    <option value="" disabled selected>- Select -</option>
-                    <option *ngFor="let so of others | async" [ngValue]="so.id">{{ so.label }}</option>
-                  </select>
+                <div class="col-4" *ngIf="(departments | async).length > 0">
+                  <div class="form-group">
+                    <label for="Select sub organization">{{ 'DATA_AND_ANALYTICS.DEPARTMENT' | translate }}</label>
+                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
+                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
+                      <option *ngFor="let so of departments | async" [ngValue]="so.id">{{ so.label }}</option>
+                    </select>
+                  </div>
                 </div>
-              </form>
+                <div class="col-4" *ngIf="(others | async).length > 0">
+                  <div class="form-group">
+                    <label for="Select sub organization">{{ 'DATA_AND_ANALYTICS.OTHERS' | translate }}</label>
+                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
+                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
+                      <option *ngFor="let so of others | async" [ngValue]="so.id">{{ so.label }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'CONTAINER'">
+                <div [ngSwitch]="dataAndAnalyticsView.type">
+                  <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
+                    <span>{{ dataAndAnalyticsView.type }} In Progress</span>
+                  </div>
+                  <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
+                    <span>{{ dataAndAnalyticsView.type }} In Progress</span>
+                  </div>
+                  <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
+                    <scholars-profile-summaries-export [document]="selectedOrganization | async" [displayView]="displayView" [dataAndAnalyticsView]="dataAndAnalyticsView"></scholars-profile-summaries-export>
+                  </div>
+                  <div *ngSwitchDefault>{{ dataAndAnalyticsView.type }} Unknown</div>
+                </div>
+              </div>
+              <div *ngSwitchCase="'GRID'">{{ dataAndAnalyticsView.layout }} Not Supported</div>
+              <div *ngSwitchCase="'LIST'">{{ dataAndAnalyticsView.layout }} Not Supported</div>
+              <div *ngSwitchDefault>{{ dataAndAnalyticsView.layout }} Unknown</div>
             </div>
           </div>
-
-          <div *ngSwitchCase="'CONTAINER'">
-            <div [ngSwitch]="view.type">
-              <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
-                <span>{{ view.type }} In Progress</span>
-              </div>
-              <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
-                <span>{{ view.type }} In Progress</span>
-              </div>
-              <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
-                <scholars-profile-summaries-export [document]="document" [displayView]="displayView" [dataAndAnalyticsView]="dataAndAnalyticsView"></scholars-profile-summaries-export>
-              </div>
-              <div *ngSwitchDefault>{{ view.type }} Unknown</div>
-            </div>
-          </div>
-          <div *ngSwitchCase="'GRID'">{{ view.layout }} Not Supported</div>
-          <div *ngSwitchCase="'LIST'">{{ view.layout }} Not Supported</div>
-          <div *ngSwitchDefault>{{ view.layout }} Unknown</div>
         </div>
       </div>
+
     </div>
   </div>
 

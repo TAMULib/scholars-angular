@@ -46,7 +46,12 @@
     }
   },
   "DATA_AND_ANALYTICS": {
-
+    "LABEL": "Data & Analytics",
+    "COLLEGE": "College",
+    "DEPARTMENT": "Department",
+    "OTHERS": "Centers, Institutes, & Others",
+    "SELECT": "- Select -",
+    "DOWNLOAD": "Download"
   },
   "DIRECTORY": {
     "ALL": "All",

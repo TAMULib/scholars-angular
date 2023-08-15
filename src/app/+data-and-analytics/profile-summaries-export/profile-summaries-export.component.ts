@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
@@ -18,13 +18,13 @@ import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 export class ProfileSummariesExportComponent implements OnInit {
 
   @Input()
-  public document: Observable<SolrDocument>;
+  public document: SolrDocument;
 
   @Input()
-  public displayView: Observable<DisplayView>;
+  public displayView: DisplayView;
 
   @Input()
-  public dataAndAnalyticsView: Observable<DataAndAnalyticsView>;
+  public dataAndAnalyticsView: DataAndAnalyticsView;
 
   public selected: Observable<ExportView>;
 
@@ -41,39 +41,36 @@ export class ProfileSummariesExportComponent implements OnInit {
     this.selectedExportView = new BehaviorSubject<ExportView>(undefined);
     this.route.queryParams.subscribe((queryParams: Params) => {
 
-      this.displayView.pipe(take(1)).subscribe((displayView: DisplayView) => {
+      const menu: SidebarMenu = {
+        sections: [
+          {
+            title: 'Time Period',
+            items: this.displayView.exportViews.map((exportView: ExportView) => {
+              const selected = exportView.name === queryParams.export;
 
-        const menu: SidebarMenu = {
-          sections: [
-            {
-              title: 'Time Period',
-              items: displayView.exportViews.map((exportView: ExportView) => {
-                const selected = exportView.name === queryParams.export;
+              if (selected) {
+                this.selectedExportView.next(exportView);
+              }
 
-                if (selected) {
-                  this.selectedExportView.next(exportView);
-                }
+              return {
+                label: exportView.name,
+                type: SidebarItemType.LINK,
+                route: ['./'],
+                queryParams: {
+                  export: exportView.name
+                },
+                selected
+              }
+            }),
+            collapsed: false,
+            collapsible: false,
+            expandable: false,
+            useDialog: false
+          }
+        ]
+      };
 
-                return {
-                  label: exportView.name,
-                  type: SidebarItemType.LINK,
-                  route: ['./'],
-                  queryParams: {
-                    export: exportView.name
-                  },
-                  selected
-                }
-              }),
-              collapsed: false,
-              collapsible: false,
-              expandable: false,
-              useDialog: false
-            }
-          ]
-        };
-
-        this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
-      });
+      this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
     });
   }
 

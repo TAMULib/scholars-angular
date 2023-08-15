@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { Params } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable, filter, map, switchMap, take, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, filter, map, take, tap, withLatestFrom } from 'rxjs';
 
 import { SolrDocument } from '../core/model/discovery';
 import { DataAndAnalyticsView, DisplayView } from '../core/model/view';
@@ -37,19 +37,31 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public isDashboard: Observable<boolean>;
 
-  public description: Observable<string>;
-
-  public label: Observable<string>;
-
-  public value: Observable<string>;
-
-  public colleges: Observable<any[]>;
-
-  public departments: Observable<any[]>;
-
-  public others: Observable<any[]>;
-
   public queryParams: Observable<Params>;
+
+  public organizations: Observable<SolrDocument[]>;
+
+  public selectedOrganizationSubject: BehaviorSubject<SolrDocument>;
+
+  public selectedOrganization: Observable<SolrDocument>;
+
+  public get colleges(): Observable<any[]> {
+    return this.selectedOrganization.pipe(
+      map((org: SolrDocument) => this.filterSubOrganization(org, ['College']))
+    );
+  };
+
+  public get departments(): Observable<any[]> {
+    return this.selectedOrganization.pipe(
+      map((org: SolrDocument) => this.filterSubOrganization(org, ['AcademicDepartment']))
+    );
+  };
+
+  public get others(): Observable<any[]> {
+    return this.selectedOrganization.pipe(
+      map((org: SolrDocument) => this.filterSubOrganization(org, ['!College', '!Department']))
+    );
+  };
 
   @HostListener('window:resize', ['$event'])
   public onResize(event): void {
@@ -57,12 +69,15 @@ export class DataAndAnalyticsComponent implements OnInit {
   }
 
   constructor(private store: Store<AppState>) {
-
+    this.selectedOrganizationSubject = new BehaviorSubject<SolrDocument>(undefined);
+    this.selectedOrganization = this.selectedOrganizationSubject.asObservable()
+      .pipe(filter((org: SolrDocument) => !!org));
   }
 
   ngOnInit() {
     this.store.dispatch(new fromSidebar.UnloadSidebarAction());
     this.store.dispatch(new fromLayout.CloseSidebarAction());
+    this.store.dispatch(new fromSdr.ClearResourcesAction('individual'));
 
     this.queryParams = this.store.pipe(select(selectRouterQueryParams));
 
@@ -79,6 +94,17 @@ export class DataAndAnalyticsComponent implements OnInit {
       map((router: any) => !!router && router.state.url === '/data-and-analytics')
     );
 
+    this.organizations = this.store.pipe(
+      select(selectAllResources('individual')),
+      tap((organizations: SolrDocument[]) => {
+        this.selectedOrganizationSubject.next(organizations[organizations.length - 1]);
+      })
+    );
+
+    this.selectedOrganizationSubject.asObservable()
+      .pipe(filter(org => org !== undefined))
+      .subscribe(console.log);
+
     this.store.select(selectActiveThemeOrganizationId)
       .pipe(
         filter(id => id !== undefined),
@@ -90,6 +116,7 @@ export class DataAndAnalyticsComponent implements OnInit {
         );
 
         this.document.pipe(take(1)).subscribe((document) => {
+
           this.displayView = this.store.pipe(
             select(selectDisplayViewByTypes(document.type)),
             filter((displayView: DisplayView) => displayView !== undefined)
@@ -104,40 +131,25 @@ export class DataAndAnalyticsComponent implements OnInit {
 
         this.organization = this.store.select(selectResourceById('individual', id));
 
-        this.colleges = this.document.pipe(
-          map((document: any) => this.filterSubOrganization(document.hasSubOrganizations, ['College']))
-        );
-
-        this.departments = this.document.pipe(
-          map((document: any) => this.filterSubOrganization(document.hasSubOrganizations, ['Department']))
-        );
-
-        this.others = this.document.pipe(
-          map((document: any) => this.filterSubOrganization(document.hasSubOrganizations, ['!College', '!Department']))
-        );
-
         this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id }));
       });
   }
 
-  trackByIndex(index, item) {
+  public trackByIndex(index, item) {
     return index;
   }
 
-  filterSubOrganization(subOrganizations: any[], types: string[]): any[] {
-    return subOrganizations.filter(so => {
-
-      for (const type of types) {
-        const match = type.startsWith('!') ? so.type !== type : so.type === type;
-        if (!match) {
-          return false;
-        }
-      }
-
-      return true;
-    })
+  public onNavigateOrganization(organizations: SolrDocument[], index: number): void {
+    let org;
+    while (!!(org = organizations[++index])) {
+      const id = org.id;
+      this.store.dispatch(new fromSdr.ClearResourceByIdAction('individual', { id }));
+    }
   }
 
+  public onSelectOrganization(id: any): void {
+    this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id }));
+  }
 
   public getQueryParams(params: Params, displayView: DisplayView, view: DataAndAnalyticsView): Params {
     const queryParams: Params = { ...params };
@@ -154,6 +166,21 @@ export class DataAndAnalyticsComponent implements OnInit {
     }
 
     return queryParams;
+  }
+
+  private filterSubOrganization(organization: any, types: string[]): any[] {
+    const subOrganizations = !!organization.hasSubOrganizations ? organization.hasSubOrganizations : [];
+
+    return subOrganizations.filter(so => {
+      for (const type of types) {
+        const match = type.startsWith('!') ? so.type !== type : so.type === type;
+        if (!match) {
+          return false;
+        }
+      }
+
+      return true;
+    })
   }
 
 }

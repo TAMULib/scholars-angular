@@ -33,10 +33,10 @@ export enum SdrActionTypes {
   GET_QUANTITY_DISTRIBUTION_FAILURE = 'failed getting quantity distribution analytics for resource',
   FIND_BY_ID_IN = 'find resource by id in',
   FIND_BY_ID_IN_SUCCESS = 'sucessfully found resource by id in',
-  FIND_BY_ID_IN_FAILURE = 'failed finding resource by id is',
+  FIND_BY_ID_IN_FAILURE = 'failed finding resource by id in',
   FIND_BY_TYPES_IN = 'find resource by types in',
   FIND_BY_TYPES_IN_SUCCESS = 'sucessfully found resource by types in',
-  FIND_BY_TYPES_IN_FAILURE = 'failed finding resource by types is',
+  FIND_BY_TYPES_IN_FAILURE = 'failed finding resource by types in',
   FETCH_LAZY_REFERENCE = 'fetch lazy reference',
   FETCH_LAZY_REFERENCE_SUCCESS = 'sucessfully fetched lazy reference',
   FETCH_LAZY_REFERENCE_FAILURE = 'failed fetching lazy reference',
@@ -53,6 +53,7 @@ export enum SdrActionTypes {
   DELETE_SUCCESS = 'sucessfully deleteed resource',
   DELETE_FAILURE = 'failed deleting resource',
   CLEAR = 'clear resources',
+  CLEAR_RESOURCE_BY_ID = 'clear resource by id',
 }
 
 export const getSdrAction = (actionType: SdrActionTypes, name: string): string => {
@@ -325,6 +326,11 @@ export class ClearResourcesAction implements Action {
   constructor(public name: string, public payload?: any) { }
 }
 
+export class ClearResourceByIdAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.CLEAR_RESOURCE_BY_ID, this.name);
+  constructor(public name: string, public payload: { id: string }) { }
+}
+
 export type SdrActions =
   GetAllResourcesAction |
   GetAllResourcesSuccessAction |
@@ -374,4 +380,5 @@ export type SdrActions =
   DeleteResourceAction |
   DeleteResourceSuccessAction |
   DeleteResourceFailureAction |
-  ClearResourcesAction;
+  ClearResourcesAction |
+  ClearResourceByIdAction;

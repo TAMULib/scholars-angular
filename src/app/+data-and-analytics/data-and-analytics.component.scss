@@ -15,4 +15,9 @@
   .card-header {
     color: black;
   }
+  .breadcrumb-item {
+    a:hover {
+      cursor: pointer;
+    }
+  }
 }
