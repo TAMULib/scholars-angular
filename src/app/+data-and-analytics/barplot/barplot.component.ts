@@ -20,6 +20,7 @@ export interface BarplotInput {
 export class BarplotComponent {
 
   @Input() height = 586;
+
   @Input() width = 396;
 
   @Input() maxOverride: number;
@@ -55,8 +56,6 @@ export class BarplotComponent {
     let index = 0;
 
     const subscription = this.input.subscribe((input: BarplotInput) => {
-
-      console.log(index, input);
 
       const data = [...input.data].reverse();
 

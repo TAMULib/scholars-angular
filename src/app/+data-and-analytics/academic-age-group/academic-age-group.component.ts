@@ -80,19 +80,18 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
           this.median.next(ra.median);
         }
       }),
-      tap(console.log),
       map(academicAgeGroupToBarplotInput)
     );
 
     this.averagePubRateResearchAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
       filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
-      tap(console.log),
       map(academicAgeGroupToBarplotInput)
     );
   }
 
   ngOnChanges() {
+    this.store.dispatch(new fromSdr.ClearResearchAgeAction('individual'));
     setTimeout(() => {
 
       this.barplots.forEach(barplot => barplot.draw());

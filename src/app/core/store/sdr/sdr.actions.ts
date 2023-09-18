@@ -53,6 +53,7 @@ export enum SdrActionTypes {
   DELETE_SUCCESS = 'sucessfully deleteed resource',
   DELETE_FAILURE = 'failed deleting resource',
   CLEAR = 'clear resources',
+  CLEAR_RESEARCH_AGE = 'clear research age',
   CLEAR_RESOURCE_BY_ID = 'clear resource by id',
 }
 
@@ -326,6 +327,11 @@ export class ClearResourcesAction implements Action {
   constructor(public name: string, public payload?: any) { }
 }
 
+export class ClearResearchAgeAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.CLEAR_RESEARCH_AGE, this.name);
+  constructor(public name: string, public payload?: any) { }
+}
+
 export class ClearResourceByIdAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.CLEAR_RESOURCE_BY_ID, this.name);
   constructor(public name: string, public payload: { id: string }) { }
@@ -381,4 +387,5 @@ export type SdrActions =
   DeleteResourceSuccessAction |
   DeleteResourceFailureAction |
   ClearResourcesAction |
+  ClearResearchAgeAction |
   ClearResourceByIdAction;
