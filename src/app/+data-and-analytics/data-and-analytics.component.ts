@@ -76,7 +76,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.selectedOrganizationSubject = new BehaviorSubject<SolrDocument>(undefined);
     this.selectedOrganization = this.selectedOrganizationSubject.asObservable()
       .pipe(filter((org: SolrDocument) => !!org));
-    this.labelSubject = new BehaviorSubject<string>('Test');
+    this.labelSubject = new BehaviorSubject<string>('');
   }
 
   ngOnInit() {
