@@ -1,8 +1,8 @@
 import { isPlatformServer } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, OnChanges, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { filter, take } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 
 import * as d3 from 'd3';
 
@@ -23,7 +23,7 @@ import * as fromSdr from '../../core/store/sdr/sdr.actions';
   styleUrls: ['./quantity-distribution.component.scss'],
   animations: [fadeIn],
 })
-export class QuantityDistributionComponent implements OnChanges {
+export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnInit {
 
   @Input()
   public organization: SolrDocument;
@@ -46,6 +46,8 @@ export class QuantityDistributionComponent implements OnChanges {
 
   public id: string;
 
+  private subscriptions: Subscription[];
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
     private store: Store<AppState>,
@@ -53,6 +55,13 @@ export class QuantityDistributionComponent implements OnChanges {
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.id = id();
+    this.subscriptions = [];
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
   }
 
   ngOnInit(): void {
@@ -60,96 +69,97 @@ export class QuantityDistributionComponent implements OnChanges {
       return;
     }
 
-    this.store.pipe(
-      select(selectResourcesQuantityDistribution('individual')),
-      filter((qd: QuantityDistribution) => qd !== undefined),
-    ).subscribe((qd: QuantityDistribution) => {
+    this.subscriptions.push(
+      this.store.pipe(
+        select(selectResourcesQuantityDistribution('individual')),
+        filter((qd: QuantityDistribution) => qd !== undefined),
+      ).subscribe((qd: QuantityDistribution) => {
 
-      d3.selectAll('figure > *').remove();
+        d3.selectAll('figure > *').remove();
 
-      setTimeout(() => {
-        // set the dimensions and margins of the graph
-        const margin = {
-          top: 100,
-          bottom: 100,
-          left: 100,
-          right: 50,
-        };
+        setTimeout(() => {
+          // set the dimensions and margins of the graph
+          const margin = {
+            top: 100,
+            bottom: 100,
+            left: 100,
+            right: 50,
+          };
 
-        const width = this.width - margin.left - margin.right;
-        const height = this.height - margin.top - margin.bottom;
+          const width = this.width - margin.left - margin.right;
+          const height = this.height - margin.top - margin.bottom;
 
-        // append the svg object to the body of the page
-        const svg = d3.select(`#${this.id}`)
-          .append('svg')
-          .attr('width', width + margin.left + margin.right)
-          .attr('height', height + margin.top + margin.bottom)
-          .append('g')
-          .attr('transform', `translate(${margin.left},${margin.top})`);
+          // append the svg object to the body of the page
+          const svg = d3.select(`#${this.id}`)
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
 
-        const total = qd.total;
+          const total = qd.total;
 
-        let position = 0;
+          let position = 0;
 
-        const data = [...qd.distribution as any[]]
-          .sort((s1, s2) => {
-            // TODO: pass in lookup methods to component
-            const i1 = getUNSDGIndexByValue(s1.label);
-            const i2 = getUNSDGIndexByValue(s2.label);
-            return (i1 < i2) ? -1 : (i1 > i2) ? 1 : 0;
-          }).map((s) => {
-            s.percentage = (s.count / total);
-            s.size = Math.floor(s.percentage * width);
-            s.position = position;
-            s.middle = s.position + (s.size / 2);
-            position += s.size;
-            return s;
-          });
+          const data = [...qd.distribution as any[]]
+            .sort((s1, s2) => {
+              // TODO: pass in lookup methods to component
+              const i1 = getUNSDGIndexByValue(s1.label);
+              const i2 = getUNSDGIndexByValue(s2.label);
+              return (i1 < i2) ? -1 : (i1 > i2) ? 1 : 0;
+            }).map((s) => {
+              s.percentage = (s.count / total);
+              s.size = Math.floor(s.percentage * width);
+              s.position = position;
+              s.middle = s.position + (s.size / 2);
+              position += s.size;
+              return s;
+            });
 
-        const sections = svg.selectAll()
-          .data(data)
-          .enter();
+          const sections = svg.selectAll()
+            .data(data)
+            .enter();
 
-        sections
-          .append('g').append('rect')
-          .attr('x', (d) => d.position)
-          .attr('y', () => 0)
-          .attr('width', (d) => d.size)
-          .attr('height', () => 100)
-          .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
+          sections
+            .append('g').append('rect')
+            .attr('x', (d) => d.position)
+            .attr('y', () => 0)
+            .attr('width', (d) => d.size)
+            .attr('height', () => 100)
+            .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
 
-        sections
-          .append('g').append('text')
-          .attr('x', (d) => d.middle - 4)
-          .attr('y', 50)
-          .style('font', '11px')
-          .style('font-family', '"Lato", Calibri, Arial, sans-serif')
-          .attr('fill', 'white')
-          .text((d) => d.count);
+          sections
+            .append('g').append('text')
+            .attr('x', (d) => d.middle - 4)
+            .attr('y', 50)
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
+            .attr('fill', 'white')
+            .text((d) => d.count);
 
-        let x = 0;
-        let y = 115;
-        sections
-          .append('g').append('rect')
-          .attr('x', (d) => x)
-          .attr('y', (d) => (y += 15) - 15)
-          .attr('width', () => 10)
-          .attr('height', () => 10)
-          .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
+          let x = 0;
+          let y = 115;
+          sections
+            .append('g').append('rect')
+            .attr('x', (d) => x)
+            .attr('y', (d) => (y += 15) - 15)
+            .attr('width', () => 10)
+            .attr('height', () => 10)
+            .attr('fill', (d) => getUNSDGByValue(d.label)?.color);
 
-        x = 0;
-        y = 115;
-        sections
-          .append('g').append('text')
-          .attr('x', (d) => x + 15)
-          .attr('y', (d) => (y += 15) - 5)
-          .style('font', '11px')
-          .style('font-family', '"Lato", Calibri, Arial, sans-serif')
-          .attr('fill', 'black')
-          .text((d) => `SDG ${d.label}, ${d.count}`);
-      });
-    });
-
+          x = 0;
+          y = 115;
+          sections
+            .append('g').append('text')
+            .attr('x', (d) => x + 15)
+            .attr('y', (d) => (y += 15) - 5)
+            .style('font', '11px')
+            .style('font-family', '"Lato", Calibri, Arial, sans-serif')
+            .attr('fill', 'black')
+            .text((d) => `SDG ${d.label}, ${d.count}`);
+        });
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
