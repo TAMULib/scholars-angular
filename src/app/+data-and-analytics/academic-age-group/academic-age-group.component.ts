@@ -51,7 +51,8 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
   @Input()
   public groupingIntervalInYears = 5;
 
-  @ViewChildren(BarplotComponent) barplots: QueryList<BarplotComponent>;
+  @ViewChildren(BarplotComponent)
+  private barplots: QueryList<BarplotComponent>;
 
   public maxOverride: Subject<number>;
 
@@ -65,7 +66,7 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
     this.labelEvent = new EventEmitter<string>();
-    this.maxOverride = new BehaviorSubject<number>(undefined);
+    this.maxOverride = new Subject<number>();
     this.mean = new Subject<number>();
     this.median = new Subject<number>();
   }

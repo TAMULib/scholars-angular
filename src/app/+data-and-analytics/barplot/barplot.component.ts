@@ -60,7 +60,7 @@ export class BarplotComponent {
       const data = [...input.data].reverse();
 
       if (index === 0) {
-        const max = this.maxOverride ? this.maxOverride : d3.max(data.map((d: any) => d.value));
+        const max = !!this.maxOverride ? this.maxOverride : d3.max(data.map((d: any) => d.value));
 
         // append the svg object to the body of the page
         svg = d3.select(`#${this.id}`)
