@@ -33,6 +33,8 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public organization: Observable<SolrDocument>;
 
+  public themeOrganizationId: Observable<string>;
+
   public isDashboard: Observable<boolean>;
 
   public queryParams: Observable<Params>;
@@ -79,7 +81,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.labelSubject = new BehaviorSubject<string>('');
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.store.dispatch(new fromSidebar.UnloadSidebarAction());
     this.store.dispatch(new fromLayout.CloseSidebarAction());
     this.store.dispatch(new fromSdr.ClearResourcesAction('individual'));
@@ -106,7 +108,9 @@ export class DataAndAnalyticsComponent implements OnInit {
       })
     );
 
-    this.store.select(selectActiveThemeOrganizationId)
+    this.themeOrganizationId = this.store.select(selectActiveThemeOrganizationId);
+
+    this.themeOrganizationId
       .pipe(
         filter(id => id !== undefined),
         take(1)
@@ -135,7 +139,7 @@ export class DataAndAnalyticsComponent implements OnInit {
       });
   }
 
-  public trackByIndex(index, item) {
+  public trackByIndex(index, item): any {
     return index;
   }
 

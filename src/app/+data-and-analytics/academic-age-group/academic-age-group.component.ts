@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subject, filter, map, tap } from 'rxjs';
+import { Observable, Subject, filter, map, tap } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
@@ -42,14 +42,17 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
   @Input()
   public dataAndAnalyticsView: DataAndAnalyticsView;
 
-  @Output()
-  public labelEvent: EventEmitter<string>;
+  @Input()
+  public defaultId: string;
 
   @Input()
   public upperLimitInYears = 40;
 
   @Input()
   public groupingIntervalInYears = 5;
+
+  @Output()
+  public labelEvent: EventEmitter<string>;
 
   @ViewChildren(BarplotComponent)
   private barplots: QueryList<BarplotComponent>;
@@ -71,7 +74,7 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
     this.median = new Subject<number>();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.academicAge = this.store.pipe(
       select(selectResourcesResearchAge('individual')),
       filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
@@ -91,19 +94,20 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
     this.store.dispatch(new fromSdr.ClearResearchAgeAction('individual'));
+
     setTimeout(() => {
 
       this.barplots.forEach(barplot => barplot.draw());
 
       const additionalFilters = [];
 
-      if (this.organization.id === 'n5d3837d6') {
+      if (this.organization.id === this.defaultId) {
         this.maxOverride.next(3000);
       }
 
-      if (this.organization.id !== 'n5d3837d6' && !!this.organization.name) {
+      if (this.organization.id !== this.defaultId && !!this.organization.name) {
         additionalFilters.push({
           field: 'positionOrganization',
           value: this.organization.name,

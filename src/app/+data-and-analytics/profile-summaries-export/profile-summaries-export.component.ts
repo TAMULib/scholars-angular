@@ -27,6 +27,9 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
   @Input()
   public dataAndAnalyticsView: DataAndAnalyticsView;
 
+  @Input()
+  public defaultId: string;
+
   @Output()
   public labelEvent: EventEmitter<string>;
 
@@ -43,7 +46,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     this.subscriptions = [];
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscriptions.forEach((subscription: Subscription) => {
       subscription.unsubscribe();
     });
