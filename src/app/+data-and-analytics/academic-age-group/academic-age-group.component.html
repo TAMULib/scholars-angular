@@ -1,0 +1,37 @@
+<div class="container mb-1">
+  <div class="text-center h2">{{organization.name}}</div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <div class="card-text">
+            <div class="text-center h2">{{mean | async}}</div>
+            <div class="text-center">{{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.MEAN' | translate }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <div class="h5">{{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.PUBLICATIONS' | translate }}</div>
+          <scholars-barplot id="academicAgeBarplot" scale="1" [input]="academicAge" maxOverride="{{maxOverride | async}}"></scholars-barplot>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <div class="card-text">
+            <div class="text-center h2">{{median | async}}</div>
+            <div class="text-center">{{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.MEDIAN' | translate }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card shadow bg-white rounded m-1">
+        <div class="card-body">
+          <div class="h5 text-truncate">{{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.AVERAGE_PUBLICATIONS' | translate }}</div>
+          <scholars-barplot id="averagePubRateResearchAgeBarplot" scale="1" [input]="averagePubRateResearchAge" maxOverride="{{maxOverride | async}}"></scholars-barplot>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

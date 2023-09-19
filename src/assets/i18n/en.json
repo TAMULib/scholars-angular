@@ -54,7 +54,13 @@
     "DEPARTMENT": "Department",
     "OTHERS": "Centers, Institutes, & Others",
     "SELECT": "- Select -",
-    "DOWNLOAD": "Download"
+    "DOWNLOAD": "Download",
+    "ACADEMIC_AGE_GROUP": {
+      "MEAN": "Average academic age of affiliated researchers 🛈",
+      "PUBLICATIONS": "Researchers and publications per academic age group",
+      "MEDIAN": "Median academic age of affiliated researchers 🛈",
+      "AVERAGE_PUBLICATIONS": "Researchers and average publications per academic age group"
+    }
   },
   "DIRECTORY": {
     "ALL": "All",
