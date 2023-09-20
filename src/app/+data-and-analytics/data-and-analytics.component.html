@@ -112,20 +112,28 @@
                 <div [ngSwitch]="dataAndAnalyticsView.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
                     <scholars-academic-age-group
-                        [organization]="selectedOrganization | async"
-                        [displayView]="displayView"
-                        [dataAndAnalyticsView]="dataAndAnalyticsView"
-                        (labelEvent)="onLabelEvent($event)">
+                      [organization]="selectedOrganization | async"
+                      [displayView]="displayView"
+                      [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      [defaultId]="themeOrganizationId | async"
+                      (labelEvent)="onLabelEvent($event)">
                     </scholars-academic-age-group>
                   </div>
                   <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
-                    <span>{{ dataAndAnalyticsView.type }} In Progress</span>
+                    <scholars-quantity-distribution
+                      [organization]="selectedOrganization | async"
+                      [displayView]="displayView"
+                      [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      [defaultId]="themeOrganizationId | async"
+                      (labelEvent)="onLabelEvent($event)">
+                    </scholars-quantity-distribution>
                   </div>
                   <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
                     <scholars-profile-summaries-export
                       [organization]="selectedOrganization | async"
                       [displayView]="displayView"
                       [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      [defaultId]="themeOrganizationId | async"
                       (labelEvent)="onLabelEvent($event)">
                     </scholars-profile-summaries-export>
                   </div>
