@@ -9,12 +9,9 @@ import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-
 
 import { VisualizationComponent } from './visualization.component';
 
-import { BarplotComponent } from './barplot/barplot.component';
 import { ChordDiagramComponent } from './chord-diagram/chord-diagram.component';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
-import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
-import { ResearchAgeComponent } from './research-age/research-age.component';
 import { routes } from './visualization.routes';
 
 @NgModule({
@@ -23,9 +20,6 @@ import { routes } from './visualization.routes';
     ChordDiagramComponent,
     CoAuthorNetworkComponent,
     CoInvestigatorNetworkComponent,
-    BarplotComponent,
-    ResearchAgeComponent,
-    QuantityDistributionComponent
   ],
   imports: [
     CommonModule,

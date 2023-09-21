@@ -166,18 +166,18 @@ export class SdrEffects {
     map((action: fromSdr.GetNetworkFailureAction) => this.alert.getNetworkFailureAlert(action.payload))
   ));
 
-  getResearchAge = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_RESEARCH_AGE)),
-    switchMap((action: fromSdr.GetResearchAgeAction) =>
+  getAcademicAge = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_ACADEMIC_AGE)),
+    switchMap((action: fromSdr.GetAcademicAgeAction) =>
       this.repos
         .get(action.name)
-        .getResearchAge(action.payload.query, action.payload.filters, action.payload.label, action.payload.dateField, action.payload.accumulateMultivaluedDate, action.payload.averageOverInterval, action.payload.upperLimitInYears, action.payload.groupingIntervalInYears)
+        .getAcademicAge(action.payload.query, action.payload.filters, action.payload.label, action.payload.dateField, action.payload.accumulateMultivaluedDate, action.payload.averageOverInterval, action.payload.upperLimitInYears, action.payload.groupingIntervalInYears)
         .pipe(
-          map((academicAge: AcademicAge) => new fromSdr.GetResearchAgeSuccessAction(action.name, { academicAge, queue: action.payload.queue })),
+          map((academicAge: AcademicAge) => new fromSdr.GetAcademicAgeSuccessAction(action.name, { academicAge, queue: action.payload.queue })),
           catchError((response) =>
             scheduled(
               [
-                new fromSdr.GetResearchAgeFailureAction(action.name, {
+                new fromSdr.GetAcademicAgeFailureAction(action.name, {
                   response,
                 }),
               ],
@@ -188,21 +188,21 @@ export class SdrEffects {
     )
   ));
 
-  getResearchAgeSuccess = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_RESEARCH_AGE_SUCCESS)),
+  getAcademicAgeSuccess = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_ACADEMIC_AGE_SUCCESS)),
     // TODO: determine utility and use of stomp connection for each success action dispatched (only applicable to asynchronous REST actions in which we want to switch to full duplex)
-    // switchMap((action: fromSdr.GetResearchAgeSuccessAction) => this.waitForStompConnection(action.name)),
+    // switchMap((action: fromSdr.GetAcademicAgeSuccessAction) => this.waitForStompConnection(action.name)),
     // withLatestFrom(this.store.pipe(select(selectStompState))),
-    map((action: fromSdr.GetResearchAgeSuccessAction) => {
+    map((action: fromSdr.GetAcademicAgeSuccessAction) => {
       if (action.payload.queue.length > 0) {
         this.store.dispatch(action.payload.queue.pop());
       }
     })
   ), { dispatch: false });
 
-  getResearchAgeFailure = createEffect(() => this.actions.pipe(
-    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_RESEARCH_AGE_FAILURE)),
-    map((action: fromSdr.GetResearchAgeFailureAction) => this.alert.getResearchAgeFailureAlert(action.payload))
+  getAcademicAgeFailure = createEffect(() => this.actions.pipe(
+    ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_ACADEMIC_AGE_FAILURE)),
+    map((action: fromSdr.GetAcademicAgeFailureAction) => this.alert.getAcademicAgeFailureAlert(action.payload))
   ));
 
   getQuantityDistribution = createEffect(() => this.actions.pipe(

@@ -37,9 +37,11 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   @Input()
   public defaultId: string;
 
-  @Input() height = 394;
+  @Input()
+  public height = 394;
 
-  @Input() width = 986;
+  @Input()
+  public width = 986;
 
   @Output()
   public labelEvent: EventEmitter<string>;
@@ -72,7 +74,7 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
     this.subscriptions.push(
       this.store.pipe(
         select(selectResourcesQuantityDistribution('individual')),
-        filter((qd: QuantityDistribution) => qd !== undefined),
+        filter((qd: QuantityDistribution) => !!qd),
       ).subscribe((qd: QuantityDistribution) => {
 
         d3.selectAll('figure > *').remove();

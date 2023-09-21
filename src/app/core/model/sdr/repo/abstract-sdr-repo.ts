@@ -56,7 +56,7 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     return this.restService.get<DataNetwork>(`${this.appConfig.serviceUrl}/${this.path()}/${id}/network?dateField=${dateField}&dataFields=${dataFields.join(',')}&typeFilter=${typeFilter}`);
   }
 
-  public getResearchAge(
+  public getAcademicAge(
     query: Queryable,
     filters: Filterable[],
     label: string,

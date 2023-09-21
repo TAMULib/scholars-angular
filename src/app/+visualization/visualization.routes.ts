@@ -3,15 +3,11 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot, Routes } from '
 import { Store, select } from '@ngrx/store';
 import { filter } from 'rxjs';
 
-import { AuthGuard } from '../core/guard/auth.guard';
 import { Individual, SolrDocument } from '../core/model/discovery';
-import { Role } from '../core/model/user';
 import { AppState } from '../core/store';
 import { selectResourceById } from '../core/store/sdr';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
 import { CoInvestigatorNetworkComponent } from './co-investigator-network/co-investigator-network.component';
-import { ResearchAgeComponent } from './research-age/research-age.component';
-import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
 import { VisualizationComponent } from './visualization.component';
 
 import * as fromSdr from '../core/store/sdr/sdr.actions';
@@ -54,26 +50,8 @@ export const routes: Routes = [
           tags: [{ name: 'view', content: 'Scholars Co-investigator Network' }],
         },
       },
-      {
-        path: 'Quantity Distribution',
-        component: QuantityDistributionComponent,
-        canActivate: [],
-        data: {
-          roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
-          tags: [{ name: 'view', content: 'Quantity Distribution' }],
-        },
-      },
-      {
-        path: 'Research Age',
-        component: ResearchAgeComponent,
-        canActivate: [],
-        data: {
-          roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
-          tags: [{ name: 'view', content: 'Organizational Research Age' }],
-        },
-      },
-      { path: '**', redirectTo: 'Research Age' },
+      { path: '**', redirectTo: 'Co-author Network' },
     ],
   },
-  { path: '**', redirectTo: 'n5d3837d6/Research Age' },
+  { path: '**', redirectTo: '/' },
 ];

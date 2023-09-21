@@ -25,9 +25,9 @@ export enum SdrActionTypes {
   GET_NETWORK = 'get network for resource by id',
   GET_NETWORK_SUCCESS = 'sucessfully got network for resource by id',
   GET_NETWORK_FAILURE = 'failed getting network for resource by id',
-  GET_RESEARCH_AGE = 'get research age analytics for resource',
-  GET_RESEARCH_AGE_SUCCESS = 'sucessfully got research age analytics for resource',
-  GET_RESEARCH_AGE_FAILURE = 'failed getting research age analytics for resource',
+  GET_ACADEMIC_AGE = 'get academic age analytics for resource',
+  GET_ACADEMIC_AGE_SUCCESS = 'sucessfully got academic age analytics for resource',
+  GET_ACADEMIC_AGE_FAILURE = 'failed getting academic age analytics for resource',
   GET_QUANTITY_DISTRIBUTION = 'get quantity distribution analytics for resource',
   GET_QUANTITY_DISTRIBUTION_SUCCESS = 'sucessfully got quantity distribution analytics for resource',
   GET_QUANTITY_DISTRIBUTION_FAILURE = 'failed getting quantity distribution analytics for resource',
@@ -53,7 +53,7 @@ export enum SdrActionTypes {
   DELETE_SUCCESS = 'sucessfully deleteed resource',
   DELETE_FAILURE = 'failed deleting resource',
   CLEAR = 'clear resources',
-  CLEAR_RESEARCH_AGE = 'clear research age',
+  CLEAR_ACADEMIC_AGE = 'clear academic age',
   CLEAR_RESOURCE_BY_ID = 'clear resource by id',
 }
 
@@ -171,8 +171,8 @@ export class GetNetworkFailureAction implements Action {
   constructor(public name: string, public payload: any) { }
 }
 
-export class GetResearchAgeAction implements Action {
-  readonly type = getSdrAction(SdrActionTypes.GET_RESEARCH_AGE, this.name);
+export class GetAcademicAgeAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_ACADEMIC_AGE, this.name);
   constructor(public name: string, public payload: {
     label: string;
     query?: Queryable;
@@ -186,13 +186,13 @@ export class GetResearchAgeAction implements Action {
   }) { }
 }
 
-export class GetResearchAgeSuccessAction implements Action {
-  readonly type = getSdrAction(SdrActionTypes.GET_RESEARCH_AGE_SUCCESS, this.name);
+export class GetAcademicAgeSuccessAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_ACADEMIC_AGE_SUCCESS, this.name);
   constructor(public name: string, public payload: any) { }
 }
 
-export class GetResearchAgeFailureAction implements Action {
-  readonly type = getSdrAction(SdrActionTypes.GET_RESEARCH_AGE_FAILURE, this.name);
+export class GetAcademicAgeFailureAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.GET_ACADEMIC_AGE_FAILURE, this.name);
   constructor(public name: string, public payload: any) { }
 }
 
@@ -327,8 +327,8 @@ export class ClearResourcesAction implements Action {
   constructor(public name: string, public payload?: any) { }
 }
 
-export class ClearResearchAgeAction implements Action {
-  readonly type = getSdrAction(SdrActionTypes.CLEAR_RESEARCH_AGE, this.name);
+export class ClearAcademicAgeAction implements Action {
+  readonly type = getSdrAction(SdrActionTypes.CLEAR_ACADEMIC_AGE, this.name);
   constructor(public name: string, public payload?: any) { }
 }
 
@@ -359,9 +359,9 @@ export type SdrActions =
   GetNetworkAction |
   GetNetworkSuccessAction |
   GetNetworkFailureAction |
-  GetResearchAgeAction |
-  GetResearchAgeSuccessAction |
-  GetResearchAgeFailureAction |
+  GetAcademicAgeAction |
+  GetAcademicAgeSuccessAction |
+  GetAcademicAgeFailureAction |
   GetQuantityDistributionAction |
   GetQuantityDistributionSuccessAction |
   GetQuantityDistributionFailureAction |
@@ -387,5 +387,5 @@ export type SdrActions =
   DeleteResourceSuccessAction |
   DeleteResourceFailureAction |
   ClearResourcesAction |
-  ClearResearchAgeAction |
+  ClearAcademicAgeAction |
   ClearResourceByIdAction;

@@ -179,7 +179,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
       case getSdrAction(SdrActionTypes.PAGE, name):
       case getSdrAction(SdrActionTypes.SEARCH, name):
       case getSdrAction(SdrActionTypes.GET_NETWORK, name):
-      case getSdrAction(SdrActionTypes.GET_RESEARCH_AGE, name):
+      case getSdrAction(SdrActionTypes.GET_ACADEMIC_AGE, name):
       case getSdrAction(SdrActionTypes.GET_QUANTITY_DISTRIBUTION, name):
       case getSdrAction(SdrActionTypes.RECENTLY_UPDATED, name):
         return {
@@ -214,7 +214,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           loading: false,
           error: undefined,
         };
-      case getSdrAction(SdrActionTypes.GET_RESEARCH_AGE_SUCCESS, name):
+      case getSdrAction(SdrActionTypes.GET_ACADEMIC_AGE_SUCCESS, name):
         const academicAge = action.payload.academicAge;
         return {
           ...state,
@@ -294,7 +294,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
       case getSdrAction(SdrActionTypes.GET_ALL_FAILURE, name):
       case getSdrAction(SdrActionTypes.GET_ONE_FAILURE, name):
       case getSdrAction(SdrActionTypes.GET_NETWORK_FAILURE, name):
-      case getSdrAction(SdrActionTypes.GET_RESEARCH_AGE_FAILURE, name):
+      case getSdrAction(SdrActionTypes.GET_ACADEMIC_AGE_FAILURE, name):
       case getSdrAction(SdrActionTypes.GET_QUANTITY_DISTRIBUTION_FAILURE, name):
       case getSdrAction(SdrActionTypes.FIND_BY_ID_IN_FAILURE, name):
       case getSdrAction(SdrActionTypes.FIND_BY_TYPES_IN_FAILURE, name):
@@ -352,7 +352,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
           updating: false,
           error: undefined,
         });
-      case getSdrAction(SdrActionTypes.CLEAR_RESEARCH_AGE, name):
+      case getSdrAction(SdrActionTypes.CLEAR_ACADEMIC_AGE, name):
         return {
           ...state,
           academicAge: undefined,
@@ -384,5 +384,5 @@ export const getFacets = <R extends SdrResource>(state: SdrState<R>) => state.fa
 export const getLinks = <R extends SdrResource>(state: SdrState<R>) => state.links;
 export const getRecentlyUpdated = <R extends SdrResource>(state: SdrState<R>) => state.recentlyUpdated;
 export const getDataNetwork = <R extends SdrResource>(state: SdrState<R>) => state.dataNetwork;
-export const getResearchAge = <R extends SdrResource>(state: SdrState<R>) => state.academicAge;
+export const getAcademicAge = <R extends SdrResource>(state: SdrState<R>) => state.academicAge;
 export const getQuantityDistribution = <R extends SdrResource>(state: SdrState<R>) => state.quantityDistribution;

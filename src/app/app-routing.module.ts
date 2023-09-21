@@ -64,7 +64,7 @@ const routes: Routes = [
   },
   { path: 'individual/:id', redirectTo: '/display/:id', pathMatch: 'full' },
   { path: 'individual/:id/:view/:tab', redirectTo: '/display/:id/:view/:tab', pathMatch: 'full' },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
