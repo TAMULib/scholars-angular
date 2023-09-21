@@ -1,11 +1,11 @@
 import { isPlatformServer } from '@angular/common';
-import { Component, Inject, Input, OnChanges, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, Input, PLATFORM_ID } from '@angular/core';
 
 import * as d3 from 'd3';
 
 import { Observable } from 'rxjs';
-import { Datum } from '../../core/store/sdr/sdr.reducer';
-import { id } from '../../shared/utilities/id.utility';
+import { Datum } from '../../../core/store/sdr/sdr.reducer';
+import { id } from '../../../shared/utilities/id.utility';
 
 export interface BarplotInput {
   label: string;
@@ -19,13 +19,17 @@ export interface BarplotInput {
 })
 export class BarplotComponent {
 
-  @Input() height = 586;
+  @Input()
+  public height = 586;
 
-  @Input() width = 396;
+  @Input()
+  public width = 396;
 
-  @Input() maxOverride: number;
+  @Input()
+  public maxOverride: number;
 
-  @Input() input: Observable<BarplotInput>;
+  @Input()
+  public input: Observable<BarplotInput>;
 
   public id: string;
 

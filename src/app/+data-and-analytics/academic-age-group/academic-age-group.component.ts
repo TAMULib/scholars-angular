@@ -7,10 +7,10 @@ import { SolrDocument } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
 import { DataAndAnalyticsView, DisplayView, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
-import { selectResourcesResearchAge } from '../../core/store/sdr';
+import { selectResourcesAcademicAge } from '../../core/store/sdr';
 import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
-import { BarplotComponent, BarplotInput } from '../barplot/barplot.component';
+import { BarplotComponent, BarplotInput } from './barplot/barplot.component';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 
@@ -65,7 +65,7 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   public academicAge: Observable<BarplotInput>;
 
-  public averagePubRateResearchAge: Observable<BarplotInput>;
+  public averagePubRateAcademicAge: Observable<BarplotInput>;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
     this.labelEvent = new EventEmitter<string>();
@@ -76,7 +76,7 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.academicAge = this.store.pipe(
-      select(selectResourcesResearchAge('individual')),
+      select(selectResourcesAcademicAge('individual')),
       filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
       tap((ra: AcademicAge) => {
         if (ra.label === rk) {
@@ -87,15 +87,15 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
       map(academicAgeGroupToBarplotInput)
     );
 
-    this.averagePubRateResearchAge = this.store.pipe(
-      select(selectResourcesResearchAge('individual')),
+    this.averagePubRateAcademicAge = this.store.pipe(
+      select(selectResourcesAcademicAge('individual')),
       filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
       map(academicAgeGroupToBarplotInput)
     );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.store.dispatch(new fromSdr.ClearResearchAgeAction('individual'));
+    this.store.dispatch(new fromSdr.ClearAcademicAgeAction('individual'));
 
     setTimeout(() => {
 
@@ -131,8 +131,8 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
     accumulateMultivaluedDate: boolean = false,
     averageOverInterval: boolean = false,
     additionalFilters: Filterable[] = [],
-    queue: fromSdr.GetResearchAgeAction[] = []
-  ): fromSdr.GetResearchAgeAction => new fromSdr.GetResearchAgeAction('individual', {
+    queue: fromSdr.GetAcademicAgeAction[] = []
+  ): fromSdr.GetAcademicAgeAction => new fromSdr.GetAcademicAgeAction('individual', {
     label,
     query: {
       expression: 'publicationDates:*'

@@ -112,18 +112,18 @@ export class DataAndAnalyticsComponent implements OnInit {
 
     this.themeOrganizationId
       .pipe(
-        filter(id => id !== undefined),
+        filter(id => !!id),
         take(1)
       ).subscribe(id => {
         this.store.pipe(
           select(selectResourceById('individual', id)),
-          filter((document: SolrDocument) => document !== undefined)
+          filter((document: SolrDocument) => !!document)
         ).pipe(take(1))
           .subscribe((document) => {
 
             this.displayView = this.store.pipe(
               select(selectDisplayViewByTypes(document.type)),
-              filter((displayView: DisplayView) => displayView !== undefined)
+              filter((displayView: DisplayView) => !!displayView)
             );
 
             this.store.dispatch(

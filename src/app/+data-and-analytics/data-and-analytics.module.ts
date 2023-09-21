@@ -8,7 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CustomMissingTranslationHandler } from '../core/handler/custom-missing-translation.handler';
 
 import { AcademicAgeGroupComponent } from './academic-age-group/academic-age-group.component';
-import { BarplotComponent } from './barplot/barplot.component';
+import { BarplotComponent } from './academic-age-group/barplot/barplot.component';
 import { DataAndAnalyticsComponent } from './data-and-analytics.component';
 import { ProfileSummariesExportComponent } from './profile-summaries-export/profile-summaries-export.component';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';

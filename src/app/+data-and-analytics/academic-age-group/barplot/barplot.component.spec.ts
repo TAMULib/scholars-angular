@@ -4,11 +4,11 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
-import { testAppConfig } from '../../../test.config';
-import { metaReducers, reducers } from '../../core/store';
-import { routes } from '../data-and-analytics.routes';
+import { testAppConfig } from '../../../../test.config';
+import { metaReducers, reducers } from '../../../core/store';
+import { DataAndAnalyticsModule } from '../../data-and-analytics.module';
+import { routes } from '../../data-and-analytics.routes';
 import { BarplotComponent } from './barplot.component';
-import { DataAndAnalyticsModule } from '../data-and-analytics.module';
 
 describe('BarplotComponent', () => {
   let component: BarplotComponent;
