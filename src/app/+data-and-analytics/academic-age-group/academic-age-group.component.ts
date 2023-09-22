@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, filter, map, tap } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
-import { DataAndAnalyticsView, DisplayView, OpKey } from '../../core/model/view';
+import { SidebarMenu } from '../../core/model/sidebar';
+import { DataAndAnalyticsView, DisplayView, Facet, OpKey } from '../../core/model/view';
+import { DialogService } from '../../core/service/dialog.service';
 import { AppState } from '../../core/store';
 import { selectResourcesAcademicAge } from '../../core/store/sdr';
 import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
@@ -13,6 +14,7 @@ import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotComponent, BarplotInput } from './barplot/barplot.component';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
+import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 
 const academicAgeGroupToBarplotInput = (academicAge: AcademicAge): BarplotInput => {
   return {
@@ -43,6 +45,9 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
   public dataAndAnalyticsView: DataAndAnalyticsView;
 
   @Input()
+  public filters: any[];
+
+  @Input()
   public defaultId: string;
 
   @Input()
@@ -67,7 +72,10 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   public averagePubRateAcademicAge: Observable<BarplotInput>;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+  constructor(
+    private store: Store<AppState>,
+    private dialog: DialogService,
+  ) {
     this.labelEvent = new EventEmitter<string>();
     this.maxOverride = new Subject<number>();
     this.mean = new Subject<number>();
@@ -75,9 +83,26 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    const items = [];
+    const menu: SidebarMenu = {
+      sections: this.dataAndAnalyticsView.facets.map((facet: Facet) => {
+        return {
+          title: facet.name,
+          expandable: facet.expandable,
+          collapsible: facet.collapsible,
+          collapsed: facet.collapsed,
+          useDialog: facet.useDialog,
+          action: this.dialog.facetEntriesDialog(facet.name, facet.field),
+          items,
+        };
+      })
+    };
+
+    this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
+
     this.academicAge = this.store.pipe(
       select(selectResourcesAcademicAge('individual')),
-      filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === pk)),
+      filter((ra: AcademicAge) => !!ra && (ra.label === rk || ra.label === pk)),
       tap((ra: AcademicAge) => {
         if (ra.label === rk) {
           this.mean.next(ra.mean);
@@ -89,19 +114,21 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
     this.averagePubRateAcademicAge = this.store.pipe(
       select(selectResourcesAcademicAge('individual')),
-      filter((ra: AcademicAge) => ra !== undefined && (ra.label === rk || ra.label === apk)),
+      filter((ra: AcademicAge) => !!ra && (ra.label === rk || ra.label === apk)),
       map(academicAgeGroupToBarplotInput)
     );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    const { filters } = changes;
+
     this.store.dispatch(new fromSdr.ClearAcademicAgeAction('individual'));
 
     setTimeout(() => {
 
-      this.barplots.forEach(barplot => barplot.draw());
-
       const additionalFilters = [];
+
+      this.barplots.forEach(barplot => barplot.draw());
 
       if (this.organization.id === this.defaultId) {
         this.maxOverride.next(3000);
@@ -122,7 +149,6 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
           ])
         ])
       );
-
     });
   }
 

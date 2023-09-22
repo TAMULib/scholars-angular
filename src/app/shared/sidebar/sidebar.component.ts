@@ -49,7 +49,7 @@ export class SidebarComponent implements OnInit {
 
   public onSelectSection(section: SidebarSection, sectionIndex: number): void {
     if (section.useDialog) {
-
+      this.store.dispatch(section.action);
     } else {
       this.store.dispatch(new fromSidebar.ToggleCollapsibleSectionAction({ sectionIndex }));
     }

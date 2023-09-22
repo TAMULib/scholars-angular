@@ -7,7 +7,8 @@ import { Subscription, filter } from 'rxjs';
 import * as d3 from 'd3';
 
 import { SolrDocument } from '../../core/model/discovery';
-import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../../core/model/view';
+import { SidebarMenu } from '../../core/model/sidebar';
+import { DataAndAnalyticsView, DisplayView, Facet, Filter, OpKey } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
@@ -16,6 +17,8 @@ import { id } from '../../shared/utilities/id.utility';
 import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/utilities/un-sdg.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
+import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
+import { DialogService } from '../../core/service/dialog.service';
 
 @Component({
   selector: 'scholars-quantity-distribution',
@@ -33,6 +36,9 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
 
   @Input()
   public dataAndAnalyticsView: DataAndAnalyticsView;
+
+  @Input()
+  public filters: any[];
 
   @Input()
   public defaultId: string;
@@ -53,7 +59,7 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
     private store: Store<AppState>,
-    private route: ActivatedRoute
+    private dialog: DialogService,
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.id = id();
@@ -67,6 +73,23 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   }
 
   ngOnInit(): void {
+    const items = [];
+    const menu: SidebarMenu = {
+      sections: this.dataAndAnalyticsView.facets.map((facet: Facet) => {
+        return {
+          title: facet.name,
+          expandable: facet.expandable,
+          collapsible: facet.collapsible,
+          collapsed: facet.collapsed,
+          useDialog: facet.useDialog,
+          action: this.dialog.facetEntriesDialog(facet.name, facet.field),
+          items,
+        };
+      })
+    };
+
+    this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
+
     if (isPlatformServer(this.platformId)) {
       return;
     }
@@ -165,6 +188,8 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    const { filters } = changes;
+
     const additionalFilters = [];
 
     if (this.organization.id !== this.defaultId && !!this.organization.name) {

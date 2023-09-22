@@ -31,9 +31,11 @@ import * as fromDialog from '../../../core/store/dialog/dialog.actions';
 })
 export class FacetEntriesComponent implements OnDestroy, OnInit {
 
-  @Input() name: string;
+  @Input()
+  public name: string;
 
-  @Input() field: string;
+  @Input()
+  public field: string;
 
   public queryParams: Observable<Params>;
 
@@ -105,7 +107,11 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
           },
         };
 
-        const collectionViewType = routerState.url.startsWith('/directory') ? 'directoryViews' : 'discoveryViews';
+        const collectionViewType = routerState.url.startsWith('/directory')
+          ? 'directoryViews'
+          : routerState.url.startsWith('/discovery')
+            ? 'discoveryViews'
+            : 'dataAndAnalyticsViews'
 
         this.collectionView = this.store.pipe(select(selectCollectionViewByName(collectionViewType, routerState.params.view)));
 
@@ -136,7 +142,8 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
             // NOTE: isolating request for facets without going through the stores, leaving facets in store intact
             this.sdrFacet = this.individualRepo.search(sdrRequest).pipe(
               map((collection: SdrCollection) => collection.facets[0]),
-              tap((sdrFacet) => {
+              filter((sdrFacet: SdrFacet) => !!sdrFacet),
+              tap((sdrFacet: SdrFacet) => {
                 const content = Object.assign([], sdrFacet.entries.content);
                 let lastTerm = '';
                 this.subscriptions.push(

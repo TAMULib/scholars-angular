@@ -1,3 +1,4 @@
+import { Action } from '@ngrx/store';
 import { SidebarItem } from './';
 
 export interface SidebarSection {
@@ -7,5 +8,6 @@ export interface SidebarSection {
   collapsible: boolean;
   collapsed: boolean;
   useDialog: boolean;
+  action?: Action;
   classes?: string;
 }

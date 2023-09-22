@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
-import { Params } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, filter, map, take, tap, withLatestFrom } from 'rxjs';
 
 import { SolrDocument } from '../core/model/discovery';
-import { DataAndAnalyticsView, DisplayView } from '../core/model/view';
+import { DataAndAnalyticsView, DisplayView, Filter } from '../core/model/view';
 import { ContainerType } from '../core/model/view/data-and-analytics-view';
 import { AppState } from '../core/store';
-import { selectRouterQueryParams, selectRouterState } from '../core/store/router';
+import { selectRouterQueryParamFilters, selectRouterQueryParams, selectRouterState } from '../core/store/router';
 import { selectAllResources, selectDisplayViewByTypes, selectResourceById } from '../core/store/sdr';
 import { selectActiveThemeOrganizationId } from '../core/store/theme';
 import { fadeIn } from '../shared/utilities/animation.utility';
+import { getFilterField, getFilterValue, getQueryParamsForFacets, removeFilterFromQueryParams, resetFiltersInQueryParams, showClearFilters, showFilter } from '../shared/utilities/view.utility';
 
 import * as fromLayout from '../core/store/layout/layout.actions';
 import * as fromSdr from '../core/store/sdr/sdr.actions';
@@ -39,11 +40,11 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public queryParams: Observable<Params>;
 
+  public filters: Observable<any[]>;
+
   public organizations: Observable<SolrDocument[]>;
 
   public selectedOrganizationSubject: BehaviorSubject<SolrDocument>;
-
-  public selectedOrganization: Observable<SolrDocument>;
 
   public labelSubject: BehaviorSubject<string>;
 
@@ -61,23 +62,25 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public get others(): Observable<any[]> {
     return this.selectedOrganization.pipe(
-      map((org: SolrDocument) => this.filterSubOrganization(org, ['!College', '!Department']))
+      map((org: SolrDocument) => this.filterSubOrganization(org, ['!College', '!AcademicDepartment']))
     );
   };
+
+  public get selectedOrganization(): Observable<SolrDocument> {
+    return this.selectedOrganizationSubject.asObservable()
+      .pipe(filter((org: SolrDocument) => !!org));
+  }
 
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
   }
 
-  @HostListener('window:resize', ['$event'])
-  public onResize(event): void {
-    this.store.dispatch(new fromLayout.CloseSidebarAction());
-  }
-
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private store: Store<AppState>
+  ) {
     this.selectedOrganizationSubject = new BehaviorSubject<SolrDocument>(undefined);
-    this.selectedOrganization = this.selectedOrganizationSubject.asObservable()
-      .pipe(filter((org: SolrDocument) => !!org));
     this.labelSubject = new BehaviorSubject<string>('');
   }
 
@@ -87,6 +90,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.store.dispatch(new fromSdr.ClearResourcesAction('individual'));
 
     this.queryParams = this.store.pipe(select(selectRouterQueryParams));
+    this.filters = this.store.pipe(select(selectRouterQueryParamFilters));
 
     this.dataAndAnalyticsViews = this.store.pipe(select(selectAllResources<DataAndAnalyticsView>('dataAndAnalyticsViews')));
 
@@ -114,49 +118,118 @@ export class DataAndAnalyticsComponent implements OnInit {
       .pipe(
         filter(id => !!id),
         take(1)
-      ).subscribe(id => {
-        this.store.pipe(
-          select(selectResourceById('individual', id)),
-          filter((document: SolrDocument) => !!document)
-        ).pipe(take(1))
-          .subscribe((document) => {
+    ).subscribe(id => {
 
-            this.displayView = this.store.pipe(
-              select(selectDisplayViewByTypes(document.type)),
-              filter((displayView: DisplayView) => !!displayView)
-            );
+      this.organization = this.store.pipe(
+        select(selectResourceById('individual', id)),
+        filter((organization: SolrDocument) => !!organization)
+      );
 
-            this.store.dispatch(
-              new fromSdr.FindByTypesInResourceAction('displayViews', {
-                types: document.type,
-              })
-            );
+      this.organization.pipe(take(1))
+        .subscribe((organization) => {
+          this.displayView = this.store.pipe(
+            select(selectDisplayViewByTypes(organization.type)),
+            filter((displayView: DisplayView) => !!displayView)
+          );
+
+          this.store.dispatch(
+            new fromSdr.FindByTypesInResourceAction('displayViews', {
+              types: organization.type,
+            })
+          );
+
+          this.queryParams.pipe(take(1)).subscribe((params: Params) => {
+            if (!!params.selectedOrganizations) {
+              const ids = params.selectedOrganizations.split(',');
+              const id = ids.shift();
+              const queue = ids.map((id: string) => new fromSdr.GetOneResourceAction('individual', { id }));
+              this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id, queue }));
+            }
           });
-
-        this.organization = this.store.select(selectResourceById('individual', id));
+        });
 
         this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id }));
+
       });
+  }
+
+  public getDataAndAnalyticsRouterLink(view: DataAndAnalyticsView): string[] {
+    return ['/data-and-analytics', view.name];
+  }
+
+  public getDataAndAnalyticsQueryParamsRemovingFilter(params: Params, filterToRemove: Filter): Params {
+    const queryParams: Params = Object.assign({}, params);
+    removeFilterFromQueryParams(queryParams, filterToRemove);
+    return queryParams;
+  }
+
+  public getDataAndAnalyticsQueryParamsClearingFilters(params: Params, view: DataAndAnalyticsView): Params {
+    const queryParams: Params = Object.assign({}, params);
+    resetFiltersInQueryParams(queryParams, view);
+    return queryParams;
+  }
+
+  public showFilter(view: DataAndAnalyticsView, actualFilter: Filter): boolean {
+    return showFilter(view, actualFilter);
+  }
+
+  public showClearFilters(view: DataAndAnalyticsView, filters: Filter[]): boolean {
+    return showClearFilters(view, filters);
+  }
+
+  public getFilterField(view: DataAndAnalyticsView, actualFilter: Filter): string {
+    return getFilterField(view, actualFilter);
+  }
+
+  public getFilterValue(view: DataAndAnalyticsView, actualFilter: Filter): string {
+    return getFilterValue(view, actualFilter);
   }
 
   public trackByIndex(index, item): any {
     return index;
   }
 
-  public onNavigateOrganization(organizations: SolrDocument[], index: number): void {
+  public onNavigateOrganization(params: Params, organizations: SolrDocument[], index: number): void {
+    const selectedOrganizations = !!params.selectedOrganizations
+      ? params.selectedOrganizations.split(',')
+      : [];
+
     let org;
     while (!!(org = organizations[++index])) {
       const id = org.id;
       this.store.dispatch(new fromSdr.ClearResourceByIdAction('individual', { id }));
+      let i;
+      if ((i = selectedOrganizations.indexOf(id)) >= 0) {
+        selectedOrganizations.splice(i, 1);
+      }
     }
+
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { ...params, selectedOrganizations },
+      queryParamsHandling: 'merge'
+    });
   }
 
-  public onSelectOrganization(id: any): void {
+  public onSelectOrganization(id: any, params: Params): void {
+    const selectedOrganizations = !!params.selectedOrganizations
+      ? `${params.selectedOrganizations},${id}`
+      : id;
+
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { ...params, selectedOrganizations },
+      queryParamsHandling: 'merge'
+    });
+
     this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id }));
   }
 
-  public getQueryParams(params: Params, displayView: DisplayView, view: DataAndAnalyticsView): Params {
-    const queryParams: Params = { ...params };
+  public getQueryParams(params: Params, view: DataAndAnalyticsView, displayView: DisplayView): Params {
+    const queryParams: Params = {
+      ...params,
+      ...getQueryParamsForFacets(view),
+    };
 
     switch (view.type) {
       case ContainerType.ACADEMIC_AGE_GROUP: break;
@@ -177,11 +250,15 @@ export class DataAndAnalyticsComponent implements OnInit {
   }
 
   private filterSubOrganization(organization: any, types: string[]): any[] {
-    const subOrganizations = !!organization.hasSubOrganizations ? organization.hasSubOrganizations : [];
+    const subOrganizations = !!organization.hasSubOrganizations
+      ? organization.hasSubOrganizations
+      : [];
 
     return subOrganizations.filter(so => {
       for (const type of types) {
-        const match = type.startsWith('!') ? so.type !== type : so.type === type;
+        const match = type.startsWith('!')
+          ? so.type !== type.substring(1)
+          : so.type === type;
         if (!match) {
           return false;
         }

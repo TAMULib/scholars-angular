@@ -144,6 +144,15 @@ const getQueryParams = (collectionView: CollectionView): Params => {
   return queryParams;
 };
 
+const getQueryParamsForFacets = (collectionView: CollectionView): Params => {
+  const queryParams: Params = {};
+  addFieldsToQueryParams(queryParams, collectionView);
+  addFacetsToQueryParams(queryParams, collectionView);
+  addFiltersToQueryParams(queryParams, collectionView);
+  addSortToQueryParams(queryParams, collectionView);
+  return queryParams;
+};
+
 const showFilter = (collectionView: CollectionView, actualFilter: Filter): boolean => {
   for (const filter of collectionView.filters) {
     if (equals(filter, actualFilter)) {
@@ -265,6 +274,7 @@ export {
   removeFilterFromQueryParams,
   resetFiltersInQueryParams,
   getQueryParams,
+  getQueryParamsForFacets,
   showFilter,
   showClearFilters,
   getFilterField,
