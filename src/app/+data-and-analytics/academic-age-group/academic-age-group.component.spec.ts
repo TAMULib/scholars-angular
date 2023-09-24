@@ -7,10 +7,13 @@ import { queueScheduler, scheduled } from 'rxjs';
 
 import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
+import { Layout } from '../../core/model/view';
+import { ContainerType } from '../../core/model/view/data-and-analytics-view';
+import { Side } from '../../core/model/view/display-view';
 import { metaReducers, reducers } from '../../core/store';
+import { DataAndAnalyticsModule } from '../data-and-analytics.module';
 import { routes } from '../data-and-analytics.routes';
 import { AcademicAgeGroupComponent } from './academic-age-group.component';
-import { DataAndAnalyticsModule } from '../data-and-analytics.module';
 
 describe('AcademicAgeGroupComponent', () => {
   let component: AcademicAgeGroupComponent;
@@ -52,7 +55,33 @@ describe('AcademicAgeGroupComponent', () => {
     component.organization = {
       id: 'n000001',
       type: [],
-      name: 'Test'
+      class: 'Organization',
+      name: 'Test',
+    };
+    component.displayView = {
+      name: 'Test',
+      types: [],
+      mainContentTemplate: '',
+      leftScanTemplate: '',
+      rightScanTemplate: '',
+      asideTemplate: '',
+      asideLocation: Side.LEFT,
+      exportViews: [],
+      metaTemplates: {},
+      tabs: []
+    };
+    component.dataAndAnalyticsView = {
+      name: 'Test',
+      type: ContainerType.ACADEMIC_AGE_GROUP,
+      layout: Layout.CONTAINER,
+      templates: {},
+      styles: [],
+      fields: [],
+      facets: [],
+      filters: [],
+      boosts: [],
+      sort: [],
+      export: [],
     };
     fixture.detectChanges();
   }));

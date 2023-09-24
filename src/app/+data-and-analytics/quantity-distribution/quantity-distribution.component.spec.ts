@@ -7,12 +7,13 @@ import { queueScheduler, scheduled } from 'rxjs';
 
 import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
+import { Layout } from '../../core/model/view';
+import { ContainerType } from '../../core/model/view/data-and-analytics-view';
+import { Side } from '../../core/model/view/display-view';
 import { metaReducers, reducers } from '../../core/store';
-
-import { QuantityDistributionComponent } from './quantity-distribution.component';
 import { DataAndAnalyticsModule } from '../data-and-analytics.module';
-
 import { routes } from '../data-and-analytics.routes';
+import { QuantityDistributionComponent } from './quantity-distribution.component';
 
 describe('QuantityDistributionComponent', () => {
   let component: QuantityDistributionComponent;
@@ -51,6 +52,37 @@ describe('QuantityDistributionComponent', () => {
     });
     fixture = TestBed.createComponent(QuantityDistributionComponent);
     component = fixture.componentInstance;
+    component.organization = {
+      id: 'n000001',
+      type: [],
+      class: 'Organization',
+      name: 'Test',
+    };
+    component.displayView = {
+      name: 'Test',
+      types: [],
+      mainContentTemplate: '',
+      leftScanTemplate: '',
+      rightScanTemplate: '',
+      asideTemplate: '',
+      asideLocation: Side.LEFT,
+      exportViews: [],
+      metaTemplates: {},
+      tabs: []
+    };
+    component.dataAndAnalyticsView = {
+      name: 'Test',
+      type: ContainerType.QUANTITY_DISTRIBUTION,
+      layout: Layout.CONTAINER,
+      templates: {},
+      styles: [],
+      fields: [],
+      facets: [],
+      filters: [],
+      boosts: [],
+      sort: [],
+      export: [],
+    };
     fixture.detectChanges();
   }));
 

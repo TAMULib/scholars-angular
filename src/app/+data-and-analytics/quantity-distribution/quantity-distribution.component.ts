@@ -1,6 +1,5 @@
 import { isPlatformServer } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription, filter } from 'rxjs';
 
@@ -9,6 +8,7 @@ import * as d3 from 'd3';
 import { SolrDocument } from '../../core/model/discovery';
 import { SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, Facet, Filter, OpKey } from '../../core/model/view';
+import { DialogService } from '../../core/service/dialog.service';
 import { AppState } from '../../core/store';
 import { selectResourcesQuantityDistribution } from '../../core/store/sdr';
 import { QuantityDistribution } from '../../core/store/sdr/sdr.reducer';
@@ -18,7 +18,6 @@ import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/utilities/un
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
-import { DialogService } from '../../core/service/dialog.service';
 
 @Component({
   selector: 'scholars-quantity-distribution',
