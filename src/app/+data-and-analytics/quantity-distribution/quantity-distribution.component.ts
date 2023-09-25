@@ -43,10 +43,10 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   public defaultId: string;
 
   @Input()
-  public height = 394;
+  public height = 586;
 
   @Input()
-  public width = 986;
+  public width = 896;
 
   @Output()
   public labelEvent: EventEmitter<string>;
@@ -104,10 +104,10 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
         setTimeout(() => {
           // set the dimensions and margins of the graph
           const margin = {
-            top: 100,
-            bottom: 100,
-            left: 100,
-            right: 50,
+            top: 25,
+            bottom: 25,
+            left: 25,
+            right: 25,
           };
 
           const width = this.width - margin.left - margin.right;
