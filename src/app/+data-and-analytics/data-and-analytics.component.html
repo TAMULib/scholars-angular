@@ -65,13 +65,13 @@
             </div>
             <div class="card-body" [ngSwitch]="view.layout">
 
-              <div class="row p-1 mb-2">
+              <div class="row p-1 mb-2" *ngIf="(label | async)?.length > 0">
                 <div class="col-12">
                   <span class="h4 font-weight-bold">{{ label | async }}</span>
                 </div>
               </div>
 
-              <div class="row p-1 mb-3">
+              <div class="row p-1 mb-2">
                 <div class="col-12">
                   <span class="h4 font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATION' | translate }}: </span>
                   <span class="h4">{{ organization.name }} ({{ organization.people.length }})</span>
