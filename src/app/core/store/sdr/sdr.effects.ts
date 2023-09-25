@@ -105,7 +105,7 @@ export class SdrEffects {
         .get(action.name)
         .getOne(action.payload.id)
         .pipe(
-          map((document: SolrDocument) => new fromSdr.GetOneResourceSuccessAction(action.name, { document })),
+          map((document: SolrDocument) => new fromSdr.GetOneResourceSuccessAction(action.name, { document, queue: action.payload.queue })),
           catchError((response) =>
             scheduled(
               [
@@ -122,7 +122,12 @@ export class SdrEffects {
 
   getOneSuccess = createEffect(() => this.actions.pipe(
     ofType(...this.buildActions(fromSdr.SdrActionTypes.GET_ONE_SUCCESS)),
-    switchMap((action: fromSdr.GetOneResourceSuccessAction) => this.waitForStompConnection(action.name)),
+    switchMap((action: fromSdr.GetOneResourceSuccessAction) => {
+      if (!!action.payload.queue && action.payload.queue.length > 0) {
+        this.store.dispatch(action.payload.queue.pop());
+      }
+      return this.waitForStompConnection(action.name);
+    }),
     withLatestFrom(this.store.pipe(select(selectStompState))),
     map(([combination, stomp]) => this.subscribeToResourceQueue(combination[0], stomp))
   ), { dispatch: false });

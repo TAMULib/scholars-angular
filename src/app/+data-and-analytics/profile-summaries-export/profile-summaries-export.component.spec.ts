@@ -3,14 +3,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ProfileSummariesExportComponent } from './profile-summaries-export.component';
-
 import { testAppConfig } from '../../../test.config';
 import { Layout } from '../../core/model/view';
 import { ContainerType } from '../../core/model/view/data-and-analytics-view';
 import { Side } from '../../core/model/view/display-view';
 import { metaReducers, reducers } from '../../core/store';
 import { SharedModule } from '../../shared/shared.module';
+import { ProfileSummariesExportComponent } from './profile-summaries-export.component';
 
 describe('ProfileSummariesExportComponent', () => {
   let component: ProfileSummariesExportComponent;
@@ -41,7 +40,9 @@ describe('ProfileSummariesExportComponent', () => {
     component = fixture.componentInstance;
     component.organization = {
       id: 'n000001',
-      type: ['Test']
+      type: [],
+      class: 'Organization',
+      name: 'Test',
     };
     component.displayView = {
       name: 'Test',

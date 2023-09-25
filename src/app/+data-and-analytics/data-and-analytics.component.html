@@ -1,12 +1,12 @@
-<scholars-sidebar>
+<scholars-sidebar *ngIf="queryParams | async; let params">
   <!-- view navigation -->
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
+  <nav aria-label="breadcrumb" *ngIf="dataAndAnalyticsView | async; let view">
+    <ol class="breadcrumb" *ngIf="displayView | async; let displayView">
       <li class="breadcrumb-item active" aria-current="page">
         <a [routerLink]="['/data-and-analytics']">{{ 'DATA_AND_ANALYTICS.LABEL' | translate }}</a>
       </li>
-      <li class="breadcrumb-item active" aria-current="page" *ngIf="dataAndAnalyticsView | async; let view">
-        <a [routerLink]="['/data-and-analytics', view.name]" [queryParams]="getQueryParams(queryParams | async, displayView | async, view)">{{ view.name }} </a>
+      <li class="breadcrumb-item active" aria-current="page" >
+        <a [routerLink]="['/data-and-analytics', view.name]" [queryParams]="getQueryParams(params, view, displayView)">{{ view.name }} </a>
       </li>
     </ol>
   </nav>
@@ -16,7 +16,7 @@
     <ol class="breadcrumb" *ngIf="organizations | async; let organizations">
       <ng-template ngFor let-organization [ngForOf]="organizations" let-i="organization"  let-index="index"  [ngForTrackBy]="trackByIndex">
         <li class="breadcrumb-item active" aria-current="page">
-          <a (click)="onNavigateOrganization(organizations, index)">{{ organization.name }}</a>
+          <a (click)="onNavigateOrganization(params, organizations, index)">{{ organization.name }}</a>
         </li>
       </ng-template>
     </ol>
@@ -28,7 +28,7 @@
       <div class="card-columns" *ngIf="isDashboard | async" [@fadeIn]>
         <ng-template ngFor let-view [ngForOf]="dataAndAnalyticsViews | async" let-i="view" [ngForTrackBy]="trackByIndex">
           <div class="card">
-            <a [routerLink]="[view.name]" [queryParams]="getQueryParams(queryParams | async, displayView, view)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <a [routerLink]="[view.name]" [queryParams]="getQueryParams(params, view, displayView)" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
               <div class="card-header">
                 <div class="h4 text-bold text-truncate">{{ organization.name }}</div>
                 <div class="h5 text-bold">{{ view.name }}</div>
@@ -57,32 +57,45 @@
         </ng-template>
       </div>
 
-      <div [@fadeIn] *ngIf="dataAndAnalyticsView | async; let dataAndAnalyticsView">
+      <div [@fadeIn] *ngIf="dataAndAnalyticsView | async; let view">
         <div class="card-deck">
           <div class="card">
             <div class="card-header">
-              {{ dataAndAnalyticsView.name }}
+              {{ view.name }}
             </div>
-            <div class="card-body" [ngSwitch]="dataAndAnalyticsView.layout">
+            <div class="card-body" [ngSwitch]="view.layout">
 
-              <div class="row p-1 mb-2">
+              <div class="row p-1 mb-2" *ngIf="(label | async)?.length > 0">
                 <div class="col-12">
                   <span class="h4 font-weight-bold">{{ label | async }}</span>
                 </div>
               </div>
 
-              <div class="row p-1 mb-3">
+              <div class="row p-1 mb-2">
                 <div class="col-12">
                   <span class="h4 font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATION' | translate }}: </span>
                   <span class="h4">{{ organization.name }} ({{ organization.people.length }})</span>
                 </div>
               </div>
 
+              <div class="applied-filters mt-2" *ngIf="filters | async; let filters">
+                <span class="badge badge-light p-2 mr-2 mb-2" *ngFor="let filter of filters">
+                  <span *ngIf="showFilter(view, filter)">
+                    <span class="mr-1">{{getFilterField(view, filter) | formalize}}:</span>
+                    <span class="mr-2">{{getFilterValue(view, filter) | formalize}}</span>
+                    <a class="fa fa-close" [routerLink]="getDataAndAnalyticsRouterLink(view)" [queryParams]="getDataAndAnalyticsQueryParamsRemovingFilter(queryParams | async, filter)"></a>
+                  </span>
+                </span>
+                <span *ngIf="showClearFilters(view, filters)" class="badge badge-light p-2 mr-2 mb-2">
+                  <a [routerLink]="getDataAndAnalyticsRouterLink(view)" [queryParams]="getDataAndAnalyticsQueryParamsClearingFilters(queryParams | async, view)">Clear</a>
+                </span>
+              </div>
+
               <div class="row p-1">
                 <div class="col-4" *ngIf="(colleges | async).length > 0">
                   <div class="form-group">
                     <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.COLLEGE' | translate }}</label>
-                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
+                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of colleges | async" [ngValue]="so.id">{{ so.label }}</option>
                     </select>
@@ -91,7 +104,7 @@
                 <div class="col-4" *ngIf="(departments | async).length > 0">
                   <div class="form-group">
                     <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.DEPARTMENT' | translate }}</label>
-                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
+                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of departments | async" [ngValue]="so.id">{{ so.label }}</option>
                     </select>
@@ -100,7 +113,7 @@
                 <div class="col-4" *ngIf="(others | async).length > 0">
                   <div class="form-group">
                     <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.OTHERS' | translate }}</label>
-                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event)">
+                    <select class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of others | async" [ngValue]="so.id">{{ so.label }}</option>
                     </select>
@@ -109,12 +122,13 @@
               </div>
 
               <div *ngSwitchCase="'CONTAINER'">
-                <div [ngSwitch]="dataAndAnalyticsView.type">
+                <div [ngSwitch]="view.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
                     <scholars-academic-age-group
                       [organization]="selectedOrganization | async"
                       [displayView]="displayView"
-                      [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      [dataAndAnalyticsView]="view"
+                      [filters]="filters | async"
                       [defaultId]="themeOrganizationId | async"
                       (labelEvent)="onLabelEvent($event)">
                     </scholars-academic-age-group>
@@ -123,7 +137,8 @@
                     <scholars-quantity-distribution
                       [organization]="selectedOrganization | async"
                       [displayView]="displayView"
-                      [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      [dataAndAnalyticsView]="view"
+                      [filters]="filters | async"
                       [defaultId]="themeOrganizationId | async"
                       (labelEvent)="onLabelEvent($event)">
                     </scholars-quantity-distribution>
@@ -132,17 +147,17 @@
                     <scholars-profile-summaries-export
                       [organization]="selectedOrganization | async"
                       [displayView]="displayView"
-                      [dataAndAnalyticsView]="dataAndAnalyticsView"
+                      [dataAndAnalyticsView]="view"
                       [defaultId]="themeOrganizationId | async"
                       (labelEvent)="onLabelEvent($event)">
                     </scholars-profile-summaries-export>
                   </div>
-                  <div *ngSwitchDefault>{{ dataAndAnalyticsView.type }} Unknown</div>
+                  <div *ngSwitchDefault>{{ view.type }} Unknown</div>
                 </div>
               </div>
-              <div *ngSwitchCase="'GRID'">{{ dataAndAnalyticsView.layout }} Not Supported</div>
-              <div *ngSwitchCase="'LIST'">{{ dataAndAnalyticsView.layout }} Not Supported</div>
-              <div *ngSwitchDefault>{{ dataAndAnalyticsView.layout }} Unknown</div>
+              <div *ngSwitchCase="'GRID'">{{ view.layout }} Not Supported</div>
+              <div *ngSwitchCase="'LIST'">{{ view.layout }} Not Supported</div>
+              <div *ngSwitchDefault>{{ view.layout }} Unknown</div>
             </div>
           </div>
         </div>

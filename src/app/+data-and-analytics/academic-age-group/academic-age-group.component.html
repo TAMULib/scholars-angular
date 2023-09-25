@@ -1,7 +1,7 @@
 <div class="container mb-1">
   <div class="text-center h2">{{organization.name}}</div>
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-6">
       <div class="card shadow bg-white rounded m-1">
         <div class="card-body">
           <div class="card-text">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="col-xs-6">
+    <div class="col-6">
       <div class="card shadow bg-white rounded m-1">
         <div class="card-body">
           <div class="card-text">
@@ -28,7 +28,7 @@
       </div>
       <div class="card shadow bg-white rounded m-1">
         <div class="card-body">
-          <div class="h5 text-truncate">{{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.AVERAGE_PUBLICATIONS' | translate }}</div>
+          <div class="h5">{{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.AVERAGE_PUBLICATIONS' | translate }}</div>
           <scholars-barplot id="averagePubRateAcademicAgeBarplot" scale="1" [input]="averagePubRateAcademicAge" maxOverride="{{maxOverride | async}}"></scholars-barplot>
         </div>
       </div>

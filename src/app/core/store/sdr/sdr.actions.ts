@@ -138,7 +138,10 @@ export class RecentlyUpdatedResourcesFailureAction implements Action {
 
 export class GetOneResourceAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.GET_ONE, this.name);
-  constructor(public name: string, public payload: { id: number | string }) { }
+  constructor(public name: string, public payload: {
+    id: number | string,
+    queue?: Array<GetOneResourceAction>,
+  }) { }
 }
 
 export class GetOneResourceSuccessAction implements Action {
