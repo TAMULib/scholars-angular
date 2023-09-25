@@ -190,7 +190,8 @@ export class DataAndAnalyticsComponent implements OnInit {
   }
 
   public onNavigateOrganization(params: Params, organizations: SolrDocument[], index: number): void {
-    const selectedOrganizations = !!params.selectedOrganizations
+    console.log(params)
+    const selectedOrganizations: string[] = !!params.selectedOrganizations
       ? params.selectedOrganizations.split(',')
       : [];
 
@@ -206,7 +207,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { ...params, selectedOrganizations },
+      queryParams: { ...params, selectedOrganizations: selectedOrganizations.join(',') },
       queryParamsHandling: 'merge'
     });
   }
