@@ -1,26 +1,21 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { Params, Router, NavigationStart } from '@angular/router';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable, Subscription, queueScheduler, scheduled } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
-import { scheduled, Subscription, Observable } from 'rxjs';
-import { filter, map, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { queueScheduler } from 'rxjs';
-
-import { AppState } from '../../../core/store';
 import { DialogButtonType, DialogControl } from '../../../core/model/dialog';
-import { Facet, FacetType, CollectionView, OpKey } from '../../../core/model/view';
-import { Facetable } from '../../../core/model/request';
-import { SdrFacet, SdrFacetEntry, SdrCollection } from '../../../core/model/sdr';
-
 import { IndividualRepo } from '../../../core/model/discovery/repo/individual.repo';
-
+import { Facetable } from '../../../core/model/request';
+import { SdrCollection, SdrFacet, SdrFacetEntry } from '../../../core/model/sdr';
+import { CollectionView, Facet, FacetType, OpKey } from '../../../core/model/view';
+import { AppState } from '../../../core/store';
+import { selectRouterQueryParams, selectRouterState } from '../../../core/store/router';
 import { CustomRouterState } from '../../../core/store/router/router.reducer';
-import { selectRouterState, selectRouterQueryParams } from '../../../core/store/router';
 import { selectCollectionViewByName } from '../../../core/store/sdr';
-
-import { createSdrRequest, buildDateYearFilterValue, buildNumberRangeFilterValue, getFacetFilterLabel } from '../../utilities/discovery.utility';
+import { buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetFilterLabel } from '../../utilities/discovery.utility';
 
 import * as fromDialog from '../../../core/store/dialog/dialog.actions';
 
@@ -37,6 +32,15 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
   @Input()
   public field: string;
 
+  @Input()
+  public multiselect: boolean;
+
+  @Input()
+  public page;
+
+  @Input()
+  public pageSize;
+
   public queryParams: Observable<Params>;
 
   public routerState: Observable<CustomRouterState>;
@@ -47,28 +51,26 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
 
   public sdrFacet: Observable<SdrFacet>;
 
-  public page: number;
-
-  public pageSize: number;
-
   public routerLink = [];
 
   public form: UntypedFormGroup;
 
   public dialog: DialogControl;
 
+  private selections: BehaviorSubject<SdrFacetEntry[]>;
+
   private subscriptions: Subscription[];
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     private store: Store<AppState>,
     private translate: TranslateService,
     private individualRepo: IndividualRepo
   ) {
+    this.selections = new BehaviorSubject<SdrFacetEntry[]>([]);
     this.subscriptions = [];
-    this.page = 2;
-    this.pageSize = 10;
   }
 
   ngOnDestroy() {
@@ -95,6 +97,34 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
     this.subscriptions.push(
       this.routerState.subscribe((routerState: CustomRouterState) => {
 
+        const submit = {
+          type: DialogButtonType.OUTLINE_PRIMARY,
+          label: this.translate.get('SHARED.DIALOG.FACET_ENTRIES.SUBMIT'),
+          action: () => {
+
+            const filters = [
+              ...routerState.queryParams.filters.split(',').filter((field: string) => this.field !== field),
+              this.field
+            ].join(',');
+
+            const queryParams = {
+              ...routerState.queryParams,
+              filters
+            };
+
+            queryParams[`${this.field}.filter`] = this.selections.value.map((entry: SdrFacetEntry) => entry.value).join(';;');
+            queryParams[`${this.field}.opKey`] = OpKey.EQUALS;
+
+            this.router.navigate([], {
+              relativeTo: this.route,
+              queryParams,
+              queryParamsHandling: 'merge'
+            });
+
+          },
+          disabled: () => this.selections.asObservable().pipe(map((selections: SdrFacetEntry[]) => selections.length === 0)),
+        };
+
         this.dialog = {
           title: scheduled([this.name], queueScheduler),
           close: {
@@ -105,6 +135,7 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
             },
             disabled: () => scheduled([false], queueScheduler),
           },
+          submit: this.multiselect ? submit : undefined
         };
 
         const collectionViewType = routerState.url.startsWith('/directory')
@@ -180,6 +211,25 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
         this.store.dispatch(new fromDialog.CloseDialogAction());
       })
     );
+  }
+
+  public selected(entry: SdrFacetEntry): number {
+    return this.selections.value.indexOf(entry);
+  }
+
+  public isSelected(entry: SdrFacetEntry): boolean {
+    return this.selected(entry) >= 0;
+  }
+
+  public selectionChanged(entry: SdrFacetEntry): void {
+    const selected = this.selected(entry);
+    const selections = [...this.selections.value];
+    if (selected >= 0) {
+      selections.splice(selected, 1);
+    } else {
+      selections.push(entry);
+    }
+    this.selections.next(selections);
   }
 
   public getFacetRangeValue(facet: Facet, entry: SdrFacetEntry): string {

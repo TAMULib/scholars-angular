@@ -6,7 +6,7 @@ import { Subscription, filter } from 'rxjs';
 import * as d3 from 'd3';
 
 import { SolrDocument } from '../../core/model/discovery';
-import { SidebarMenu } from '../../core/model/sidebar';
+import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, Facet, Filter, OpKey } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
 import { AppState } from '../../core/store';
@@ -16,6 +16,7 @@ import { fadeIn } from '../../shared/utilities/animation.utility';
 import { id } from '../../shared/utilities/id.utility';
 import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/utilities/un-sdg.utility';
 
+import * as fromRouter from '../../core/store/router/router.actions';
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 
@@ -53,6 +54,8 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
 
   public id: string;
 
+  private sidebarMenuSections: { [key: string]: { facet:Facet, index: number } };
+
   private subscriptions: Subscription[];
 
   constructor(
@@ -62,6 +65,7 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.id = id();
+    this.sidebarMenuSections = {};
     this.subscriptions = [];
   }
 
@@ -72,9 +76,9 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   }
 
   ngOnInit(): void {
-    const items = [];
     const menu: SidebarMenu = {
-      sections: this.dataAndAnalyticsView.facets.map((facet: Facet) => {
+      sections: this.dataAndAnalyticsView.facets.map((facet: Facet, index: number) => {
+        this.sidebarMenuSections[facet.field] = { facet, index};
         return {
           title: facet.name,
           expandable: facet.expandable,
@@ -82,7 +86,7 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
           collapsed: facet.collapsed,
           useDialog: facet.useDialog,
           action: this.dialog.facetEntriesDialog(facet.name, facet.field),
-          items,
+          items: [],
         };
       })
     };
@@ -189,7 +193,40 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   ngOnChanges(changes: SimpleChanges): void {
     const { filters } = changes;
 
-    const additionalFilters = [];
+    if (!!filters.previousValue) {
+      filters.previousValue.forEach((entry: any) => {
+        if (filters.currentValue.indexOf(entry) === -1) {
+          const section = this.sidebarMenuSections[entry.field];
+          if (!!section) {
+            this.store.dispatch(new fromSidebar.RemoveSectionAction({
+              sectionIndex: section.index,
+              itemLabel: entry.value,
+              itemField: entry.field,
+            }));
+          }
+        }
+      });
+    }
+
+    filters.currentValue.forEach((entry: any) => {
+      if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
+        const section = this.sidebarMenuSections[entry.field];
+        if (!!section) {
+          this.store.dispatch(new fromSidebar.AddSectionItemAction({
+            sectionIndex: section.index,
+            sectionItem: {
+              type: SidebarItemType.ACTION,
+              label: entry.value,
+              selected: true,
+              action: new fromRouter.RemoveFilter({ filter: entry }),
+            }
+          }));
+        }
+      }
+    });
+
+    const additionalFilters = [...filters.currentValue];
+    additionalFilters.shift();
 
     if (this.organization.id !== this.defaultId && !!this.organization.name) {
       additionalFilters.push({

@@ -1,10 +1,12 @@
 import { Action } from '@ngrx/store';
-import { SidebarMenu } from '../../model/sidebar';
+import { SidebarItem, SidebarMenu } from '../../model/sidebar';
 
 export enum SidebarActionTypes {
   LOAD_SIDEBAR = '[Sidebar] load',
   UNLOAD_SIDEBAR = '[Sidebar] unload',
   TOGGLE_COLLAPSIBLE_SECTION = '[Sidebar] toggle collapsible section',
+  ADD_SECTION_ITEM = '[Sidebar] add section item',
+  REMOVE_SECTION_ITEM = '[Sidebar] remove section item',
 }
 
 export class LoadSidebarAction implements Action {
@@ -21,7 +23,19 @@ export class ToggleCollapsibleSectionAction implements Action {
   constructor(public payload: { sectionIndex: number }) { }
 }
 
+export class AddSectionItemAction implements Action {
+  readonly type = SidebarActionTypes.ADD_SECTION_ITEM;
+  constructor(public payload: { sectionIndex: number, sectionItem: SidebarItem }) { }
+}
+
+export class RemoveSectionAction implements Action {
+  readonly type = SidebarActionTypes.REMOVE_SECTION_ITEM;
+  constructor(public payload: { sectionIndex: number, itemLabel: string, itemField: string }) { }
+}
+
 export type SidebarActions =
   LoadSidebarAction |
   UnloadSidebarAction |
-  ToggleCollapsibleSectionAction;
+  ToggleCollapsibleSectionAction |
+  AddSectionItemAction |
+  RemoveSectionAction;

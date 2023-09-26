@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { NavigationExtras } from '@angular/router';
+import { Filter } from '../../model/view';
 
 export type RouterNavigation = Readonly<{
   path: any[];
@@ -13,6 +14,7 @@ export enum RouterActionTypes {
   BACK = '[Router] back',
   FORWARD = '[Router] forward',
   CHANGED = '[Router] changed',
+  REMOVE_FILTER = '[Router] remove filter',
 }
 
 export class Go implements Action {
@@ -37,9 +39,15 @@ export class Changed implements Action {
   readonly type = RouterActionTypes.CHANGED;
 }
 
+export class RemoveFilter implements Action {
+  readonly type = RouterActionTypes.REMOVE_FILTER;
+  constructor(public payload: { filter: Filter }) { }
+}
+
 export type RouterActions =
   Go |
   Link |
   Back |
   Forward |
-  Changed;
+  Changed |
+  RemoveFilter;

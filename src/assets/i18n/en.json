@@ -154,7 +154,9 @@
     "DIALOG": {
       "FACET_ENTRIES": {
         "ARIA_LABELLED_BY": "{{name}} facet entries dialog",
-        "CANCEL": "Close"
+        "EMPTY": "No facet entries matching current filter. Try removing some filters.",
+        "CANCEL": "Close",
+        "SUBMIT": "Submit"
       },
       "LOGIN": {
         "EMAIL": "Enter email",
