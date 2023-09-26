@@ -1,4 +1,4 @@
-<div *ngIf="document | async; let individual" [@fadeIn]>
+<div *ngIf="individual | async; let individual" [@fadeIn]>
   <div class="float-right">
     <div class="text-nowrap" *ngIf="individual.researcherOn !== undefined">
       <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.ICON_ALT' | translate }}n">

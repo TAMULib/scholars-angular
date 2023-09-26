@@ -37,7 +37,7 @@ export class ResultViewComponent implements OnInit {
     return templateFunction(this.resource);
   }
 
-  private getTemplateFunction(): (document: any) => string {
+  private getTemplateFunction(): (individual: any) => string {
     if (this.view.templateFunctions.hasOwnProperty(this.resource.class)) {
       return this.view.templateFunctions[this.resource.class];
     }

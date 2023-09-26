@@ -252,12 +252,12 @@ export class FindByTypesInResourceFailureAction implements Action {
 
 export class FetchLazyReferenceAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.FETCH_LAZY_REFERENCE, this.name);
-  constructor(public name: string, public payload: { document: any; field: string }) { }
+  constructor(public name: string, public payload: { individual: any; field: string }) { }
 }
 
 export class FetchLazyReferenceSuccessAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.FETCH_LAZY_REFERENCE_SUCCESS, this.name);
-  constructor(public name: string, public payload: { document: any; field: string; resources: SdrCollection }) { }
+  constructor(public name: string, public payload: { individual: any; field: string; resources: SdrCollection }) { }
 }
 
 export class FetchLazyReferenceFailureAction implements Action {

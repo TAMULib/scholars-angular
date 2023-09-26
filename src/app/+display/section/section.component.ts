@@ -7,7 +7,7 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppConfig, APP_CONFIG } from '../../app.config';
 import { DisplayTabSectionView, Sort } from '../../core/model/view';
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
 import { getResourcesPage, getSubsectionResources, loadBadges } from '../../shared/utilities/view.utility';
 
@@ -22,7 +22,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   public section: DisplayTabSectionView;
 
   @Input()
-  public document: SolrDocument;
+  public individual: Individual;
 
   @Input()
   public display: string;
@@ -56,7 +56,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
       this.subscriptions.push(
         this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => loadBadges(this.platformId))
       );
-      const resources = getSubsectionResources(this.document[this.section.field], this.section.filters);
+      const resources = getSubsectionResources(this.individual[this.section.field], this.section.filters);
       this.page = this.route.queryParams.pipe(
         map((params: Params) => {
           const pageSize = params[`${this.section.name}.size`] ? Number(params[`${this.section.name}.size`]) : this.section.pageSize;
@@ -83,7 +83,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public getEmbedSnippet(): string {
-    return `<div class="_scholars_embed_" data-collection="individual" data-individual="${this.document.id}" data-display="${this.display}" data-sections="${this.section.name}"></div>\n\n` + '<!-- This JavaScript only needs to be included once in your HTML -->\n' + `<script type="text/javascript" src="${this.appConfig.embedUrl}/scholars-embed.min.js" async></script>`;
+    return `<div class="_scholars_embed_" data-collection="individual" data-individual="${this.individual.id}" data-display="${this.display}" data-sections="${this.section.name}"></div>\n\n` + '<!-- This JavaScript only needs to be included once in your HTML -->\n' + `<script type="text/javascript" src="${this.appConfig.embedUrl}/scholars-embed.min.js" async></script>`;
   }
 
   public copyToClipBoard(copyElement: any, tooltip: NgbTooltip) {

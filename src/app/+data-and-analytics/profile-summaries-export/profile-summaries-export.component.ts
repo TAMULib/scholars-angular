@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, ExportView } from '../../core/model/view';
 import { AppState } from '../../core/store';
@@ -19,7 +19,7 @@ import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   @Input()
-  public organization: SolrDocument;
+  public organization: Individual;
 
   @Input()
   public displayView: DisplayView;
@@ -97,7 +97,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     return this.selectedExportView.asObservable();
   }
 
-  public getDownloadLink(organization: SolrDocument, exportView: ExportView): string {
+  public getDownloadLink(organization: Individual, exportView: ExportView): string {
     const link = exportView.name.toLowerCase().replace(/ /g, '_');
     return organization._links[link].href;
   }

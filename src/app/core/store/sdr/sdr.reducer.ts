@@ -151,7 +151,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
     return resources;
   };
   const getResource = (action: SdrActions, key: string): R => {
-    const resource = action.payload.document;
+    const resource = action.payload.individual;
     switch (key) {
       case 'dataAndAnalyticsViews':
       case 'directoryViews':
@@ -240,7 +240,7 @@ export const getSdrReducer = <R extends SdrResource>(name: string, additionalCon
         };
       case getSdrAction(SdrActionTypes.FETCH_LAZY_REFERENCE_SUCCESS, name):
         const changes = {};
-        const id = action.payload.document.id;
+        const id = action.payload.individual.id;
         const isArray = Array.isArray(state.entities[id][action.payload.field]);
         // tslint:disable-next-line: no-string-literal
         const embedded = action.payload.resources._embedded.individual;

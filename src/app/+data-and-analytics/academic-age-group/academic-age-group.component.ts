@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, S
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, filter, map, tap } from 'rxjs';
 
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, Facet, OpKey } from '../../core/model/view';
@@ -37,7 +37,7 @@ const apk = 'Average publications';
 export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   @Input()
-  public organization: SolrDocument;
+  public organization: Individual;
 
   @Input()
   public displayView: DisplayView;

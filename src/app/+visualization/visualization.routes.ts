@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot, Routes } from '
 import { Store, select } from '@ngrx/store';
 import { filter } from 'rxjs';
 
-import { Individual, SolrDocument } from '../core/model/discovery';
+import { Individual } from '../core/model/discovery';
 import { AppState } from '../core/store';
 import { selectResourceById } from '../core/store/sdr';
 import { CoAuthorNetworkComponent } from './co-author-network/co-author-network.component';
@@ -24,7 +24,7 @@ export const individualResolver: ResolveFn<Individual> = (
 
   return store.pipe(
     select(selectResourceById('individual', id)),
-    filter((document: SolrDocument) => document !== undefined)
+    filter((individual: Individual) => individual !== undefined)
   );
 };
 
@@ -33,7 +33,7 @@ export const routes: Routes = [
     path: ':id',
     component: VisualizationComponent,
     resolve: {
-      document: individualResolver
+      individual: individualResolver
     },
     children: [
       {

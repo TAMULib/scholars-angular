@@ -20,7 +20,7 @@ import { AbstractSdrRepo } from '../../model/sdr/repo/abstract-sdr-repo';
 
 import { SdrResource, SdrCollection, SdrFacet, SdrFacetEntry, Count } from '../../model/sdr';
 import { SidebarMenu, SidebarSection, SidebarItem, SidebarItemType } from '../../model/sidebar';
-import { SolrDocument } from '../../model/discovery';
+import { Individual } from '../../model/discovery';
 import { Facet, DiscoveryView, DirectoryView, FacetType, OpKey } from '../../model/view';
 
 import { injectable, repos } from '../../model/repos';
@@ -105,7 +105,7 @@ export class SdrEffects {
         .get(action.name)
         .getOne(action.payload.id)
         .pipe(
-          map((document: SolrDocument) => new fromSdr.GetOneResourceSuccessAction(action.name, { document, queue: action.payload.queue })),
+          map((individual: Individual) => new fromSdr.GetOneResourceSuccessAction(action.name, { individual, queue: action.payload.queue })),
           catchError((response) =>
             scheduled(
               [
@@ -296,9 +296,9 @@ export class SdrEffects {
         .findByTypesIn(action.payload.types)
         .pipe(
           map(
-            (document: SolrDocument) =>
+            (individual: Individual) =>
               new fromSdr.FindByTypesInResourceSuccessAction(action.name, {
-                document,
+                individual,
               })
           ),
           catchError((response) =>
@@ -331,8 +331,8 @@ export class SdrEffects {
     ofType(...this.buildActions(fromSdr.SdrActionTypes.FETCH_LAZY_REFERENCE)),
     switchMap((action: fromSdr.FetchLazyReferenceAction) => {
       const field = action.payload.field;
-      const document = action.payload.document;
-      const ids = Array.isArray(document[field]) ? document[field].map((property) => property.id) : [document[field].id];
+      const individual = action.payload.individual;
+      const ids = Array.isArray(individual[field]) ? individual[field].map((property) => property.id) : [individual[field].id];
       return this.repos
         .get('individual')
         .findByIdIn(ids)
@@ -340,7 +340,7 @@ export class SdrEffects {
           map(
             (resources: SdrCollection) =>
               new fromSdr.FetchLazyReferenceSuccessAction(action.name, {
-                document,
+                individual,
                 field,
                 resources,
               })

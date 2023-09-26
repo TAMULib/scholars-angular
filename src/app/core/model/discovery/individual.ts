@@ -1,3 +1,8 @@
-import { SolrDocument } from './solr-document';
+import { SdrResource } from '../sdr';
 
-export type Individual = SolrDocument;
+export interface Individual extends SdrResource {
+  readonly id: number | string;
+  readonly type: string[];
+  readonly name?: string;
+  readonly class?: string;
+}

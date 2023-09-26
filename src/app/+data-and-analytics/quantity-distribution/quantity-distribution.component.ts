@@ -5,7 +5,7 @@ import { Subscription, filter } from 'rxjs';
 
 import * as d3 from 'd3';
 
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, Facet, Filter, OpKey } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
@@ -29,7 +29,7 @@ import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnInit {
 
   @Input()
-  public organization: SolrDocument;
+  public organization: Individual;
 
   @Input()
   public displayView: DisplayView;

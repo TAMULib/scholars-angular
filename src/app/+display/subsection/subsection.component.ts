@@ -5,7 +5,7 @@ import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { Sort } from '../../core/model/view';
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { DisplaySubsectionView } from '../../core/model/view/display-view';
 import { SdrPage } from '../../core/model/sdr';
 import { getResourcesPage, getSubsectionResources, loadBadges } from '../../shared/utilities/view.utility';
@@ -21,7 +21,7 @@ export class SubsectionComponent implements AfterViewInit, OnInit, OnDestroy {
   public subsection: DisplaySubsectionView;
 
   @Input()
-  public document: SolrDocument;
+  public individual: Individual;
 
   public resources: BehaviorSubject<any[]>;
 
@@ -48,7 +48,7 @@ export class SubsectionComponent implements AfterViewInit, OnInit, OnDestroy {
     this.subscriptions.push(
       this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => loadBadges(this.platformId))
     );
-    const resources = getSubsectionResources(this.document[this.subsection.field], this.subsection.filters);
+    const resources = getSubsectionResources(this.individual[this.subsection.field], this.subsection.filters);
     this.page = this.route.queryParams.pipe(
       map((params: Params) => {
         const pageSize = params[`${this.subsection.name}.size`] ? Number(params[`${this.subsection.name}.size`]) : this.subsection.pageSize;

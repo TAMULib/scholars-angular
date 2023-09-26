@@ -9,7 +9,7 @@ import { filter, tap } from 'rxjs/operators';
 import { AppState } from '../core/store';
 import { AppConfig, APP_CONFIG } from '../app.config';
 import { DirectoryView, DiscoveryView, Filter } from '../core/model/view';
-import { SolrDocument } from '../core/model/discovery';
+import { Individual } from '../core/model/discovery';
 import { SdrPage, SdrFacet } from '../core/model/sdr';
 
 import { selectAllResources, selectResourcesPage, selectResourcesFacets, selectResourceById, selectDiscoveryViewByClass, selectResourceIsLoading } from '../core/store/sdr';
@@ -33,7 +33,7 @@ export class DirectoryComponent implements OnDestroy, OnInit {
 
   public discoveryView: Observable<DiscoveryView>;
 
-  public documents: Observable<SolrDocument[]>;
+  public documents: Observable<Individual[]>;
 
   public loading: Observable<boolean>;
 
@@ -62,9 +62,9 @@ export class DirectoryComponent implements OnDestroy, OnInit {
     this.queryParams = this.store.pipe(select(selectRouterQueryParams));
     this.filters = this.store.pipe(select(selectRouterQueryParamFilters));
     this.loading = this.store.pipe(select(selectResourceIsLoading('individual')));
-    this.documents = this.store.pipe(select(selectAllResources<SolrDocument>('individual')));
-    this.page = this.store.pipe(select(selectResourcesPage<SolrDocument>('individual')));
-    this.facets = this.store.pipe(select(selectResourcesFacets<SolrDocument>('individual')));
+    this.documents = this.store.pipe(select(selectAllResources<Individual>('individual')));
+    this.page = this.store.pipe(select(selectResourcesPage<Individual>('individual')));
+    this.facets = this.store.pipe(select(selectResourcesFacets<Individual>('individual')));
     this.subscriptions.push(
       this.route.params.subscribe((params) => {
         if (params.view) {

@@ -6,7 +6,7 @@ import { Observable, Subscription, combineLatest } from 'rxjs';
 import { map, filter, switchMap } from 'rxjs/operators';
 
 import { DisplayTabView, DisplayTabSectionView, DisplayView } from '../../core/model/view';
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 
 import { AppState } from '../../core/store';
 
@@ -22,7 +22,7 @@ export class TabComponent implements OnDestroy, OnInit {
 
   public tab: Observable<DisplayTabView>;
 
-  public document: Observable<SolrDocument>;
+  public individual: Observable<Individual>;
 
   public display: string;
 
@@ -36,17 +36,17 @@ export class TabComponent implements OnDestroy, OnInit {
     this.subscriptions.push(
       combineLatest([this.route.parent.params, this.route.params]).subscribe((params: Params[]) => {
         if (params[0].id && params[1].view && params[1].tab) {
-          this.document = this.store.pipe(select(selectResourceById('individual', params[0].id)));
+          this.individual = this.store.pipe(select(selectResourceById('individual', params[0].id)));
 
-          // listen to document changes to get updated display view
+          // listen to individual changes to get updated display view
           this.tab = this.store.pipe(
             select(selectResourceById('individual', params[0].id)),
-            filter((document: SolrDocument) => document !== undefined),
-            switchMap((document: SolrDocument) => {
+            filter((individual: Individual) => individual !== undefined),
+            switchMap((individual: Individual) => {
 
-              // map tab from latest display view for document type
+              // map tab from latest display view for individual type
               return this.store.pipe(
-                select(selectDisplayViewByTypes(document.type)),
+                select(selectDisplayViewByTypes(individual.type)),
                 filter((displayView: DisplayView) => displayView !== undefined),
                 map((displayView: DisplayView) => {
                   let tab: DisplayTabView;
@@ -78,8 +78,8 @@ export class TabComponent implements OnDestroy, OnInit {
     });
   }
 
-  public getSectionsToShow(tab: DisplayTabView, document: SolrDocument): DisplayTabSectionView[] {
-    return sectionsToShow(tab.sections, document);
+  public getSectionsToShow(tab: DisplayTabView, individual: Individual): DisplayTabSectionView[] {
+    return sectionsToShow(tab.sections, individual);
   }
 
 }

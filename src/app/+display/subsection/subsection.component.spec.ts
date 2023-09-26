@@ -63,12 +63,12 @@ describe('SubsectionComponent', () => {
       template: '',
       templateFunction: (resource: any) => '',
     };
-    component.document = {
+    component.individual = {
       id: 1,
       type: ['Person'],
     };
     // tslint:disable-next-line: no-string-literal
-    component.document['publications'] = [];
+    component.individual['publications'] = [];
     fixture.detectChanges();
   });
 

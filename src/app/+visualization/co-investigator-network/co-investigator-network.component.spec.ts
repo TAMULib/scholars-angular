@@ -45,7 +45,7 @@ describe('CoInvestigatorNetworkComponent', () => {
           useValue: {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
-              data: scheduled([{ document: { id: 'test', name: 'Test' } }], queueScheduler)
+              data: scheduled([{ individual: { id: 'test', name: 'Test' } }], queueScheduler)
             },
           },
         },

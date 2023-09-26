@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Params } from '@angular/router';
 
+import { Individual } from '../../core/model/discovery';
 import { Direction } from '../../core/model/request';
 import { SdrPage } from '../../core/model/sdr';
 import { Boost, CollectionView, DiscoveryView, Export, Facet, FacetType, Filter, OpKey, Sort } from '../../core/model/view';
@@ -200,14 +201,14 @@ const equals = (filterOne: Filter, filterTwo: Filter): boolean => {
  * }
  * i.e. `trainee.label` returns 'Name of organizarion'
  *
- * @param doc solr document or any JSON object
+ * @param individual solr individual or any JSON object
  * @param path dot notation path
  * @returns value at path
  */
-const getValueByPath = (doc: any, path: string): string | undefined => {
+const getValueByPath = (individual: Individual, path: string): string | undefined => {
   let pathValue;
   path.split('.').forEach((p: string) => {
-    pathValue = pathValue ? pathValue[p] : doc[p];
+    pathValue = pathValue ? pathValue[p] : individual[p];
   });
   return pathValue;
 };
@@ -270,17 +271,10 @@ const loadBadges = (platformId: string): void => {
 };
 
 export {
-  addExportToQueryParams,
-  removeFilterFromQueryParams,
-  resetFiltersInQueryParams,
-  getQueryParams,
-  getQueryParamsForFacets,
-  showFilter,
-  showClearFilters,
-  getFilterField,
-  getFilterValue,
-  hasExport,
-  getResourcesPage,
-  getSubsectionResources,
-  loadBadges
+  addExportToQueryParams, getFilterField,
+  getFilterValue, getQueryParams,
+  getQueryParamsForFacets, getResourcesPage,
+  getSubsectionResources, hasExport, loadBadges, removeFilterFromQueryParams,
+  resetFiltersInQueryParams, showClearFilters, showFilter
 };
+
