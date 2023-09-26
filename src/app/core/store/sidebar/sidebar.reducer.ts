@@ -1,5 +1,5 @@
 import { SidebarActions, SidebarActionTypes } from './sidebar.actions';
-import { SidebarMenu } from '../../model/sidebar';
+import { SidebarItem, SidebarMenu } from '../../model/sidebar';
 
 export type SidebarState = Readonly<{
   menu: SidebarMenu;
@@ -25,7 +25,7 @@ export function reducer(state = initialState, action: SidebarActions): SidebarSt
           sections: [],
         },
       };
-    case SidebarActionTypes.TOGGLE_COLLAPSIBLE_SECTION:
+    case SidebarActionTypes.TOGGLE_COLLAPSIBLE_SECTION: {
       const sections = [...state.menu.sections];
       const section = sections[action.payload.sectionIndex];
 
@@ -41,6 +41,37 @@ export function reducer(state = initialState, action: SidebarActions): SidebarSt
           sections
         }
       };
+    }
+    case SidebarActionTypes.ADD_SECTION_ITEM: {
+      const sections = [...state.menu.sections];
+      const section = sections[action.payload.sectionIndex];
+
+      section.items.push(action.payload.sectionItem);
+
+      return {
+        ...state,
+        menu: {
+          sections
+        }
+      };
+    }
+    case SidebarActionTypes.REMOVE_SECTION_ITEM: {
+      const sections = [...state.menu.sections];
+      const section = sections[action.payload.sectionIndex];
+
+      const index = section.items.map((item: SidebarItem) => item.label).indexOf(action.payload.itemLabel);
+
+      if (index >= 0) {
+        section.items.splice(index, 1);
+      }
+
+      return {
+        ...state,
+        menu: {
+          sections
+        }
+      };
+    }
     default:
       return state;
   }

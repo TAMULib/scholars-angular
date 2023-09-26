@@ -81,7 +81,7 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
           collapsible: facet.collapsible,
           collapsed: facet.collapsed,
           useDialog: facet.useDialog,
-          action: this.dialog.facetEntriesDialog(facet.name, facet.field),
+          action: this.dialog.facetEntriesDialog(facet.name, facet.field, true, 1),
           items,
         };
       })

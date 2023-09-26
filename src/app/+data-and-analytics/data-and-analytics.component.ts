@@ -77,7 +77,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private store: Store<AppState>
   ) {
     this.selectedOrganizationSubject = new BehaviorSubject<SolrDocument>(undefined);
@@ -206,7 +206,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     }
 
     this.router.navigate([], {
-      relativeTo: this.activatedRoute,
+      relativeTo: this.route,
       queryParams: { ...params, selectedOrganizations: selectedOrganizations.join(',') },
       queryParamsHandling: 'merge'
     });
@@ -218,7 +218,7 @@ export class DataAndAnalyticsComponent implements OnInit {
       : id;
 
     this.router.navigate([], {
-      relativeTo: this.activatedRoute,
+      relativeTo: this.route,
       queryParams: { ...params, selectedOrganizations },
       queryParamsHandling: 'merge'
     });

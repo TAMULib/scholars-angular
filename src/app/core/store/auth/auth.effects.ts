@@ -1,31 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
-import { Store, select } from '@ngrx/store';
-
-import { combineLatest, scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom, skipWhile, take } from 'rxjs/operators';
+import { Action, select, Store } from '@ngrx/store';
+import { asapScheduler, combineLatest, scheduled } from 'rxjs';
+import { catchError, map, skipWhile, switchMap, take, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
-
-import { User, Role } from '../../model/user';
-import { LoginRequest, RegistrationRequest } from '../../model/request';
-
 import { RegistrationStep } from '../../../shared/dialog/registration/registration.component';
-
+import { LoginRequest, RegistrationRequest } from '../../model/request';
+import { Role, User } from '../../model/user';
 import { AlertService } from '../../service/alert.service';
 import { AuthService } from '../../service/auth.service';
 import { DialogService } from '../../service/dialog.service';
-
-import { selectLoginRedirect, selectUser } from './';
 import { selectIsStompConnected } from '../stomp';
+import { selectLoginRedirect, selectUser } from './';
 
-import * as fromAuth from './auth.actions';
 import * as fromDialog from '../dialog/dialog.actions';
 import * as fromRouter from '../router/router.actions';
-import * as fromStomp from '../stomp/stomp.actions';
 import * as fromSdr from '../sdr/sdr.actions';
-import { Action } from '@ngrx/store';
+import * as fromStomp from '../stomp/stomp.actions';
+import * as fromAuth from './auth.actions';
+
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {

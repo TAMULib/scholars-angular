@@ -8,11 +8,20 @@
     </div>
   </form>
   <div *ngIf="facet | async; let facet">
-    <div *ngIf="sdrFacet | async; let sdrFacet">
+    <div *ngIf="sdrFacet | async; let sdrFacet; else noEntries">
       <table class="table table-sm table-striped table-hover">
         <tbody>
-          <tr *ngFor="let entry of sdrFacet.entries.content | slice: (page - 1) * pageSize : ((page - 1) * pageSize) + pageSize">
-            <td scope="row" [ngSwitch]="facet.type">
+          <tr *ngFor="let entry of sdrFacet.entries.content | slice: (page - 1) * pageSize : ((page - 1) * pageSize) + pageSize; index as i">
+            <td scope="row" [ngSwitch]="facet.type" *ngIf="multiselect">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="{{isSelected(entry)}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="selectionChanged(entry)">
+                <label class="form-check-label" for="selection-{{i}}">
+                  <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
+                  <span> ({{entry.count}})</span>
+                </label>
+              </div>
+            </td>
+            <td scope="row" [ngSwitch]="facet.type" *ngIf="!multiselect">
               <span *ngSwitchCase="'STRING'">
                 <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge">
                   <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
@@ -39,5 +48,8 @@
       </table>
       <ngb-pagination [collectionSize]="sdrFacet.entries.content.length" [pageSize]="pageSize" [(page)]="page" [maxSize]="3" [rotate]="true" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination>
     </div>
+    <ng-template #noEntries>
+      <div>{{ 'SHARED.DIALOG.FACET_ENTRIES.EMPTY' | translate }}</div>
+    </ng-template>
   </div>
 </scholars-dialog>

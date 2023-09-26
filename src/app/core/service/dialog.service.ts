@@ -73,12 +73,12 @@ export class DialogService {
     });
   }
 
-  public facetEntriesDialog(name: string, field: string): fromDialog.OpenDialogAction {
+  public facetEntriesDialog(name: string, field: string, multiselect = false, page = 2, pageSize = 10): fromDialog.OpenDialogAction {
     return new fromDialog.OpenDialogAction({
       dialog: {
         ref: {
           component: FacetEntriesComponent,
-          inputs: { name, field },
+          inputs: { name, field, multiselect, page, pageSize },
         },
         options: this.options(this.translate.instant('SHARED.DIALOG.FACET_ENTRIES.ARIA_LABELLED_BY', { name })),
       },

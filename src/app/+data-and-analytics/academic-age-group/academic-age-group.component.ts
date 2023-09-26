@@ -4,7 +4,7 @@ import { Observable, Subject, filter, map, tap } from 'rxjs';
 
 import { SolrDocument } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
-import { SidebarMenu } from '../../core/model/sidebar';
+import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, Facet, OpKey } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
 import { AppState } from '../../core/store';
@@ -13,8 +13,10 @@ import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotComponent, BarplotInput } from './barplot/barplot.component';
 
+import * as fromRouter from '../../core/store/router/router.actions';
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const academicAgeGroupToBarplotInput = (academicAge: AcademicAge): BarplotInput => {
   return {
@@ -72,7 +74,11 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   public averagePubRateAcademicAge: Observable<BarplotInput>;
 
+  private sidebarMenuSections: { [key: string]: { facet:Facet, index: number } };
+
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private store: Store<AppState>,
     private dialog: DialogService,
   ) {
@@ -80,20 +86,21 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
     this.maxOverride = new Subject<number>();
     this.mean = new Subject<number>();
     this.median = new Subject<number>();
+    this.sidebarMenuSections = {};
   }
 
   ngOnInit(): void {
-    const items = [];
     const menu: SidebarMenu = {
-      sections: this.dataAndAnalyticsView.facets.map((facet: Facet) => {
+      sections: this.dataAndAnalyticsView.facets.map((facet: Facet, index: number) => {
+        this.sidebarMenuSections[facet.field] = { facet, index};
         return {
           title: facet.name,
           expandable: facet.expandable,
           collapsible: facet.collapsible,
           collapsed: facet.collapsed,
           useDialog: facet.useDialog,
-          action: this.dialog.facetEntriesDialog(facet.name, facet.field),
-          items,
+          action: this.dialog.facetEntriesDialog(facet.name, facet.field, true, 1),
+          items: [],
         };
       })
     };
@@ -125,8 +132,44 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
     this.store.dispatch(new fromSdr.ClearAcademicAgeAction('individual'));
 
     setTimeout(() => {
+      if (!!filters.previousValue) {
+        filters.previousValue.forEach((entry: any) => {
+          if (filters.currentValue.indexOf(entry) === -1) {
+            const section = this.sidebarMenuSections[entry.field];
+            if (!!section) {
+              this.store.dispatch(new fromSidebar.RemoveSectionAction({
+                sectionIndex: section.index,
+                itemLabel: entry.value,
+                itemField: entry.field,
+              }));
+            }
+          }
+        });
+      }
 
-      const additionalFilters = [];
+      filters.currentValue.forEach((entry: any) => {
+        if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
+          const section = this.sidebarMenuSections[entry.field];
+          if (!!section) {
+            this.store.dispatch(new fromSidebar.AddSectionItemAction({
+              sectionIndex: section.index,
+              sectionItem: {
+                type: SidebarItemType.ACTION,
+                label: entry.value,
+                selected: true,
+                action: new fromSidebar.RemoveSectionAction({
+                  sectionIndex: section.index,
+                  itemLabel: entry.value,
+                  itemField: entry.field,
+                })
+              }
+            }));
+          }
+        }
+      });
+
+      const additionalFilters = [...filters.currentValue];
+      additionalFilters.shift();
 
       this.barplots.forEach(barplot => barplot.draw());
 
