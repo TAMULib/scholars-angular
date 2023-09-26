@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
 import { Banner } from '../../core/model/theme/banner';
-
+import { AppState } from '../../core/store';
 import { selectActiveThemeHeaderBanner } from '../../core/store/theme';
 
 @Component({

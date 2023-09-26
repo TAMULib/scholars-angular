@@ -1,12 +1,10 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 
-import { SdrActionTypes, SdrActions, getSdrAction } from './sdr.actions';
-import { SdrResource, SdrPage, SdrCollectionLinks, SdrFacet, SdrHighlight } from '../../model/sdr';
-
-import { keys } from '../../model/repos';
-
 import { augmentCollectionViewTemplates, augmentDisplayViewTemplates } from '../../../shared/utilities/template.utility';
+import { keys } from '../../model/repos';
+import { SdrCollectionLinks, SdrFacet, SdrHighlight, SdrPage, SdrResource } from '../../model/sdr';
 import { CollectionView, DisplayView } from '../../model/view';
+import { SdrActionTypes, SdrActions, getSdrAction } from './sdr.actions';
 
 export interface DirectedData {
   source: string;

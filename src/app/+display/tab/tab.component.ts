@@ -1,16 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Params, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-
 import { Observable, Subscription, combineLatest } from 'rxjs';
-import { map, filter, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
-import { DisplayTabView, DisplayTabSectionView, DisplayView } from '../../core/model/view';
 import { Individual } from '../../core/model/discovery';
-
+import { DisplayTabSectionView, DisplayTabView, DisplayView } from '../../core/model/view';
 import { AppState } from '../../core/store';
-
-import { selectResourceById, selectDisplayViewByTypes } from '../../core/store/sdr';
+import { selectDisplayViewByTypes, selectResourceById } from '../../core/store/sdr';
 import { sectionsToShow } from '../display.component';
 
 @Component({

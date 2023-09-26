@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, Input, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'scholars-twitter',

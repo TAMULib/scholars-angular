@@ -1,21 +1,18 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedModule } from '../shared/shared.module';
-
-import { DisplayComponent } from './display.component';
-import { TabComponent } from './tab/tab.component';
-
-import { routes } from './display.routes';
-
-import { metaReducers, reducers } from '../core/store';
 import { testAppConfig } from '../../test.config';
 import { APP_CONFIG } from '../app.config';
+import { metaReducers, reducers } from '../core/store';
+import { SharedModule } from '../shared/shared.module';
+import { DisplayComponent } from './display.component';
+import { routes } from './display.routes';
+import { TabComponent } from './tab/tab.component';
 
 describe('DisplayComponent', () => {
   let component: DisplayComponent;

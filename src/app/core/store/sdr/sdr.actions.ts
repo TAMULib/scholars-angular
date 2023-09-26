@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
-import { SdrRequest, Filterable } from '../../model/request';
-import { SdrCollection, Count } from '../../model/sdr';
+
+import { Filterable, SdrRequest } from '../../model/request';
 import { Queryable } from '../../model/request/sdr.request';
+import { Count, SdrCollection } from '../../model/sdr';
 
 export enum SdrActionTypes {
   GET_ALL = 'get all resources',

@@ -1,19 +1,16 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
-
-import { SharedModule } from './shared/shared.module';
-import { HeaderModule } from './header/header.module';
-import { FooterModule } from './footer/footer.module';
-
-import { AppComponent } from './app.component';
-
-import { metaReducers, reducers } from './core/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { testAppConfig } from '../test.config';
+import { AppComponent } from './app.component';
 import { APP_CONFIG } from './app.config';
+import { metaReducers, reducers } from './core/store';
+import { FooterModule } from './footer/footer.module';
+import { HeaderModule } from './header/header.module';
+import { SharedModule } from './shared/shared.module';
 
 describe('AppComponent', () => {
   let component: AppComponent;

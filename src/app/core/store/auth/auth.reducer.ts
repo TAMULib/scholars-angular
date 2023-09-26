@@ -1,7 +1,7 @@
-import { AuthActions, AuthActionTypes } from './auth.actions';
-import { RouterNavigation } from '../router/router.actions';
-import { User } from '../../model/user';
 import { RegistrationRequest } from '../../model/request';
+import { User } from '../../model/user';
+import { RouterNavigation } from '../router/router.actions';
+import { AuthActions, AuthActionTypes } from './auth.actions';
 
 export interface AuthState {
   checkingSession: boolean;

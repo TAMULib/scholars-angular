@@ -1,16 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { Store, select } from '@ngrx/store';
-
-import { combineLatest, scheduled, Observable } from 'rxjs';
-import { queueScheduler } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, combineLatest, queueScheduler, scheduled } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AppState } from '../../../core/store';
 import { DialogButtonType, DialogControl } from '../../../core/model/dialog';
 import { Role, User } from '../../../core/model/user';
-
+import { AppState } from '../../../core/store';
 import { selectResourceIsUpdating } from '../../../core/store/sdr';
 
 import * as fromDialog from '../../../core/store/dialog/dialog.actions';

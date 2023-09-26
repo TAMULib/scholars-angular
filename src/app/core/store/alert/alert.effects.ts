@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-
 import { map } from 'rxjs/operators';
 
 import { AppState } from '../';
-
 import { Alert } from '../../model/alert';
 
 import * as fromAlert from '../alert/alert.actions';

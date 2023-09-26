@@ -1,11 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { testAppConfig } from '../../../test.config';
 import { metaReducers, reducers } from '../../core/store';
-
 import { CopyrightComponent } from './copyright.component';
 
 describe('CopyrightComponent', () => {

@@ -20,7 +20,6 @@ import * as fromSdr from '../sdr/sdr.actions';
 import * as fromStomp from '../stomp/stomp.actions';
 import * as fromAuth from './auth.actions';
 
-
 @Injectable()
 export class AuthEffects implements OnInitEffects {
 

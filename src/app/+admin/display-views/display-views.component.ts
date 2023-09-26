@@ -1,12 +1,10 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 
-import { AppState } from '../../core/store';
 import { SdrPage } from '../../core/model/sdr';
 import { DisplayView } from '../../core/model/view';
-
+import { AppState } from '../../core/store';
 import { selectAllResources, selectResourcesPage } from '../../core/store/sdr';
 
 @Component({

@@ -1,18 +1,14 @@
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { asapScheduler, scheduled } from 'rxjs';
 
-import { scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
-
-import { SharedModule } from '../shared.module';
-
-import { DialogComponent } from './dialog.component';
-import { DialogButtonType } from '../../core/model/dialog';
-
-import { metaReducers, reducers } from '../../core/store';
 import { testAppConfig } from '../../../test.config';
+import { DialogButtonType } from '../../core/model/dialog';
+import { metaReducers, reducers } from '../../core/store';
+import { SharedModule } from '../shared.module';
+import { DialogComponent } from './dialog.component';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;

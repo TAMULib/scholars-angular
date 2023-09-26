@@ -1,5 +1,5 @@
-import { StompActions, StompActionTypes } from './stomp.actions';
 import { StompSubscription } from '../../model/stomp';
+import { StompActions, StompActionTypes } from './stomp.actions';
 
 export type StompState = Readonly<{
   connecting: boolean;

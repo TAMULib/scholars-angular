@@ -1,10 +1,8 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SharedModule } from '../shared.module';
-
-import { ResultViewComponent } from './result-view.component';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { Layout } from '../../core/model/view';
+import { SharedModule } from '../shared.module';
+import { ResultViewComponent } from './result-view.component';
 
 describe('ResultViewComponent', () => {
   let component: ResultViewComponent;

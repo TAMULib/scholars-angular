@@ -1,5 +1,5 @@
-import { DialogActions, DialogActionTypes } from './dialog.actions';
 import { Dialog } from '../../model/dialog';
+import { DialogActions, DialogActionTypes } from './dialog.actions';
 
 export type DialogState = Readonly<{
   opened: boolean;

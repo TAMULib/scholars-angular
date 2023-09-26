@@ -1,5 +1,6 @@
-import { MetadataActions, MetadataActionTypes } from './metadata.actions';
 import { MetaDefinition } from '@angular/platform-browser';
+
+import { MetadataActions, MetadataActionTypes } from './metadata.actions';
 
 export type MetadataState = Readonly<{
   tags: MetaDefinition[];

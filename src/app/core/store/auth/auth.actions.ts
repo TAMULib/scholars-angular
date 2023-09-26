@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 
-import { RouterNavigation } from '../router/router.actions';
-import { User } from '../../model/user';
 import { LoginRequest, RegistrationRequest } from '../../model/request';
+import { User } from '../../model/user';
+import { RouterNavigation } from '../router/router.actions';
 
 export enum AuthActionTypes {
   LOGIN = '[Auth] login',

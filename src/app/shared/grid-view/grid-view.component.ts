@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { CollectionView } from '../../core/model/view';
 import { fadeOutIn } from '../utilities/animation.utility';
 

@@ -1,43 +1,35 @@
 import { Injectable, Injector } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Params } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-
-import { combineLatest, defer, Observable, scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
+import { Observable, asapScheduler, combineLatest, defer, scheduled } from 'rxjs';
 import { catchError, filter, map, mergeMap, skipWhile, switchMap, take, withLatestFrom } from 'rxjs/operators';
 
+import { AppState } from '../';
+import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetFilterLabel } from '../../../shared/utilities/discovery.utility';
+import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
+import { Individual } from '../../model/discovery';
+import { injectable, repos } from '../../model/repos';
+import { Count, SdrCollection, SdrFacet, SdrFacetEntry, SdrResource } from '../../model/sdr';
+import { AbstractSdrRepo } from '../../model/sdr/repo/abstract-sdr-repo';
+import { SidebarItem, SidebarItemType, SidebarMenu, SidebarSection } from '../../model/sidebar';
+import { DirectoryView, DiscoveryView, Facet, FacetType, OpKey } from '../../model/view';
 import { AlertService } from '../../service/alert.service';
 import { DialogService } from '../../service/dialog.service';
 import { StatsService } from '../../service/stats.service';
-
-import { AppState } from '../';
-import { StompState } from '../stomp/stomp.reducer';
-import { CustomRouterState } from '../router/router.reducer';
-
-import { AbstractSdrRepo } from '../../model/sdr/repo/abstract-sdr-repo';
-
-import { SdrResource, SdrCollection, SdrFacet, SdrFacetEntry, Count } from '../../model/sdr';
-import { SidebarMenu, SidebarSection, SidebarItem, SidebarItemType } from '../../model/sidebar';
-import { Individual } from '../../model/discovery';
-import { Facet, DiscoveryView, DirectoryView, FacetType, OpKey } from '../../model/view';
-
-import { injectable, repos } from '../../model/repos';
-
-import { createSdrRequest, buildDateYearFilterValue, buildNumberRangeFilterValue, getFacetFilterLabel, FILTER_VALUE_DELIMITER } from '../../../shared/utilities/discovery.utility';
-import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
-
-import { selectSdrState } from './';
-import { DataNetwork, QuantityDistribution, AcademicAge, SdrState } from './sdr.reducer';
 import { selectRouterState } from '../router';
+import { CustomRouterState } from '../router/router.reducer';
 import { selectIsStompConnected, selectStompState } from '../stomp';
+import { StompState } from '../stomp/stomp.reducer';
+import { selectSdrState } from './';
+import { AcademicAge, DataNetwork, QuantityDistribution, SdrState } from './sdr.reducer';
 
 import * as fromDialog from '../dialog/dialog.actions';
 import * as fromRouter from '../router/router.actions';
+import * as fromSidebar from '../sidebar/sidebar.actions';
 import * as fromStomp from '../stomp/stomp.actions';
 import * as fromSdr from './sdr.actions';
-import * as fromSidebar from '../sidebar/sidebar.actions';
 
 @Injectable()
 export class SdrEffects {

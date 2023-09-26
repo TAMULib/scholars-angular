@@ -6,18 +6,14 @@ import { StoreModule } from '@ngrx/store';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedModule } from '../../shared.module';
-
-import { IndividualRepo } from '../../../core/model/discovery/repo/individual.repo';
-import { RestService } from '../../../core/service/rest.service';
-
-import { FacetEntriesComponent } from './facet-entries.component';
-
 import { testAppConfig } from '../../../../test.config';
-import { metaReducers, reducers } from '../../../core/store';
-
 import { getRequest } from '../../../app.browser.module';
 import { APP_CONFIG } from '../../../app.config';
+import { IndividualRepo } from '../../../core/model/discovery/repo/individual.repo';
+import { RestService } from '../../../core/service/rest.service';
+import { metaReducers, reducers } from '../../../core/store';
+import { SharedModule } from '../../shared.module';
+import { FacetEntriesComponent } from './facet-entries.component';
 
 describe('FacetEntriesComponent', () => {
   let component: FacetEntriesComponent;

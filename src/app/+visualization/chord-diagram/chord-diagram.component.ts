@@ -6,9 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3-shape';
 
-import { id } from '../../shared/utilities/id.utility';
-
 import { DataNetwork, DirectedData } from '../../core/store/sdr/sdr.reducer';
+import { id } from '../../shared/utilities/id.utility';
 
 @Component({
   selector: 'scholars-chord-diagram',

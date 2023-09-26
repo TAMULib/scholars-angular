@@ -1,14 +1,13 @@
-import { Component, Input, Inject, OnInit, PLATFORM_ID, AfterViewInit, OnDestroy } from '@angular/core';
-import { Params, ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
-
+import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import { AppConfig, APP_CONFIG } from '../../app.config';
-import { DisplayTabSectionView, Sort } from '../../core/model/view';
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
+import { DisplayTabSectionView, Sort } from '../../core/model/view';
 import { getResourcesPage, getSubsectionResources, loadBadges } from '../../shared/utilities/view.utility';
 
 @Component({

@@ -1,19 +1,14 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { queueScheduler, scheduled } from 'rxjs';
 
-import { scheduled } from 'rxjs';
-import { queueScheduler } from 'rxjs';
-
-import { DisplayModule } from '../display.module';
-
-import { SubsectionComponent } from './subsection.component';
-
-import { metaReducers, reducers } from '../../core/store';
-
-import { routes } from '../display.routes';
 import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
+import { DisplayModule } from '../display.module';
+import { routes } from '../display.routes';
+import { SubsectionComponent } from './subsection.component';
 
 describe('SubsectionComponent', () => {
   let component: SubsectionComponent;

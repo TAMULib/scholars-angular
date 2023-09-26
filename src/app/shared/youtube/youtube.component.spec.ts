@@ -1,7 +1,6 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SharedModule } from '../shared.module';
-
 import { YouTubeComponent } from './youtube.component';
 
 describe('YouTubeComponent', () => {

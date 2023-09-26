@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { MetaDefinition } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
 import { filter, switchMap, take, tap } from 'rxjs/operators';
 
 import { Individual } from '../core/model/discovery';

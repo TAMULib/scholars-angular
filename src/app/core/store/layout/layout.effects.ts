@@ -1,18 +1,16 @@
 import { isPlatformBrowser, Location } from '@angular/common';
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { ofType, Actions, createEffect, OnInitEffects } from '@ngrx/effects';
-import { Store, select, Action } from '@ngrx/store';
-
-import { map, withLatestFrom, filter } from 'rxjs/operators';
+import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
+import { Action, select, Store } from '@ngrx/store';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
-import { WindowDimensions } from '../layout/layout.reducer';
-
+import { SidebarMenu } from '../../model/sidebar';
 import { selectWindowDimensions } from '../layout';
+import { WindowDimensions } from '../layout/layout.reducer';
 import { selectRouterUrl } from '../router';
 import { selectMenu } from '../sidebar';
-import { SidebarMenu } from '../../model/sidebar';
 
 import * as fromLayout from '../layout/layout.actions';
 import * as fromSidebar from '../sidebar/sidebar.actions';

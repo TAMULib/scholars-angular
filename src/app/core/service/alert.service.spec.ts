@@ -1,5 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from './alert.service';
 

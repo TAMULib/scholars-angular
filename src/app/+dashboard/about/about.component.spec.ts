@@ -1,12 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { AboutComponent } from './about.component';
-
-import { metaReducers, reducers } from '../../core/store';
 import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
+import { AboutComponent } from './about.component';
 
 describe('AboutComponent', () => {
   let component: AboutComponent;

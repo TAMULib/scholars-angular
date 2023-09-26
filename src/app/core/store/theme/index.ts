@@ -1,6 +1,6 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { Theme, Style } from '../../model/theme';
+import { Style, Theme } from '../../model/theme';
 
 import * as fromTheme from './theme.reducer';
 

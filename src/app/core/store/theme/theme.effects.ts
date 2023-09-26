@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
-
-import { scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
+import { Action } from '@ngrx/store';
+import { asapScheduler, scheduled } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
+import { Theme } from '../../model/theme';
 import { AlertService } from '../../service/alert.service';
 import { ThemeService } from '../../service/theme.service';
 
-import { Theme } from '../../model/theme';
-
 import * as fromTheme from './theme.actions';
-import { Action } from '@ngrx/store';
 
 @Injectable()
 export class ThemeEffects implements OnInitEffects {

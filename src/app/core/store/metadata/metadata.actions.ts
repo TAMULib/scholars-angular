@@ -1,5 +1,5 @@
-import { Action } from '@ngrx/store';
 import { MetaDefinition } from '@angular/platform-browser';
+import { Action } from '@ngrx/store';
 
 export enum MetadataActionTypes {
   CLEAR_TAGS = '[Metadata] clear tags',

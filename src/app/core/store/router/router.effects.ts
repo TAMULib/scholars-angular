@@ -1,18 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
+import { filter, map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
-import { filter, map, withLatestFrom, skipWhile } from 'rxjs/operators';
-
+import { selectRouterQueryParams } from '.';
 import { AppState } from '../';
-
 import { selectLoginRedirect } from '../auth';
 
 import * as fromAuth from '../auth/auth.actions';
 import * as fromRouter from './router.actions';
-import { selectRouterQueryParams } from '.';
 
 @Injectable()
 export class RouterEffects {

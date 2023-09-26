@@ -1,9 +1,7 @@
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-
 import { REQUEST } from '@nguniversal/express-engine/tokens';
-
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 

@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
 import { DiscoveryView } from '../../core/model/view';
-
+import { AppState } from '../../core/store';
 import { selectDiscoveryViewByClass } from '../../core/store/sdr';
 
 @Component({

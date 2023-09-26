@@ -1,21 +1,16 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, Input, OnInit, Inject } from '@angular/core';
-import { Params, Router, ActivatedRoute } from '@angular/router';
-
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
-
 import { v4 as uuidv4 } from 'uuid';
 
 import { pagination } from 'scholars-embed-utilities';
 
-import { AppState } from '../../core/store';
-
 import { SdrPage } from '../../core/model/sdr';
-import { WindowDimensions } from '../../core/store/layout/layout.reducer';
-
+import { AppState } from '../../core/store';
 import { selectWindowDimensions } from '../../core/store/layout';
+import { WindowDimensions } from '../../core/store/layout/layout.reducer';
 
 @Component({
   selector: 'scholars-pagination',

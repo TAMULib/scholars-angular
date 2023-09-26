@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
-
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { queueScheduler, scheduled } from 'rxjs';
 

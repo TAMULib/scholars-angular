@@ -1,16 +1,12 @@
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { Observable, asapScheduler, scheduled } from 'rxjs';
 
-import { Observable, scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
-
-import { ComputedStyleLoader } from '../computed-style-loader';
-import { RestService } from './rest.service';
-
-import { AppConfig, APP_CONFIG } from '../../app.config';
-import { Theme, Style } from '../model/theme';
-
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { hexToRgb, luminance, mix, yiq } from '../../shared/utilities/color.utility';
+import { ComputedStyleLoader } from '../computed-style-loader';
+import { Style, Theme } from '../model/theme';
+import { RestService } from './rest.service';
 
 @Injectable({
   providedIn: 'root',

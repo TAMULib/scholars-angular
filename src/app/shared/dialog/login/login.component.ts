@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { Store, select } from '@ngrx/store';
-
-import { combineLatest, scheduled, Observable } from 'rxjs';
-import { queueScheduler } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, combineLatest, queueScheduler, scheduled } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AppState } from '../../../core/store';
 import { DialogButtonType, DialogControl } from '../../../core/model/dialog';
-
+import { AppState } from '../../../core/store';
 import { selectIsLoggingIn } from '../../../core/store/auth';
 
 import * as fromAuth from '../../../core/store/auth/auth.actions';

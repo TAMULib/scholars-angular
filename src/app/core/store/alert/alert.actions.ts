@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+
 import { Alert } from '../../model/alert';
 
 export enum AlertActionTypes {

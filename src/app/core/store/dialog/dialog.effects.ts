@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { map, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
-import { Dialog } from '../../model/dialog';
 import { AlertLocation } from '../../model/alert';
-
+import { Dialog } from '../../model/dialog';
 import { selectAlertsByLocation } from '../alert';
 
-import * as fromDialog from './dialog.actions';
 import * as fromAlert from '../alert/alert.actions';
+import * as fromDialog from './dialog.actions';
 
 @Injectable()
 export class DialogEffects {
