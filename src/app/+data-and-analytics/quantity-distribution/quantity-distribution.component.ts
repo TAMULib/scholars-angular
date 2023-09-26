@@ -193,40 +193,45 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   ngOnChanges(changes: SimpleChanges): void {
     const { filters } = changes;
 
-    if (!!filters.previousValue) {
-      filters.previousValue.forEach((entry: any) => {
-        if (filters.currentValue.indexOf(entry) === -1) {
+    const additionalFilters = [];
+
+    if (!!filters) {
+
+      if (!!filters.previousValue) {
+        filters.previousValue.forEach((entry: any) => {
+          if (filters.currentValue.indexOf(entry) === -1) {
+            const section = this.sidebarMenuSections[entry.field];
+            if (!!section) {
+              this.store.dispatch(new fromSidebar.RemoveSectionAction({
+                sectionIndex: section.index,
+                itemLabel: entry.value,
+                itemField: entry.field,
+              }));
+            }
+          }
+        });
+      }
+
+      filters.currentValue.forEach((entry: any) => {
+        if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
           const section = this.sidebarMenuSections[entry.field];
           if (!!section) {
-            this.store.dispatch(new fromSidebar.RemoveSectionAction({
+            this.store.dispatch(new fromSidebar.AddSectionItemAction({
               sectionIndex: section.index,
-              itemLabel: entry.value,
-              itemField: entry.field,
+              sectionItem: {
+                type: SidebarItemType.ACTION,
+                label: entry.value,
+                selected: true,
+                action: new fromRouter.RemoveFilter({ filter: entry }),
+              }
             }));
           }
         }
       });
+
+      additionalFilters.push(filters.currentValue);
+      additionalFilters.shift();
     }
-
-    filters.currentValue.forEach((entry: any) => {
-      if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
-        const section = this.sidebarMenuSections[entry.field];
-        if (!!section) {
-          this.store.dispatch(new fromSidebar.AddSectionItemAction({
-            sectionIndex: section.index,
-            sectionItem: {
-              type: SidebarItemType.ACTION,
-              label: entry.value,
-              selected: true,
-              action: new fromRouter.RemoveFilter({ filter: entry }),
-            }
-          }));
-        }
-      }
-    });
-
-    const additionalFilters = [...filters.currentValue];
-    additionalFilters.shift();
 
     if (this.organization.id !== this.defaultId && !!this.organization.name) {
       additionalFilters.push({
