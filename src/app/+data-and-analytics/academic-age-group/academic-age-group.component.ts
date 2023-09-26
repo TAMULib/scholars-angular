@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, filter, map, tap } from 'rxjs';
 
@@ -13,10 +14,8 @@ import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotComponent, BarplotInput } from './barplot/barplot.component';
 
-import * as fromRouter from '../../core/store/router/router.actions';
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
-import { ActivatedRoute, Router } from '@angular/router';
 
 const academicAgeGroupToBarplotInput = (academicAge: AcademicAge): BarplotInput => {
   return {
@@ -27,7 +26,7 @@ const academicAgeGroupToBarplotInput = (academicAge: AcademicAge): BarplotInput 
 
 const rk = 'Researchers';
 const pk = 'Publications';
-const apk = 'Average publications';
+const apk = 'Average publications'; 
 
 @Component({
   selector: 'scholars-academic-age-group',
