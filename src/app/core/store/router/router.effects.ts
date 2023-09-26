@@ -12,6 +12,7 @@ import { selectLoginRedirect } from '../auth';
 
 import * as fromAuth from '../auth/auth.actions';
 import * as fromRouter from './router.actions';
+import { selectRouterQueryParams } from '.';
 
 @Injectable()
 export class RouterEffects {
@@ -61,6 +62,38 @@ export class RouterEffects {
     skipWhile((redirect: fromRouter.RouterNavigation) => redirect === undefined),
     map(() => new fromAuth.UnsetLoginRedirectAction())
   ));
+
+  removeFilter = createEffect(() => this.actions.pipe(
+    ofType(fromRouter.RouterActionTypes.REMOVE_FILTER),
+    map((action: fromRouter.RemoveFilter) => action.payload),
+    withLatestFrom(this.store.pipe(select(selectRouterQueryParams))),
+    map(([payload, params]) => {
+      console.log(payload, params);
+
+      const queryParams = { ...params };
+
+      const filter = queryParams[`${payload.filter.field}.filter`].split(';;')
+        .filter((value: string) => value !== payload.filter.value)
+        .join(';;');
+
+      console.log(filter);
+
+      if (filter.trim().length === 0) {
+        queryParams[`${payload.filter.field}.opKey`] = undefined;
+        queryParams.filters = queryParams.filters.split(',')
+          .filter((field: string) => field !== payload.filter.field)
+          .join(',');
+      }
+
+      queryParams[`${payload.filter.field}.filter`] = filter;
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams,
+        queryParamsHandling: 'merge'
+      });
+    })
+  ), { dispatch: false });
 
   private listenForRouteChange() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {

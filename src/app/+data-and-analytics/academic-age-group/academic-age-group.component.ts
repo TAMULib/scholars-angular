@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, filter, map, tap } from 'rxjs';
 
@@ -14,6 +13,7 @@ import { AcademicAge } from '../../core/store/sdr/sdr.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { BarplotComponent, BarplotInput } from './barplot/barplot.component';
 
+import * as fromRouter from '../../core/store/router/router.actions';
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 
@@ -76,8 +76,6 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
   private sidebarMenuSections: { [key: string]: { facet:Facet, index: number } };
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private store: Store<AppState>,
     private dialog: DialogService,
   ) {
@@ -150,17 +148,15 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
         if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
           const section = this.sidebarMenuSections[entry.field];
           if (!!section) {
+            const remove = {};
+            remove[entry.field]
             this.store.dispatch(new fromSidebar.AddSectionItemAction({
               sectionIndex: section.index,
               sectionItem: {
                 type: SidebarItemType.ACTION,
                 label: entry.value,
                 selected: true,
-                action: new fromSidebar.RemoveSectionAction({
-                  sectionIndex: section.index,
-                  itemLabel: entry.value,
-                  itemField: entry.field,
-                })
+                action: new fromRouter.RemoveFilter({ filter: entry }),
               }
             }));
           }

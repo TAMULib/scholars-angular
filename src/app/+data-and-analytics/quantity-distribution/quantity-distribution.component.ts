@@ -1,6 +1,5 @@
 import { isPlatformServer } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Subscription, filter } from 'rxjs';
 
@@ -17,6 +16,7 @@ import { fadeIn } from '../../shared/utilities/animation.utility';
 import { id } from '../../shared/utilities/id.utility';
 import { getUNSDGByValue, getUNSDGIndexByValue } from '../../shared/utilities/un-sdg.utility';
 
+import * as fromRouter from '../../core/store/router/router.actions';
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 
@@ -60,8 +60,6 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
-    private router: Router,
-    private route: ActivatedRoute,
     private store: Store<AppState>,
     private dialog: DialogService,
   ) {
@@ -220,11 +218,7 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
               type: SidebarItemType.ACTION,
               label: entry.value,
               selected: true,
-              action: new fromSidebar.RemoveSectionAction({
-                sectionIndex: section.index,
-                itemLabel: entry.value,
-                itemField: entry.field,
-              })
+              action: new fromRouter.RemoveFilter({ filter: entry }),
             }
           }));
         }
