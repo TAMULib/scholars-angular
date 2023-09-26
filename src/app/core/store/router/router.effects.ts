@@ -7,6 +7,7 @@ import { filter, map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
 import { selectRouterQueryParams } from '.';
 import { AppState } from '../';
+import { FILTER_VALUE_DELIMITER } from '../../../shared/utilities/discovery.utility';
 import { selectLoginRedirect } from '../auth';
 
 import * as fromAuth from '../auth/auth.actions';
@@ -68,9 +69,9 @@ export class RouterEffects {
     map(([payload, params]) => {
       const queryParams = { ...params };
 
-      const filter = queryParams[`${payload.filter.field}.filter`].split(';;')
+      const filter = queryParams[`${payload.filter.field}.filter`].split(FILTER_VALUE_DELIMITER)
         .filter((value: string) => value !== payload.filter.value)
-        .join(';;');
+        .join(FILTER_VALUE_DELIMITER);
 
       if (filter.trim().length === 0) {
         queryParams[`${payload.filter.field}.opKey`] = undefined;

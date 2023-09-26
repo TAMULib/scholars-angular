@@ -15,7 +15,7 @@ import { AppState } from '../../../core/store';
 import { selectRouterQueryParams, selectRouterState } from '../../../core/store/router';
 import { CustomRouterState } from '../../../core/store/router/router.reducer';
 import { selectCollectionViewByName } from '../../../core/store/sdr';
-import { buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetFilterLabel } from '../../utilities/discovery.utility';
+import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetFilterLabel } from '../../utilities/discovery.utility';
 
 import * as fromDialog from '../../../core/store/dialog/dialog.actions';
 
@@ -112,7 +112,7 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
               filters
             };
 
-            queryParams[`${this.field}.filter`] = this.selections.value.map((entry: SdrFacetEntry) => entry.value).join(';;');
+            queryParams[`${this.field}.filter`] = this.selections.value.map((entry: SdrFacetEntry) => entry.value).join(FILTER_VALUE_DELIMITER);
             queryParams[`${this.field}.opKey`] = OpKey.EQUALS;
 
             this.router.navigate([], {
