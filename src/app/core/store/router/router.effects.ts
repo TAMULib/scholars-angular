@@ -68,15 +68,11 @@ export class RouterEffects {
     map((action: fromRouter.RemoveFilter) => action.payload),
     withLatestFrom(this.store.pipe(select(selectRouterQueryParams))),
     map(([payload, params]) => {
-      console.log(payload, params);
-
       const queryParams = { ...params };
 
       const filter = queryParams[`${payload.filter.field}.filter`].split(';;')
         .filter((value: string) => value !== payload.filter.value)
         .join(';;');
-
-      console.log(filter);
 
       if (filter.trim().length === 0) {
         queryParams[`${payload.filter.field}.opKey`] = undefined;

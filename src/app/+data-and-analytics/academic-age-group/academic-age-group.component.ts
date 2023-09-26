@@ -26,7 +26,7 @@ const academicAgeGroupToBarplotInput = (academicAge: AcademicAge): BarplotInput 
 
 const rk = 'Researchers';
 const pk = 'Publications';
-const apk = 'Average publications'; 
+const apk = 'Average publications';
 
 @Component({
   selector: 'scholars-academic-age-group',
