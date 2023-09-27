@@ -18,8 +18,28 @@ import * as expressStaticGzip from 'express-static-gzip';
 import { APP_CONFIG, AppConfig } from './src/app/app.config';
 import { AppServerModule } from './src/main.server';
 
+const HOST = process.env.HOST || 'localhost';
+const PORT = Number(process.env.PORT) || 4200;
+const BASE_HREF = process.env.BASE_HREF || '/';
+
+const SSR_SERVICE_URL = process.env.SSR_SERVICE_URL || 'http://127.0.0.1:9000';
+const SERVICE_URL = process.env.SERVICE_URL || 'http://localhost:9000';
+const EMBED_URL = process.env.EMBED_URL || 'http://localhost:4201';
+const UI_URL = process.env.UI_URL || 'http://localhost:4200';
+const VIVO_URL = process.env.VIVO_URL || 'http://localhost:8080/vivo';
+const VIVO_EDITOR_URL = process.env.VIVO_EDITOR_URL || 'http://localhost:8080/vivo_editor';
+
+const COLLECT_SEARCH_STATS = process.env.COLLECT_SEARCH_STATS === 'true';
+
+const serverAppConfig = (appConfig: AppConfig): AppConfig => {
+  return {
+    ...appConfig,
+    serviceUrl: SSR_SERVICE_URL
+  };
+}
+
 // The Express app is exported so that it can be used by serverless Functions.
-export function app(appConfig: AppConfig) {
+export const app = (appConfig: AppConfig) => {
   const server = express();
   const router = express.Router();
   const distFolder = join(process.cwd(), 'dist/scholars-angular/browser');
@@ -34,7 +54,7 @@ export function app(appConfig: AppConfig) {
     providers: [
       {
         provide: APP_CONFIG,
-        useValue: appConfig,
+        useValue: serverAppConfig(appConfig),
       }
     ]
   }));
@@ -74,18 +94,6 @@ export function app(appConfig: AppConfig) {
 }
 
 function run() {
-  const HOST = process.env.HOST || 'localhost';
-  const PORT = Number(process.env.PORT) || 4200;
-  const BASE_HREF = process.env.BASE_HREF || '/';
-
-  const SERVICE_URL = process.env.SERVICE_URL || 'http://localhost:9000';
-  const EMBED_URL = process.env.EMBED_URL || 'http://localhost:4201';
-  const UI_URL = process.env.UI_URL || 'http://localhost:4200';
-  const VIVO_URL = process.env.VIVO_URL || 'http://localhost:8080/vivo';
-  const VIVO_EDITOR_URL = process.env.VIVO_EDITOR_URL || 'http://localhost:8080/vivo_editor';
-
-  const COLLECT_SEARCH_STATS = process.env.COLLECT_SEARCH_STATS === 'true';
-
   const appConfig: AppConfig = {
     host: HOST,
     port: PORT,
@@ -100,10 +108,11 @@ function run() {
 
   // Start up the Node server
   const server = app(appConfig);
+
   server.listen(PORT, () => {
     console.log(`Node Express server listening on http://${HOST}:${PORT}${BASE_HREF}`);
     console.log('Using runtime app config:');
-    console.log(appConfig);
+    console.log(serverAppConfig(appConfig));
   });
 }
 

@@ -25,6 +25,7 @@ In addition to having [Docker](https://docs.docker.com/) installed, a running [S
   -e HOST=localhost \
   -e PORT=4200 \
   -e BASE_HREF=/ \
+  -e SSR_SERVICE_URL="http://127.0.0.1:9000" \
   -e SERVICE_URL="http://localhost:9000" \
   -e EMBED_URL="http://localhost:4201" \
   -e UI_URL="http://localhost:4200" \
