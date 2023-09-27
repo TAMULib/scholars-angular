@@ -1,14 +1,11 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 
-import { DialogService } from '../../core/service/dialog.service';
-
-import { AppState } from '../../core/store';
 import { SdrPage } from '../../core/model/sdr';
-import { User, Role } from '../../core/model/user';
-
+import { Role, User } from '../../core/model/user';
+import { DialogService } from '../../core/service/dialog.service';
+import { AppState } from '../../core/store';
 import { selectAllResources, selectResourcesPage } from '../../core/store/sdr';
 
 @Component({

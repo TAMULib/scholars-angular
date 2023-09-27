@@ -10,7 +10,7 @@ export enum Side {
 export interface DisplaySubsectionView extends FieldView {
   readonly pageSize: number;
   readonly template: string;
-  templateFunction?: (document: any) => string;
+  templateFunction?: (individual: any) => string;
 }
 
 export interface DisplayTabSectionView extends FieldView {
@@ -19,7 +19,7 @@ export interface DisplayTabSectionView extends FieldView {
   readonly paginated: boolean;
   readonly pageSize: number;
   readonly template: string;
-  templateFunction?: (document: any) => string;
+  templateFunction?: (individual: any) => string;
   readonly requiredFields: string[];
   readonly lazyReferences: string[];
   readonly subsections: DisplaySubsectionView[];
@@ -33,13 +33,13 @@ export interface DisplayTabView extends View {
 export interface DisplayView extends View {
   readonly types: string[];
   readonly mainContentTemplate: string;
-  mainContentTemplateFunction?: (document: any) => string;
+  mainContentTemplateFunction?: (individual: any) => string;
   readonly leftScanTemplate: string;
-  leftScanTemplateFunction?: (document: any) => string;
+  leftScanTemplateFunction?: (individual: any) => string;
   readonly rightScanTemplate: string;
-  rightScanTemplateFunction?: (document: any) => string;
+  rightScanTemplateFunction?: (individual: any) => string;
   readonly asideTemplate: string;
-  asideTemplateFunction?: (document: any) => string;
+  asideTemplateFunction?: (individual: any) => string;
   readonly asideLocation: Side;
   readonly exportViews: ExportView[];
   readonly metaTemplates: any;

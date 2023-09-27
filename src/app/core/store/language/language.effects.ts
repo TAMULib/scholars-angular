@@ -1,23 +1,18 @@
-import { Injectable, Optional, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
+import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { Actions, OnInitEffects, createEffect, ofType } from '@ngrx/effects';
+import { Action, Store, select } from '@ngrx/store';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
-import { Store, select, Action } from '@ngrx/store';
-import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
-
-import { scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
-import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
-
-import { AlertService } from '../../service/alert.service';
+import { TranslateService } from '@ngx-translate/core';
+import { asapScheduler, scheduled } from 'rxjs';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
-
+import { environment } from '../../../../environments/environment';
+import { AlertService } from '../../service/alert.service';
 import { selectDefaultLanguage } from './';
 
 import * as fromLanguage from './language.actions';
-
-import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class LanguageEffects implements OnInitEffects {

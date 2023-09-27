@@ -1,18 +1,15 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { StoreModule } from '@ngrx/store';
-
-import { CoreModule } from '../../core/core.module';
-import { SharedModule } from '../../shared/shared.module';
-
-import { ThemesComponent } from './themes.component';
-
-import { metaReducers, reducers } from '../../core/store';
 import { testAppConfig } from '../../../test.config';
+import { CoreModule } from '../../core/core.module';
+import { metaReducers, reducers } from '../../core/store';
+import { SharedModule } from '../../shared/shared.module';
+import { ThemesComponent } from './themes.component';
 
 describe('ThemesComponent', () => {
   let component: ThemesComponent;

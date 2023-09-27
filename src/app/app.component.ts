@@ -1,23 +1,20 @@
 import { isPlatformBrowser } from '@angular/common';
-import { PLATFORM_ID, Component, Inject, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { SafeStyle } from '@angular/platform-browser';
 import { Store, select } from '@ngrx/store';
 
 import { Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
 
-import { AppState } from './core/store';
+import { environment } from '../environments/environment';
 import { AlertLocation } from './core/model/alert';
+import { AppState } from './core/store';
 import { WindowDimensions } from './core/store/layout/layout.reducer';
-
 import { selectStyle } from './core/store/theme';
-
 import { initializeTemplateHelpers } from './shared/utilities/template.utility';
 
 import * as fromLayout from './core/store/layout/layout.actions';
 import * as fromRouter from './core/store/router/router.actions';
-
-import { environment } from '../environments/environment';
 
 @Component({
   selector: 'scholars-root',

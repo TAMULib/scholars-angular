@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
 import { metaReducers, reducers } from '../../core/store';

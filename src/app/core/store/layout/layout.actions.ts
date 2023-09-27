@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+
 import { WindowDimensions } from './layout.reducer';
 
 export enum LayoutActionTypes {

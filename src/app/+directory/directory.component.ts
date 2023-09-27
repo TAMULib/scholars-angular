@@ -1,21 +1,17 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-
 import { Store, select } from '@ngrx/store';
-
 import { Observable, Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
-import { AppState } from '../core/store';
-import { AppConfig, APP_CONFIG } from '../app.config';
+import { APP_CONFIG, AppConfig } from '../app.config';
+import { Individual } from '../core/model/discovery';
+import { SdrFacet, SdrPage } from '../core/model/sdr';
 import { DirectoryView, DiscoveryView, Filter } from '../core/model/view';
-import { SolrDocument } from '../core/model/discovery';
-import { SdrPage, SdrFacet } from '../core/model/sdr';
-
-import { selectAllResources, selectResourcesPage, selectResourcesFacets, selectResourceById, selectDiscoveryViewByClass, selectResourceIsLoading } from '../core/store/sdr';
-import { selectRouterQueryParams, selectRouterQueryParamFilters } from '../core/store/router';
-
-import { addExportToQueryParams, showFilter, showClearFilters, getFilterField, getFilterValue, hasExport, removeFilterFromQueryParams, resetFiltersInQueryParams } from '../shared/utilities/view.utility';
+import { AppState } from '../core/store';
+import { selectRouterQueryParamFilters, selectRouterQueryParams } from '../core/store/router';
+import { selectAllResources, selectDiscoveryViewByClass, selectResourceById, selectResourceIsLoading, selectResourcesFacets, selectResourcesPage } from '../core/store/sdr';
+import { addExportToQueryParams, getFilterField, getFilterValue, hasExport, removeFilterFromQueryParams, resetFiltersInQueryParams, showClearFilters, showFilter } from '../shared/utilities/view.utility';
 
 @Component({
   selector: 'scholars-directory',
@@ -33,7 +29,7 @@ export class DirectoryComponent implements OnDestroy, OnInit {
 
   public discoveryView: Observable<DiscoveryView>;
 
-  public documents: Observable<SolrDocument[]>;
+  public documents: Observable<Individual[]>;
 
   public loading: Observable<boolean>;
 
@@ -62,9 +58,9 @@ export class DirectoryComponent implements OnDestroy, OnInit {
     this.queryParams = this.store.pipe(select(selectRouterQueryParams));
     this.filters = this.store.pipe(select(selectRouterQueryParamFilters));
     this.loading = this.store.pipe(select(selectResourceIsLoading('individual')));
-    this.documents = this.store.pipe(select(selectAllResources<SolrDocument>('individual')));
-    this.page = this.store.pipe(select(selectResourcesPage<SolrDocument>('individual')));
-    this.facets = this.store.pipe(select(selectResourcesFacets<SolrDocument>('individual')));
+    this.documents = this.store.pipe(select(selectAllResources<Individual>('individual')));
+    this.page = this.store.pipe(select(selectResourcesPage<Individual>('individual')));
+    this.facets = this.store.pipe(select(selectResourcesFacets<Individual>('individual')));
     this.subscriptions.push(
       this.route.params.subscribe((params) => {
         if (params.view) {

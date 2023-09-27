@@ -3,7 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, filter, map, take, tap, withLatestFrom } from 'rxjs';
 
-import { SolrDocument } from '../core/model/discovery';
+import { Individual } from '../core/model/discovery';
 import { DataAndAnalyticsView, DisplayView, Filter } from '../core/model/view';
 import { ContainerType } from '../core/model/view/data-and-analytics-view';
 import { AppState } from '../core/store';
@@ -32,7 +32,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public dataAndAnalyticsViews: Observable<DataAndAnalyticsView[]>;
 
-  public organization: Observable<SolrDocument>;
+  public organization: Observable<Individual>;
 
   public themeOrganizationId: Observable<string>;
 
@@ -42,33 +42,33 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public filters: Observable<any[]>;
 
-  public organizations: Observable<SolrDocument[]>;
+  public organizations: Observable<Individual[]>;
 
-  public selectedOrganizationSubject: BehaviorSubject<SolrDocument>;
+  public selectedOrganizationSubject: BehaviorSubject<Individual>;
 
   public labelSubject: BehaviorSubject<string>;
 
   public get colleges(): Observable<any[]> {
     return this.selectedOrganization.pipe(
-      map((org: SolrDocument) => this.filterSubOrganization(org, ['College']))
+      map((org: Individual) => this.filterSubOrganization(org, ['College']))
     );
   };
 
   public get departments(): Observable<any[]> {
     return this.selectedOrganization.pipe(
-      map((org: SolrDocument) => this.filterSubOrganization(org, ['AcademicDepartment']))
+      map((org: Individual) => this.filterSubOrganization(org, ['AcademicDepartment']))
     );
   };
 
   public get others(): Observable<any[]> {
     return this.selectedOrganization.pipe(
-      map((org: SolrDocument) => this.filterSubOrganization(org, ['!College', '!AcademicDepartment']))
+      map((org: Individual) => this.filterSubOrganization(org, ['!College', '!AcademicDepartment']))
     );
   };
 
-  public get selectedOrganization(): Observable<SolrDocument> {
+  public get selectedOrganization(): Observable<Individual> {
     return this.selectedOrganizationSubject.asObservable()
-      .pipe(filter((org: SolrDocument) => !!org));
+      .pipe(filter((org: Individual) => !!org));
   }
 
   public get label(): Observable<string> {
@@ -80,7 +80,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     private route: ActivatedRoute,
     private store: Store<AppState>
   ) {
-    this.selectedOrganizationSubject = new BehaviorSubject<SolrDocument>(undefined);
+    this.selectedOrganizationSubject = new BehaviorSubject<Individual>(undefined);
     this.labelSubject = new BehaviorSubject<string>('');
   }
 
@@ -107,7 +107,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
     this.organizations = this.store.pipe(
       select(selectAllResources('individual')),
-      tap((organizations: SolrDocument[]) => {
+      tap((organizations: Individual[]) => {
         this.selectedOrganizationSubject.next(organizations[organizations.length - 1]);
       })
     );
@@ -122,7 +122,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
       this.organization = this.store.pipe(
         select(selectResourceById('individual', id)),
-        filter((organization: SolrDocument) => !!organization)
+        filter((organization: Individual) => !!organization)
       );
 
       this.organization.pipe(take(1))
@@ -189,7 +189,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     return index;
   }
 
-  public onNavigateOrganization(params: Params, organizations: SolrDocument[], index: number): void {
+  public onNavigateOrganization(params: Params, organizations: Individual[], index: number): void {
     console.log(params)
     const selectedOrganizations: string[] = !!params.selectedOrganizations
       ? params.selectedOrganizations.split(',')

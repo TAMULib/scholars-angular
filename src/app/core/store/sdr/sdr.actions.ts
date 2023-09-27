@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
-import { SdrRequest, Filterable } from '../../model/request';
-import { SdrCollection, Count } from '../../model/sdr';
+
+import { Filterable, SdrRequest } from '../../model/request';
 import { Queryable } from '../../model/request/sdr.request';
+import { Count, SdrCollection } from '../../model/sdr';
 
 export enum SdrActionTypes {
   GET_ALL = 'get all resources',
@@ -252,12 +253,12 @@ export class FindByTypesInResourceFailureAction implements Action {
 
 export class FetchLazyReferenceAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.FETCH_LAZY_REFERENCE, this.name);
-  constructor(public name: string, public payload: { document: any; field: string }) { }
+  constructor(public name: string, public payload: { individual: any; field: string }) { }
 }
 
 export class FetchLazyReferenceSuccessAction implements Action {
   readonly type = getSdrAction(SdrActionTypes.FETCH_LAZY_REFERENCE_SUCCESS, this.name);
-  constructor(public name: string, public payload: { document: any; field: string; resources: SdrCollection }) { }
+  constructor(public name: string, public payload: { individual: any; field: string; resources: SdrCollection }) { }
 }
 
 export class FetchLazyReferenceFailureAction implements Action {

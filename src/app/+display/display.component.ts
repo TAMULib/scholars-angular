@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { MetaDefinition } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
 import { filter, switchMap, take, tap } from 'rxjs/operators';
 
-import { SolrDocument } from '../core/model/discovery';
+import { Individual } from '../core/model/discovery';
 import { DiscoveryView, DisplayTabSectionView, DisplayTabView, DisplayView, Filter } from '../core/model/view';
 import { DisplaySubsectionView, Side } from '../core/model/view/display-view';
 import { AppState } from '../core/store';
@@ -46,24 +46,24 @@ const hasDataAfterSubsectionFilters = (subsection: DisplaySubsectionView, prop: 
   return subsection.filters.length === 0 || hasDataAfterFilters(subsection.filters, prop);
 };
 
-const hasDataAfterSectionFilters = (section: DisplayTabSectionView, document: SolrDocument): boolean => {
-  return (section.filters.length === 0 || hasDataAfterFilters(section.filters, document[section.field])) && (section.subsections.length === 0 || section.subsections.filter((subsection: DisplaySubsectionView) => {
-    return hasDataAfterSubsectionFilters(subsection, document[subsection.field]);
+const hasDataAfterSectionFilters = (section: DisplayTabSectionView, individual: Individual): boolean => {
+  return (section.filters.length === 0 || hasDataAfterFilters(section.filters, individual[section.field])) && (section.subsections.length === 0 || section.subsections.filter((subsection: DisplaySubsectionView) => {
+    return hasDataAfterSubsectionFilters(subsection, individual[subsection.field]);
   }).length > 0);
 };
 
-const hasRequiredFields = (requiredFields: string[], document: SolrDocument): boolean => {
+const hasRequiredFields = (requiredFields: string[], individual: Individual): boolean => {
   for (const requiredField of requiredFields) {
-    if (document[requiredField] === undefined) {
+    if (individual[requiredField] === undefined) {
       return false;
     }
   }
   return true;
 };
 
-export const sectionsToShow = (sections: DisplayTabSectionView[], document: SolrDocument): DisplayTabSectionView[] => {
+export const sectionsToShow = (sections: DisplayTabSectionView[], individual: Individual): DisplayTabSectionView[] => {
   return sections.filter((section: DisplayTabSectionView) => {
-    return !section.hidden && hasRequiredFields(section.requiredFields.concat([section.field]), document) && hasDataAfterSectionFilters(section, document);
+    return !section.hidden && hasRequiredFields(section.requiredFields.concat([section.field]), individual) && hasDataAfterSectionFilters(section, individual);
   });
 };
 
@@ -82,7 +82,7 @@ export class DisplayComponent implements OnDestroy, OnInit {
 
   public discoveryView: Observable<DiscoveryView>;
 
-  public document: Observable<SolrDocument>;
+  public individual: Observable<Individual>;
 
   public ready: BehaviorSubject<boolean>;
 
@@ -114,40 +114,40 @@ export class DisplayComponent implements OnDestroy, OnInit {
 
           this.store.dispatch(new fromSdr.GetOneResourceAction('individual', { id: params.id }));
 
-          // listen to document changes
-          this.document = this.store.pipe(
+          // listen to individual changes
+          this.individual = this.store.pipe(
             select(selectResourceById('individual', params.id)),
-            filter((document: SolrDocument) => document !== undefined)
+            filter((individual: Individual) => individual !== undefined)
           );
 
-          // on first defined document, get discovery view
+          // on first defined individual, get discovery view
           this.discoveryView = this.store.pipe(
             select(selectResourceById('individual', params.id)),
-            filter((document: SolrDocument) => document !== undefined),
+            filter((individual: Individual) => individual !== undefined),
             take(1),
-            switchMap((document: SolrDocument) => {
+            switchMap((individual: Individual) => {
               return this.store.pipe(
-                select(selectDiscoveryViewByClass(document.class)),
+                select(selectDiscoveryViewByClass(individual.class)),
                 filter((view: DiscoveryView) => view !== undefined)
               );
             })
           );
 
-          // listen to document changes, updating display view tabs
+          // listen to individual changes, updating display view tabs
           this.displayView = this.store.pipe(
             select(selectResourceById('individual', params.id)),
-            filter((document: SolrDocument) => document !== undefined),
-            switchMap((document: SolrDocument) => {
+            filter((individual: Individual) => individual !== undefined),
+            switchMap((individual: Individual) => {
 
               return this.store.pipe(
-                select(selectDisplayViewByTypes(document.type)),
+                select(selectDisplayViewByTypes(individual.type)),
                 filter((displayView: DisplayView) => displayView !== undefined),
                 tap((displayView: DisplayView) => {
 
                   setTimeout(() => {
                     this.store.dispatch(
                       new fromMetadata.AddMetadataTagsAction({
-                        tags: this.buildDisplayMetaTags(displayView, document),
+                        tags: this.buildDisplayMetaTags(displayView, individual),
                       })
                     );
                   });
@@ -159,8 +159,8 @@ export class DisplayComponent implements OnDestroy, OnInit {
                   }
 
                   const sections = new Map();
-                  this.getTabsToShow(displayView.tabs, document).forEach((tab: DisplayTabView) => {
-                    this.getSectionsToShow(tab.sections, document).forEach((section: DisplayTabSectionView) => {
+                  this.getTabsToShow(displayView.tabs, individual).forEach((tab: DisplayTabView) => {
+                    this.getSectionsToShow(tab.sections, individual).forEach((section: DisplayTabSectionView) => {
                       sections.set(section.name, section);
                     });
                   });
@@ -177,22 +177,22 @@ export class DisplayComponent implements OnDestroy, OnInit {
             })
           );
 
-          // subscribe to first defined document to find display view
+          // subscribe to first defined individual to find display view
           firstValueFrom(this.store.pipe(
             select(selectResourceById('individual', params.id)),
-            filter((document: SolrDocument) => document !== undefined),
+            filter((individual: Individual) => individual !== undefined),
             take(1),
-            switchMap((document: SolrDocument) => {
+            switchMap((individual: Individual) => {
 
               this.store.dispatch(
                 new fromSdr.FindByTypesInResourceAction('displayViews', {
-                  types: document.type,
+                  types: individual.type,
                 })
               );
 
               // subscribe to first defined display view to lazily fetch references
               return this.store.pipe(
-                select(selectDisplayViewByTypes(document.type)),
+                select(selectDisplayViewByTypes(individual.type)),
                 filter((displayView: DisplayView) => displayView !== undefined),
                 take(1),
                 tap((displayView: DisplayView) => {
@@ -201,7 +201,7 @@ export class DisplayComponent implements OnDestroy, OnInit {
                     return new Promise((resolve, reject) => {
                       this.store.dispatch(
                         new fromSdr.FetchLazyReferenceAction('individual', {
-                          document,
+                          individual,
                           field: lazyReference,
                         })
                       );
@@ -223,7 +223,7 @@ export class DisplayComponent implements OnDestroy, OnInit {
                         .filter((section: DisplayTabSectionView) => !section.hidden)
                         .forEach((section: DisplayTabSectionView) => {
                           section.lazyReferences
-                            .filter((lr: string) => document[lr] !== undefined && !lazyReferences.find((r) => r === lr))
+                            .filter((lr: string) => individual[lr] !== undefined && !lazyReferences.find((r) => r === lr))
                             .forEach((lazyReference: string) => {
                               lazyReferences.push(lazyReference);
                             });
@@ -301,26 +301,26 @@ export class DisplayComponent implements OnDestroy, OnInit {
     return 3;
   }
 
-  public getTabsToShow(tabs: DisplayTabView[], document: SolrDocument): DisplayTabView[] {
-    return tabs.filter((tab: DisplayTabView) => !tab.hidden && this.getSectionsToShow(tab.sections, document).length > 0);
+  public getTabsToShow(tabs: DisplayTabView[], individual: Individual): DisplayTabView[] {
+    return tabs.filter((tab: DisplayTabView) => !tab.hidden && this.getSectionsToShow(tab.sections, individual).length > 0);
   }
 
-  public getSectionsToShow(sections: DisplayTabSectionView[], document: SolrDocument): DisplayTabSectionView[] {
-    return sectionsToShow(sections, document);
+  public getSectionsToShow(sections: DisplayTabSectionView[], individual: Individual): DisplayTabSectionView[] {
+    return sectionsToShow(sections, individual);
   }
 
   public isMobile(windowDimensions: WindowDimensions): boolean {
     return windowDimensions.width < 768;
   }
 
-  private buildDisplayMetaTags(displayView: DisplayView, document: SolrDocument): MetaDefinition[] {
+  private buildDisplayMetaTags(displayView: DisplayView, individual: Individual): MetaDefinition[] {
     const metaTags: MetaDefinition[] = [];
     for (const name in displayView.metaTemplateFunctions) {
       if (displayView.metaTemplateFunctions.hasOwnProperty(name)) {
         const metaTemplateFunction = displayView.metaTemplateFunctions[name];
         metaTags.push({
           name,
-          content: metaTemplateFunction(document).trim(),
+          content: metaTemplateFunction(individual).trim(),
         });
       }
     }

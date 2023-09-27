@@ -1,5 +1,6 @@
-import { Action } from '@ngrx/store';
 import { NavigationExtras } from '@angular/router';
+import { Action } from '@ngrx/store';
+
 import { Filter } from '../../model/view';
 
 export type RouterNavigation = Readonly<{

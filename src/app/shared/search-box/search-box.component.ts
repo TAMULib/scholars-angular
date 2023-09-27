@@ -1,20 +1,16 @@
-import { Component, Input, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
-import { isPlatformBrowser, isPlatformServer, APP_BASE_HREF } from '@angular/common';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { Router, Params } from '@angular/router';
-
+import { APP_BASE_HREF, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-
 import { Observable, Subscription } from 'rxjs';
-import { skipWhile, debounceTime, distinctUntilChanged, take, mergeMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, mergeMap, skipWhile, take } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
 import { DiscoveryView, Facet, Filter } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
-
+import { AppState } from '../../core/store';
+import { selectRouterQueryParams, selectRouterSearchQuery } from '../../core/store/router';
 import { selectActiveThemeOrganization } from '../../core/store/theme';
-import { selectRouterSearchQuery, selectRouterQueryParams } from '../../core/store/router';
-
 import { getQueryParams } from '../utilities/view.utility';
 
 export interface SearchBoxStyles {

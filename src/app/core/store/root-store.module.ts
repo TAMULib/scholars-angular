@@ -4,8 +4,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 
-import { CustomRouterStateSerializer } from './router/router.reducer';
-
+import { extModules } from '../../../environments/environment';
+import { metaReducers, reducerProvider, reducerToken } from './';
 import { AlertEffects } from './alert/alert.effects';
 import { AuthEffects } from './auth/auth.effects';
 import { DialogEffects } from './dialog/dialog.effects';
@@ -14,13 +14,11 @@ import { LayoutEffects } from './layout/layout.effects';
 import { MetadataEffects } from './metadata/metadata.effects';
 import { RootStoreEffects } from './root-store.effects';
 import { RouterEffects } from './router/router.effects';
+import { CustomRouterStateSerializer } from './router/router.reducer';
 import { SdrEffects } from './sdr/sdr.effects';
 import { SidebarEffects } from './sidebar/sidebar.effects';
 import { StompEffects } from './stomp/stomp.effects';
 import { ThemeEffects } from './theme/theme.effects';
-
-import { extModules } from '../../../environments/environment';
-import { metaReducers, reducerProvider, reducerToken } from './';
 
 @NgModule({
   imports: [

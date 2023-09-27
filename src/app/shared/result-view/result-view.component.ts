@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewEncapsulation, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, Input, OnInit, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
 
 import { CollectionView } from '../../core/model/view';
 
@@ -37,7 +37,7 @@ export class ResultViewComponent implements OnInit {
     return templateFunction(this.resource);
   }
 
-  private getTemplateFunction(): (document: any) => string {
+  private getTemplateFunction(): (individual: any) => string {
     if (this.view.templateFunctions.hasOwnProperty(this.resource.class)) {
       return this.view.templateFunctions[this.resource.class];
     }

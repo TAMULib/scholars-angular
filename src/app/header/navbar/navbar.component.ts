@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
 import { Navbar } from '../../core/model/theme/navbar';
-
+import { AppState } from '../../core/store';
 import { selectIsNavbarCollapsed, selectIsNavbarExpanded } from '../../core/store/layout';
 import { selectActiveThemeHeaderNavbar } from '../../core/store/theme';
 

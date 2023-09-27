@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-
-import { defer, scheduled, Observable } from 'rxjs';
-import { asapScheduler } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom, skipWhile, mergeMap } from 'rxjs/operators';
+import { asapScheduler, Observable, scheduled } from 'rxjs';
+import { catchError, map, mergeMap, skipWhile, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
 import { StompSubscription } from '../../model/stomp';
-
 import { AlertService } from '../../service/alert.service';
 import { StompService } from '../../service/stomp.service';
 

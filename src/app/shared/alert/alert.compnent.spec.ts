@@ -1,12 +1,10 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 
-import { SharedModule } from '../shared.module';
-
-import { AlertComponent } from './alert.component';
-
-import { metaReducers, reducers } from '../../core/store';
 import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
+import { SharedModule } from '../shared.module';
+import { AlertComponent } from './alert.component';
 
 describe('AlertComponent', () => {
   let component: AlertComponent;

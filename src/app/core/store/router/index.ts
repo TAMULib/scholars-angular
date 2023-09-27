@@ -1,10 +1,10 @@
 import { Params } from '@angular/router';
 import { RouterReducerState } from '@ngrx/router-store';
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { CustomRouterState } from './router.reducer';
-import { Filter } from '../../model/view';
 import { FILTER_VALUE_DELIMITER } from '../../../shared/utilities/discovery.utility';
+import { Filter } from '../../model/view';
+import { CustomRouterState } from './router.reducer';
 
 export const selectRouterState = createFeatureSelector<RouterReducerState<CustomRouterState>>('router');
 

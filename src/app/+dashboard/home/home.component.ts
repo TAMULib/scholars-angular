@@ -1,21 +1,17 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
-
 import { Store, select } from '@ngrx/store';
-
-import { Subscription, Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
-import { Home, Hero } from '../../core/model/theme';
+import { Hero, Home } from '../../core/model/theme';
 import { DiscoveryView } from '../../core/model/view';
-
-import { SearchBoxStyles } from '../../shared/search-box/search-box.component';
-
+import { AppState } from '../../core/store';
 import { selectDiscoveryViewByClass } from '../../core/store/sdr';
 import { selectActiveThemeHome, selectActiveThemeOrganization } from '../../core/store/theme';
+import { SearchBoxStyles } from '../../shared/search-box/search-box.component';
 
 import * as fromAuth from '../../core/store/auth/auth.actions';
 

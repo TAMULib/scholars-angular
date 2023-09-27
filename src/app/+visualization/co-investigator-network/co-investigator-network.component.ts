@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, filter } from 'rxjs';
 
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { AppState } from '../../core/store';
 import { selectResourceById, selectResourcesDataNetwork } from '../../core/store/sdr';
 import { DataNetwork } from '../../core/store/sdr/sdr.reducer';
@@ -20,7 +20,7 @@ import * as fromSdr from '../../core/store/sdr/sdr.actions';
 })
 export class CoInvestigatorNetworkComponent implements OnDestroy, OnInit {
 
-  public document: Observable<SolrDocument>;
+  public individual: Observable<Individual>;
 
   public dataNetwork: Observable<DataNetwork>;
 
@@ -33,15 +33,15 @@ export class CoInvestigatorNetworkComponent implements OnDestroy, OnInit {
   ngOnInit() {
     if (this.route.parent && this.route.parent.data) {
       this.route.parent.data.subscribe(data => {
-        if (data.document && data.document.id) {
-          const id = data.document.id;
-          this.document = this.store.pipe(
+        if (data.individual && data.individual.id) {
+          const id = data.individual.id;
+          this.individual = this.store.pipe(
             select(selectResourceById('individual', id)),
-            filter((document: SolrDocument) => document !== undefined)
+            filter((individual: Individual) => individual !== undefined)
           );
           this.dataNetwork = this.store.pipe(
             select(selectResourcesDataNetwork('individual')),
-            filter((document: DataNetwork) => document !== undefined),
+            filter((individual: DataNetwork) => individual !== undefined),
           );
           this.store.dispatch(new fromSdr.GetNetworkAction('individual', {
             id,

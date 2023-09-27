@@ -1,7 +1,7 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { DiscoveryView, DisplayView, DirectoryView, CollectionView, Filter } from '../../model/view';
 import { SdrResource } from '../../model/sdr';
+import { CollectionView, DirectoryView, DiscoveryView, DisplayView, Filter } from '../../model/view';
 
 import * as fromSdr from './sdr.reducer';
 

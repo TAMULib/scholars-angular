@@ -1,13 +1,12 @@
-import { Component, Inject, PLATFORM_ID, Input, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router, NavigationStart } from '@angular/router';
+import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import { Subscription, BehaviorSubject, Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
-
-import { Sort } from '../../core/model/view';
-import { SolrDocument } from '../../core/model/discovery';
-import { DisplaySubsectionView } from '../../core/model/view/display-view';
+import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
+import { Sort } from '../../core/model/view';
+import { DisplaySubsectionView } from '../../core/model/view/display-view';
 import { getResourcesPage, getSubsectionResources, loadBadges } from '../../shared/utilities/view.utility';
 
 @Component({
@@ -21,7 +20,7 @@ export class SubsectionComponent implements AfterViewInit, OnInit, OnDestroy {
   public subsection: DisplaySubsectionView;
 
   @Input()
-  public document: SolrDocument;
+  public individual: Individual;
 
   public resources: BehaviorSubject<any[]>;
 
@@ -48,7 +47,7 @@ export class SubsectionComponent implements AfterViewInit, OnInit, OnDestroy {
     this.subscriptions.push(
       this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => loadBadges(this.platformId))
     );
-    const resources = getSubsectionResources(this.document[this.subsection.field], this.subsection.filters);
+    const resources = getSubsectionResources(this.individual[this.subsection.field], this.subsection.filters);
     this.page = this.route.queryParams.pipe(
       map((params: Params) => {
         const pageSize = params[`${this.subsection.name}.size`] ? Number(params[`${this.subsection.name}.size`]) : this.subsection.pageSize;

@@ -1,12 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 
-import { AppState } from '../../core/store';
-
 import { Alert, AlertLocation } from '../../core/model/alert';
-
+import { AppState } from '../../core/store';
 import { selectAlertsByLocation } from '../../core/store/alert';
 
 import * as fromAlert from '../../core/store/alert/alert.actions';

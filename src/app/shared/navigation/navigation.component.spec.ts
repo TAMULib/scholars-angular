@@ -4,13 +4,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedModule } from '../../shared/shared.module';
-
-import { NavigationComponent } from './navigation.component';
-
 import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
 import { metaReducers, reducers } from '../../core/store';
+import { SharedModule } from '../../shared/shared.module';
+import { NavigationComponent } from './navigation.component';
 
 describe('NavigationComponent', () => {
   let component: NavigationComponent;

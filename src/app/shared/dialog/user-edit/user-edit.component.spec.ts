@@ -1,16 +1,13 @@
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedModule } from '../../shared.module';
-
-import { UserEditComponent } from './user-edit.component';
-
-import { Role } from '../../../core/model/user';
-
-import { metaReducers, reducers } from '../../../core/store';
 import { testAppConfig } from '../../../../test.config';
+import { Role } from '../../../core/model/user';
+import { metaReducers, reducers } from '../../../core/store';
+import { SharedModule } from '../../shared.module';
+import { UserEditComponent } from './user-edit.component';
 
 describe('UserEditComponent', () => {
   let component: UserEditComponent;

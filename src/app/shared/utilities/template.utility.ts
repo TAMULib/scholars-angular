@@ -1,6 +1,6 @@
 import { CollectionView, DisplayView } from '../../core/model/view';
 
-import { compileTemplate, getTemplateFunction, getParsedTemplateFunction, initializeTemplateHelpers } from 'scholars-embed-utilities';
+import { compileTemplate, getParsedTemplateFunction, getTemplateFunction, initializeTemplateHelpers } from 'scholars-embed-utilities';
 
 const getParsedResourceViewTemplateFunction = (template: string, additionalContext: any) => {
   compileTemplate(template);

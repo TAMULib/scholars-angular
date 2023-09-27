@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AppConfig, APP_CONFIG } from './app.config';
+import { APP_CONFIG, AppConfig } from './app.config';
 import { CoreModule } from './core/core.module';
 import { RootStoreModule } from './core/store/root-store.module';
 import { FooterModule } from './footer/footer.module';

@@ -1,21 +1,16 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { queueScheduler, scheduled } from 'rxjs';
 
-import { scheduled } from 'rxjs';
-import { queueScheduler } from 'rxjs';
-
-import { SharedModule } from '../../shared/shared.module';
-
-import { TabComponent } from './tab.component';
-
-import { metaReducers, reducers } from '../../core/store';
-
-import { routes } from '../display.routes';
 import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
+import { SharedModule } from '../../shared/shared.module';
+import { routes } from '../display.routes';
+import { TabComponent } from './tab.component';
 
 describe('TabComponent', () => {
   let component: TabComponent;

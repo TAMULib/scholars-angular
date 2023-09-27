@@ -1,22 +1,16 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
+import { queueScheduler, scheduled } from 'rxjs';
 
-import { scheduled } from 'rxjs';
-import { queueScheduler } from 'rxjs';
-
-import { VisualizationModule } from '../visualization.module';
-
-import { CoInvestigatorNetworkComponent } from './co-investigator-network.component';
-
-import { metaReducers, reducers } from '../../core/store';
-
-import { routes } from '../visualization.routes';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { testAppConfig } from '../../../test.config';
 import { APP_CONFIG } from '../../app.config';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { metaReducers, reducers } from '../../core/store';
+import { VisualizationModule } from '../visualization.module';
+import { routes } from '../visualization.routes';
+import { CoInvestigatorNetworkComponent } from './co-investigator-network.component';
 
 describe('CoInvestigatorNetworkComponent', () => {
   let component: CoInvestigatorNetworkComponent;
@@ -45,7 +39,7 @@ describe('CoInvestigatorNetworkComponent', () => {
           useValue: {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
-              data: scheduled([{ document: { id: 'test', name: 'Test' } }], queueScheduler)
+              data: scheduled([{ individual: { id: 'test', name: 'Test' } }], queueScheduler)
             },
           },
         },

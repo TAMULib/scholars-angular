@@ -7,9 +7,9 @@ export interface ExportFieldView extends FieldView {
 
 export interface ExportView extends View {
   readonly contentTemplate: string;
-  contentTemplateFunction?: (document: any) => string;
+  contentTemplateFunction?: (individual: any) => string;
   readonly headerTemplate: string;
-  headerTemplateFunction?: (document: any) => string;
+  headerTemplateFunction?: (individual: any) => string;
   readonly multipleReference: ExportFieldView;
   readonly lazyReferences: ExportFieldView[];
 }

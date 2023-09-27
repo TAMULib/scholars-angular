@@ -1,23 +1,19 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-
 import { Store, select } from '@ngrx/store';
-
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { AppState } from '../core/store';
-import { AppConfig, APP_CONFIG } from '../app.config';
+import { APP_CONFIG, AppConfig } from '../app.config';
+import { Individual } from '../core/model/discovery';
+import { SdrFacet, SdrPage } from '../core/model/sdr';
 import { DiscoveryView, Filter } from '../core/model/view';
-import { SolrDocument } from '../core/model/discovery';
-import { SdrPage, SdrFacet } from '../core/model/sdr';
-import { WindowDimensions } from '../core/store/layout/layout.reducer';
-
-import { selectRouterSearchQuery, selectRouterUrl, selectRouterQueryParamFilters, selectRouterQueryParams } from '../core/store/router';
-import { selectAllResources, selectResourcesPage, selectResourcesFacets, selectResourceById, selectResourceIsLoading } from '../core/store/sdr';
+import { AppState } from '../core/store';
 import { selectWindowDimensions } from '../core/store/layout';
-
-import { addExportToQueryParams, showFilter, showClearFilters, getFilterField, getFilterValue, hasExport, removeFilterFromQueryParams, resetFiltersInQueryParams, getQueryParams } from '../shared/utilities/view.utility';
+import { WindowDimensions } from '../core/store/layout/layout.reducer';
+import { selectRouterQueryParamFilters, selectRouterQueryParams, selectRouterSearchQuery, selectRouterUrl } from '../core/store/router';
+import { selectAllResources, selectResourceById, selectResourceIsLoading, selectResourcesFacets, selectResourcesPage } from '../core/store/sdr';
+import { addExportToQueryParams, getFilterField, getFilterValue, getQueryParams, hasExport, removeFilterFromQueryParams, resetFiltersInQueryParams, showClearFilters, showFilter } from '../shared/utilities/view.utility';
 
 @Component({
   selector: 'scholars-discovery',
@@ -41,7 +37,7 @@ export class DiscoveryComponent implements OnDestroy, OnInit {
 
   public discoveryView: Observable<DiscoveryView>;
 
-  public documents: Observable<SolrDocument[]>;
+  public documents: Observable<Individual[]>;
 
   public loading: Observable<boolean>;
 
@@ -73,9 +69,9 @@ export class DiscoveryComponent implements OnDestroy, OnInit {
     this.queryParams = this.store.pipe(select(selectRouterQueryParams));
     this.filters = this.store.pipe(select(selectRouterQueryParamFilters));
     this.loading = this.store.pipe(select(selectResourceIsLoading('individual')));
-    this.documents = this.store.pipe(select(selectAllResources<SolrDocument>('individual')));
-    this.page = this.store.pipe(select(selectResourcesPage<SolrDocument>('individual')));
-    this.facets = this.store.pipe(select(selectResourcesFacets<SolrDocument>('individual')));
+    this.documents = this.store.pipe(select(selectAllResources<Individual>('individual')));
+    this.page = this.store.pipe(select(selectResourcesPage<Individual>('individual')));
+    this.facets = this.store.pipe(select(selectResourcesFacets<Individual>('individual')));
     this.discoveryViews = this.store.pipe(select(selectAllResources<DiscoveryView>('discoveryViews')));
     this.subscriptions.push(
       this.route.params.subscribe((params) => {

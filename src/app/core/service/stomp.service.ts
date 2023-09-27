@@ -1,16 +1,12 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 // import { isPlatformServer } from '@angular/common';
-
-import { Observable, Observer, scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
-
 // import * as Stomp from 'stompjs';
 // import * as SockJS from 'sockjs-client';
-
-import { AppConfig, APP_CONFIG } from '../../app.config';
-import { StompSubscription } from '../model/stomp';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Observable, Observer, asapScheduler, scheduled } from 'rxjs';
 
 // import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../app.config';
+import { StompSubscription } from '../model/stomp';
 
 // NOTE: Commented out any reference to sockjs-client and stompjs.
 // They have been removed due to being built with commonjs and causes

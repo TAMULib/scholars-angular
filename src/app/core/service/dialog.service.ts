@@ -5,12 +5,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { FacetEntriesComponent } from '../../shared/dialog/facet-entries/facet-entries.component';
 import { LoginComponent } from '../../shared/dialog/login/login.component';
 import { NotificationComponent } from '../../shared/dialog/notification/notification.component';
+import { RegistrationComponent, RegistrationStep } from '../../shared/dialog/registration/registration.component';
 import { SearchTipsComponent } from '../../shared/dialog/search-tips/search-tips.component';
 import { UserEditComponent } from '../../shared/dialog/user-edit/user-edit.component';
-import { RegistrationStep, RegistrationComponent } from '../../shared/dialog/registration/registration.component';
-
-import { User } from '../model/user';
 import { RegistrationRequest } from '../model/request';
+import { User } from '../model/user';
 
 import * as fromDialog from '../../core/store/dialog/dialog.actions';
 

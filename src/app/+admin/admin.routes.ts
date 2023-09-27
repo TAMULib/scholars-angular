@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
 
 import { AdminComponent } from './admin.component';
-import { ThemesComponent } from './themes/themes.component';
-import { UsersComponent } from './users/users.component';
-
 import { DirectoryViewsComponent } from './directory-views/directory-views.component';
 import { DiscoveryViewsComponent } from './discovery-views/discovery-views.component';
 import { DisplayViewsComponent } from './display-views/display-views.component';
+import { ThemesComponent } from './themes/themes.component';
+import { UsersComponent } from './users/users.component';
 
 export const routes: Routes = [
   {

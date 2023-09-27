@@ -1,20 +1,16 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Params, Router } from '@angular/router';
 import { Action, Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 
 import { SidebarMenu, SidebarSection } from '../../core/model/sidebar';
 import { AppState } from '../../core/store';
-
 import { selectIsSidebarCollapsed } from '../../core/store/layout';
-import { selectMenu } from '../../core/store/sidebar';
-
-import { fadeIn } from '../utilities/animation.utility';
-
-import { Params, Router } from '@angular/router';
 import { selectRouterUrl } from '../../core/store/router';
 import { selectResourceIsLoading } from '../../core/store/sdr';
+import { selectMenu } from '../../core/store/sidebar';
+import { fadeIn } from '../utilities/animation.utility';
 
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
 

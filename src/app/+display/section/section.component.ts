@@ -1,14 +1,13 @@
-import { Component, Input, Inject, OnInit, PLATFORM_ID, AfterViewInit, OnDestroy } from '@angular/core';
-import { Params, ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
-
+import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import { AppConfig, APP_CONFIG } from '../../app.config';
-import { DisplayTabSectionView, Sort } from '../../core/model/view';
-import { SolrDocument } from '../../core/model/discovery';
+import { APP_CONFIG, AppConfig } from '../../app.config';
+import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
+import { DisplayTabSectionView, Sort } from '../../core/model/view';
 import { getResourcesPage, getSubsectionResources, loadBadges } from '../../shared/utilities/view.utility';
 
 @Component({
@@ -22,7 +21,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   public section: DisplayTabSectionView;
 
   @Input()
-  public document: SolrDocument;
+  public individual: Individual;
 
   @Input()
   public display: string;
@@ -56,7 +55,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
       this.subscriptions.push(
         this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => loadBadges(this.platformId))
       );
-      const resources = getSubsectionResources(this.document[this.section.field], this.section.filters);
+      const resources = getSubsectionResources(this.individual[this.section.field], this.section.filters);
       this.page = this.route.queryParams.pipe(
         map((params: Params) => {
           const pageSize = params[`${this.section.name}.size`] ? Number(params[`${this.section.name}.size`]) : this.section.pageSize;
@@ -83,7 +82,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public getEmbedSnippet(): string {
-    return `<div class="_scholars_embed_" data-collection="individual" data-individual="${this.document.id}" data-display="${this.display}" data-sections="${this.section.name}"></div>\n\n` + '<!-- This JavaScript only needs to be included once in your HTML -->\n' + `<script type="text/javascript" src="${this.appConfig.embedUrl}/scholars-embed.min.js" async></script>`;
+    return `<div class="_scholars_embed_" data-collection="individual" data-individual="${this.individual.id}" data-display="${this.display}" data-sections="${this.section.name}"></div>\n\n` + '<!-- This JavaScript only needs to be included once in your HTML -->\n' + `<script type="text/javascript" src="${this.appConfig.embedUrl}/scholars-embed.min.js" async></script>`;
   }
 
   public copyToClipBoard(copyElement: any, tooltip: NgbTooltip) {

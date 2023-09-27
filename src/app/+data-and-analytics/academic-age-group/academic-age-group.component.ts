@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, S
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, filter, map, tap } from 'rxjs';
 
-import { SolrDocument } from '../../core/model/discovery';
+import { Individual } from '../../core/model/discovery';
 import { Filterable } from '../../core/model/request';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, Facet, OpKey } from '../../core/model/view';
@@ -37,7 +37,7 @@ const apk = 'Average publications';
 export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   @Input()
-  public organization: SolrDocument;
+  public organization: Individual;
 
   @Input()
   public displayView: DisplayView;
@@ -129,42 +129,47 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
     this.store.dispatch(new fromSdr.ClearAcademicAgeAction('individual'));
 
     setTimeout(() => {
-      if (!!filters.previousValue) {
-        filters.previousValue.forEach((entry: any) => {
-          if (filters.currentValue.indexOf(entry) === -1) {
+      const additionalFilters = [];
+
+      if (!!filters) {
+
+        if (!!filters.previousValue) {
+          filters.previousValue.forEach((entry: any) => {
+            if (filters.currentValue.indexOf(entry) === -1) {
+              const section = this.sidebarMenuSections[entry.field];
+              if (!!section) {
+                this.store.dispatch(new fromSidebar.RemoveSectionAction({
+                  sectionIndex: section.index,
+                  itemLabel: entry.value,
+                  itemField: entry.field,
+                }));
+              }
+            }
+          });
+        }
+
+        filters.currentValue.forEach((entry: any) => {
+          if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
             const section = this.sidebarMenuSections[entry.field];
             if (!!section) {
-              this.store.dispatch(new fromSidebar.RemoveSectionAction({
+              const remove = {};
+              remove[entry.field]
+              this.store.dispatch(new fromSidebar.AddSectionItemAction({
                 sectionIndex: section.index,
-                itemLabel: entry.value,
-                itemField: entry.field,
+                sectionItem: {
+                  type: SidebarItemType.ACTION,
+                  label: entry.value,
+                  selected: true,
+                  action: new fromRouter.RemoveFilter({ filter: entry }),
+                }
               }));
             }
           }
         });
+
+        additionalFilters.push(filters.currentValue);
+        additionalFilters.shift();
       }
-
-      filters.currentValue.forEach((entry: any) => {
-        if (filters.previousValue === undefined || filters.previousValue.indexOf(entry) === -1) {
-          const section = this.sidebarMenuSections[entry.field];
-          if (!!section) {
-            const remove = {};
-            remove[entry.field]
-            this.store.dispatch(new fromSidebar.AddSectionItemAction({
-              sectionIndex: section.index,
-              sectionItem: {
-                type: SidebarItemType.ACTION,
-                label: entry.value,
-                selected: true,
-                action: new fromRouter.RemoveFilter({ filter: entry }),
-              }
-            }));
-          }
-        }
-      });
-
-      const additionalFilters = [...filters.currentValue];
-      additionalFilters.shift();
 
       this.barplots.forEach(barplot => barplot.draw());
 

@@ -1,20 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
 
-import { DialogService } from '../core/service/dialog.service';
-
-import { AppState } from '../core/store';
 import { Footer } from '../core/model/theme/footer';
-import { User, Role } from '../core/model/user';
-
-import { RegistrationStep } from '../shared/dialog/registration/registration.component';
-
-import { selectIsAuthenticated, selectUser, selectHasRole } from '../core/store/auth';
+import { Role, User } from '../core/model/user';
+import { DialogService } from '../core/service/dialog.service';
+import { AppState } from '../core/store';
+import { selectHasRole, selectIsAuthenticated, selectUser } from '../core/store/auth';
 import { selectActiveThemeFooter } from '../core/store/theme';
+import { RegistrationStep } from '../shared/dialog/registration/registration.component';
 
 import * as fromAuth from '../core/store/auth/auth.actions';
 

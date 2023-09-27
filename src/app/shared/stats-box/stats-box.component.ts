@@ -1,19 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Params } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { AppState } from '../../core/store';
-
 import { DirectoryView, OpKey } from '../../core/model/view';
+import { AppState } from '../../core/store';
+import { selectDirectoryViewByClass, selectResourcesCounts } from '../../core/store/sdr';
+import { getQueryParams } from '../utilities/view.utility';
 
 import * as fromSdr from '../../core/store/sdr/sdr.actions';
-
-import { selectResourcesCounts, selectDirectoryViewByClass } from '../../core/store/sdr';
-
-import { getQueryParams } from '../utilities/view.utility';
 
 @Component({
   selector: 'scholars-stats-box',

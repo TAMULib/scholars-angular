@@ -1,12 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { queueScheduler, scheduled } from 'rxjs';
 
-import { scheduled } from 'rxjs';
-import { queueScheduler } from 'rxjs';
-
-import { AppState } from '../../../core/store';
 import { DialogButtonType, DialogControl } from '../../../core/model/dialog';
+import { AppState } from '../../../core/store';
 
 import * as fromDialog from '../../../core/store/dialog/dialog.actions';
 

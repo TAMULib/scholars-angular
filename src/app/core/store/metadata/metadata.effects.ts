@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect,  ofType } from '@ngrx/effects';
 import { MetaDefinition } from '@angular/platform-browser';
-import { Router, ActivationStart } from '@angular/router';
+import { ActivationStart, Router } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
-
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
-
 import { MetadataService } from '../../service/metadata.service';
-
 import { selectMetadataTags } from './';
 
 import * as fromMetadata from './metadata.actions';

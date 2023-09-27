@@ -1,43 +1,35 @@
 import { Injectable, Injector } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Params } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-
-import { combineLatest, defer, Observable, scheduled } from 'rxjs';
-import { asapScheduler } from 'rxjs';
+import { Observable, asapScheduler, combineLatest, defer, scheduled } from 'rxjs';
 import { catchError, filter, map, mergeMap, skipWhile, switchMap, take, withLatestFrom } from 'rxjs/operators';
 
+import { AppState } from '../';
+import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetFilterLabel } from '../../../shared/utilities/discovery.utility';
+import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
+import { Individual } from '../../model/discovery';
+import { injectable, repos } from '../../model/repos';
+import { Count, SdrCollection, SdrFacet, SdrFacetEntry, SdrResource } from '../../model/sdr';
+import { AbstractSdrRepo } from '../../model/sdr/repo/abstract-sdr-repo';
+import { SidebarItem, SidebarItemType, SidebarMenu, SidebarSection } from '../../model/sidebar';
+import { DirectoryView, DiscoveryView, Facet, FacetType, OpKey } from '../../model/view';
 import { AlertService } from '../../service/alert.service';
 import { DialogService } from '../../service/dialog.service';
 import { StatsService } from '../../service/stats.service';
-
-import { AppState } from '../';
-import { StompState } from '../stomp/stomp.reducer';
-import { CustomRouterState } from '../router/router.reducer';
-
-import { AbstractSdrRepo } from '../../model/sdr/repo/abstract-sdr-repo';
-
-import { SdrResource, SdrCollection, SdrFacet, SdrFacetEntry, Count } from '../../model/sdr';
-import { SidebarMenu, SidebarSection, SidebarItem, SidebarItemType } from '../../model/sidebar';
-import { SolrDocument } from '../../model/discovery';
-import { Facet, DiscoveryView, DirectoryView, FacetType, OpKey } from '../../model/view';
-
-import { injectable, repos } from '../../model/repos';
-
-import { createSdrRequest, buildDateYearFilterValue, buildNumberRangeFilterValue, getFacetFilterLabel, FILTER_VALUE_DELIMITER } from '../../../shared/utilities/discovery.utility';
-import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
-
-import { selectSdrState } from './';
-import { DataNetwork, QuantityDistribution, AcademicAge, SdrState } from './sdr.reducer';
 import { selectRouterState } from '../router';
+import { CustomRouterState } from '../router/router.reducer';
 import { selectIsStompConnected, selectStompState } from '../stomp';
+import { StompState } from '../stomp/stomp.reducer';
+import { selectSdrState } from './';
+import { AcademicAge, DataNetwork, QuantityDistribution, SdrState } from './sdr.reducer';
 
 import * as fromDialog from '../dialog/dialog.actions';
 import * as fromRouter from '../router/router.actions';
+import * as fromSidebar from '../sidebar/sidebar.actions';
 import * as fromStomp from '../stomp/stomp.actions';
 import * as fromSdr from './sdr.actions';
-import * as fromSidebar from '../sidebar/sidebar.actions';
 
 @Injectable()
 export class SdrEffects {
@@ -105,7 +97,7 @@ export class SdrEffects {
         .get(action.name)
         .getOne(action.payload.id)
         .pipe(
-          map((document: SolrDocument) => new fromSdr.GetOneResourceSuccessAction(action.name, { document, queue: action.payload.queue })),
+          map((individual: Individual) => new fromSdr.GetOneResourceSuccessAction(action.name, { individual, queue: action.payload.queue })),
           catchError((response) =>
             scheduled(
               [
@@ -296,9 +288,9 @@ export class SdrEffects {
         .findByTypesIn(action.payload.types)
         .pipe(
           map(
-            (document: SolrDocument) =>
+            (individual: Individual) =>
               new fromSdr.FindByTypesInResourceSuccessAction(action.name, {
-                document,
+                individual,
               })
           ),
           catchError((response) =>
@@ -331,8 +323,8 @@ export class SdrEffects {
     ofType(...this.buildActions(fromSdr.SdrActionTypes.FETCH_LAZY_REFERENCE)),
     switchMap((action: fromSdr.FetchLazyReferenceAction) => {
       const field = action.payload.field;
-      const document = action.payload.document;
-      const ids = Array.isArray(document[field]) ? document[field].map((property) => property.id) : [document[field].id];
+      const individual = action.payload.individual;
+      const ids = Array.isArray(individual[field]) ? individual[field].map((property) => property.id) : [individual[field].id];
       return this.repos
         .get('individual')
         .findByIdIn(ids)
@@ -340,7 +332,7 @@ export class SdrEffects {
           map(
             (resources: SdrCollection) =>
               new fromSdr.FetchLazyReferenceSuccessAction(action.name, {
-                document,
+                individual,
                 field,
                 resources,
               })

@@ -1,7 +1,7 @@
 import { ThemeActions, ThemeActionTypes } from './theme.actions';
 
-import { Theme } from '../../model/theme';
 import { SafeStyle } from '@angular/platform-browser';
+import { Theme } from '../../model/theme';
 
 export type ThemeState = Readonly<{
   loadingActive: boolean;

@@ -1,12 +1,10 @@
-import { Injectable, Inject } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
-
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AppConfig, APP_CONFIG } from '../../app.config';
-import { User } from '../model/user';
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { LoginRequest, RegistrationRequest } from '../model/request';
-
+import { User } from '../model/user';
 import { RestService } from './rest.service';
 
 @Injectable({

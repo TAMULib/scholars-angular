@@ -1,12 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 
-import { StatsBoxComponent } from './stats-box.component';
-
-import { metaReducers, reducers } from '../../core/store';
 import { testAppConfig } from '../../../test.config';
+import { metaReducers, reducers } from '../../core/store';
+import { StatsBoxComponent } from './stats-box.component';
 
 describe('StatsBoxComponent', () => {
   let component: StatsBoxComponent;

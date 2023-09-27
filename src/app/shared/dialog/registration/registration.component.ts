@@ -1,18 +1,15 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Store, select } from '@ngrx/store';
-
-import { combineLatest, scheduled, Observable, Subscription } from 'rxjs';
-import { queueScheduler } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subscription, combineLatest, queueScheduler, scheduled } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AppState } from '../../../core/store';
 import { DialogButtonType, DialogControl } from '../../../core/model/dialog';
 import { RegistrationRequest } from '../../../core/model/request/registration.request';
-
-import { selectIsSubmittingRegistration, selectIsCompletingRegistration } from '../../../core/store/auth';
+import { AppState } from '../../../core/store';
+import { selectIsCompletingRegistration, selectIsSubmittingRegistration } from '../../../core/store/auth';
 
 import * as fromAuth from '../../../core/store/auth/auth.actions';
 import * as fromDialog from '../../../core/store/dialog/dialog.actions';

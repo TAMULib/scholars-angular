@@ -18,7 +18,7 @@
   </div>
 </div>
 <div class="card-body">
-  <div *ngIf="!section.paginated" [innerHtml]="section.templateFunction(document) | safeHtml"></div>
+  <div *ngIf="!section.paginated" [innerHtml]="section.templateFunction(individual) | safeHtml"></div>
   <div *ngIf="section.paginated">
     <div *ngIf="page | async">
       <div *ngIf="getResources() | async as resources">
@@ -35,6 +35,6 @@
     </div>
   </div>
   <div *ngFor="let subsection of section.subsections">
-    <scholars-subsection [subsection]="subsection" [document]="document"></scholars-subsection>
+    <scholars-subsection [subsection]="subsection" [individual]="individual"></scholars-subsection>
   </div>
 </div>

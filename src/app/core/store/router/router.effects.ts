@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
+import { filter, map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
-import { filter, map, withLatestFrom, skipWhile } from 'rxjs/operators';
-
+import { selectRouterQueryParams } from '.';
 import { AppState } from '../';
-
+import { FILTER_VALUE_DELIMITER } from '../../../shared/utilities/discovery.utility';
 import { selectLoginRedirect } from '../auth';
 
 import * as fromAuth from '../auth/auth.actions';
 import * as fromRouter from './router.actions';
-import { selectRouterQueryParams } from '.';
 
 @Injectable()
 export class RouterEffects {
@@ -70,9 +69,9 @@ export class RouterEffects {
     map(([payload, params]) => {
       const queryParams = { ...params };
 
-      const filter = queryParams[`${payload.filter.field}.filter`].split(';;')
+      const filter = queryParams[`${payload.filter.field}.filter`].split(FILTER_VALUE_DELIMITER)
         .filter((value: string) => value !== payload.filter.value)
-        .join(';;');
+        .join(FILTER_VALUE_DELIMITER);
 
       if (filter.trim().length === 0) {
         queryParams[`${payload.filter.field}.opKey`] = undefined;

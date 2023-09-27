@@ -1,14 +1,10 @@
 import { InjectionToken } from '@angular/core';
-
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 
 import { APP_CONFIG, AppConfig } from '../../app.config';
-
 import { Individual } from '../model/discovery';
-
 import { Theme } from '../model/theme';
 import { User } from '../model/user';
-
 import { DataAndAnalyticsView, DirectoryView, DiscoveryView, DisplayView } from '../model/view';
 
 import * as fromRouter from '@ngrx/router-store';

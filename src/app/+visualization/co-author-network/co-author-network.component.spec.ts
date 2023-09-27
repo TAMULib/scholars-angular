@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
-
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { queueScheduler, scheduled } from 'rxjs';
 
@@ -40,7 +39,7 @@ describe('CoAuthorNetworkComponent', () => {
           useValue: {
             parent: {
               params: scheduled([{ collection: 'individual', id: 'test' }], queueScheduler),
-              data: scheduled([{ document: { id: 'test', name: 'Test' } }], queueScheduler)
+              data: scheduled([{ individual: { id: 'test', name: 'Test' } }], queueScheduler)
             },
           },
         },
