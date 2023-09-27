@@ -15,7 +15,7 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
 import * as expressStaticGzip from 'express-static-gzip';
 
-import { AppConfig, APP_CONFIG } from './src/app/app.config';
+import { APP_CONFIG, AppConfig } from './src/app/app.config';
 import { AppServerModule } from './src/main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.

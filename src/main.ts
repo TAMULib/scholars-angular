@@ -10,7 +10,7 @@ if (environment.production) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // fetch runtime configuration, move to provider if and  when Angular supports asynchronous providers
+  // fetch runtime configuration, move to provider if and when Angular supports asynchronous providers
   fetch('assets/appConfig.json')
     .then((response) => response.json())
     .then((appConfig) => {

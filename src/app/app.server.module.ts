@@ -1,23 +1,29 @@
 import { APP_BASE_HREF, DOCUMENT } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, TransferState } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ServerModule } from '@angular/platform-server';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { readFileSync } from 'fs';
-import { Observable, Observer } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { AppComponent } from './app.component';
-import { AppModule } from './app.module';
+import { AppModule, I18N_TRANSLATE_STATE, I18nTranslateState } from './app.module';
 import { ComputedStyleLoader } from './core/computed-style-loader';
 import { CustomMissingTranslationHandler } from './core/handler/custom-missing-translation.handler';
 
-const createUniversalTranslateLoader = (): TranslateLoader => {
+const createUniversalTranslateLoader = (transferState: TransferState): TranslateLoader => {
   return {
     getTranslation: (lang: string): Observable<any> => {
-      return new Observable((observer: Observer<any>) => {
-        observer.next(JSON.parse(readFileSync(`./dist/scholars-angular/browser/assets/i18n/${lang}.json`, 'utf8')));
-        observer.complete();
+      const messages = JSON.parse(readFileSync(`./dist/scholars-angular/browser/assets/i18n/${lang}.json`, 'utf8'));
+
+      const prevState = transferState.get<I18nTranslateState>(I18N_TRANSLATE_STATE, {});
+
+      transferState.set(I18N_TRANSLATE_STATE, {
+        ...prevState,
+        [lang]: messages
       });
+
+      return of(messages);
     },
   } as TranslateLoader;
 };
@@ -55,6 +61,7 @@ const createUniversalStyleLoader = (document: Document, baseHref: string): Compu
       loader: {
         provide: TranslateLoader,
         useFactory: createUniversalTranslateLoader,
+        deps: [TransferState]
       },
     }),
   ],
