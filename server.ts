@@ -11,6 +11,7 @@ import { join } from 'path';
 import { APP_BASE_HREF } from '@angular/common';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
+import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 
 import * as express from 'express';
 import * as expressStaticGzip from 'express-static-gzip';
@@ -22,10 +23,12 @@ const HOST = process.env.HOST || 'localhost';
 const PORT = Number(process.env.PORT) || 4200;
 const BASE_HREF = process.env.BASE_HREF || '/';
 
-const SSR_SERVICE_URL = process.env.SSR_SERVICE_URL || 'http://127.0.0.1:9000';
+const BROKER_URL = process.env.BROKER_URL || 'ws://localhost:9000';
 const SERVICE_URL = process.env.SERVICE_URL || 'http://localhost:9000';
-const EMBED_URL = process.env.EMBED_URL || 'http://localhost:4201';
+const SSR_SERVICE_URL = process.env.SSR_SERVICE_URL || 'http://127.0.0.1:9000';
+
 const UI_URL = process.env.UI_URL || 'http://localhost:4200';
+const EMBED_URL = process.env.EMBED_URL || 'http://localhost:4201';
 const VIVO_URL = process.env.VIVO_URL || 'http://localhost:8080/vivo';
 const VIVO_EDITOR_URL = process.env.VIVO_EDITOR_URL || 'http://localhost:8080/vivo_editor';
 
@@ -81,10 +84,11 @@ export const app = (appConfig: AppConfig) => {
   router.get('*', (req, res) => {
     res.render(indexHtml, {
       req,
-      providers: [{
-        provide: APP_BASE_HREF,
-        useValue: req.baseUrl
-      }]
+      providers: [
+        { provide: APP_BASE_HREF, useValue: req.baseUrl },
+        { provide: REQUEST, useValue: req },
+        { provide: RESPONSE, useValue: res },
+      ]
     });
   });
 
@@ -98,9 +102,10 @@ function run() {
     host: HOST,
     port: PORT,
     baseHref: BASE_HREF,
+    brokerUrl: BROKER_URL,
     serviceUrl: SERVICE_URL,
-    embedUrl: EMBED_URL,
     uiUrl: UI_URL,
+    embedUrl: EMBED_URL,
     vivoUrl: VIVO_URL,
     vivoEditorUrl: VIVO_EDITOR_URL,
     collectSearchStats: COLLECT_SEARCH_STATS

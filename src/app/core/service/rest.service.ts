@@ -92,7 +92,7 @@ export class RestService {
   }
 
   private preProcessOptions(options: any): void {
-    if (this.useSession(options)) {
+    if (this.useSession()) {
       if (!options.headers) {
         options.headers = new HttpHeaders({
           // tslint:disable-next-line: no-string-literal
@@ -105,8 +105,8 @@ export class RestService {
     }
   }
 
-  private useSession(options: any): boolean {
-    return options.withCredentials && isPlatformServer(this.platformId) && this.hasSession();
+  private useSession(): boolean {
+    return isPlatformServer(this.platformId) && this.hasSession();
   }
 
 }

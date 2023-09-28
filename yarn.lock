@@ -2905,6 +2905,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stomp/stompjs@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@stomp/stompjs@npm:7.0.0"
+  checksum: 94618b5a394339ed3098dae213eef27c462f504ba050208598c9ef396abb527b57e6333b2e78af4715693d6ba04fffb23df4b1bf7041bc0f1b3bc6e92138f1dc
+  languageName: node
+  linkType: hard
+
 "@szmarczak/http-timer@npm:^5.0.1":
   version: 5.0.1
   resolution: "@szmarczak/http-timer@npm:5.0.1"
@@ -11695,6 +11702,7 @@ __metadata:
     "@nguniversal/express-engine": 16.2.0
     "@ngx-translate/core": 15.0.0
     "@ngx-translate/http-loader": 8.0.0
+    "@stomp/stompjs": 7.0.0
     "@types/d3": 7.4.0
     "@types/express": 4.17.17
     "@types/jasmine": 4.3.6

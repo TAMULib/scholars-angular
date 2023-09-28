@@ -27,27 +27,27 @@ export class AuthService {
       'Content-Type': 'application/x-www-form-urlencoded',
     });
     const data = `username=${login.email}&password=${login.password}`;
-    return this.restService.post<User>(this.appConfig.serviceUrl + '/login', data, { headers });
+    return this.restService.post<User>(`${this.appConfig.serviceUrl}/login`, data, { headers });
   }
 
   public logout(): Observable<string> {
-    return this.restService.get<string>(this.appConfig.serviceUrl + '/logout', { withCredentials: true, responseType: 'text' });
+    return this.restService.get<string>(`${this.appConfig.serviceUrl}/logout`, { responseType: 'text' });
   }
 
   public submitRegistration(registration: RegistrationRequest): Observable<RegistrationRequest> {
-    return this.restService.post<RegistrationRequest>(this.appConfig.serviceUrl + '/registration', registration);
+    return this.restService.post<RegistrationRequest>(`${this.appConfig.serviceUrl}/registration`, registration);
   }
 
   public confirmRegistration(key: string): Observable<RegistrationRequest> {
-    return this.restService.get<RegistrationRequest>(this.appConfig.serviceUrl + '/registration?key=' + key);
+    return this.restService.get<RegistrationRequest>(`${this.appConfig.serviceUrl}/registration?key=${key}`);
   }
 
   public completeRegistration(key: string, registration: RegistrationRequest): Observable<User> {
-    return this.restService.put<User>(this.appConfig.serviceUrl + '/registration?key=' + key, registration);
+    return this.restService.put<User>(`${this.appConfig.serviceUrl}/registration?key=${key}`, registration);
   }
 
   public getUser(): Observable<User> {
-    return this.restService.get<User>(this.appConfig.serviceUrl + '/user', { withCredentials: true });
+    return this.restService.get<User>(`${this.appConfig.serviceUrl}/user`);
   }
 
 }

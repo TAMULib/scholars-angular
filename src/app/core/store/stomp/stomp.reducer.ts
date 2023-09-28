@@ -1,4 +1,5 @@
-import { StompSubscription } from '../../model/stomp';
+import { StompSubscription } from '@stomp/stompjs';
+
 import { StompActions, StompActionTypes } from './stomp.actions';
 
 export type StompState = Readonly<{

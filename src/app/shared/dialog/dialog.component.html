@@ -11,6 +11,6 @@
   </div>
   <div class="modal-footer">
     <button *ngIf="dialog.close" type="button" class="btn {{dialog.close.type}}" (click)="dialog.close.action()" [disabled]="dialog.close.disabled() | async">{{dialog.close.label | async}}</button>
-    <button *ngIf="dialog.submit" type="button" class="btn {{dialog.submit.type}}" (click)="dialog.submit.action()" [disabled]="dialog.submit.disabled() | async">{{dialog.submit.label | async}}</button>
+    <button *ngIf="dialog.submit" type="submit" class="btn {{dialog.submit.type}}" (click)="dialog.submit.action()" [disabled]="dialog.submit.disabled() | async">{{dialog.submit.label | async}}</button>
   </div>
 </form>

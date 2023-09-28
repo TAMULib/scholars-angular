@@ -42,6 +42,10 @@ export class AdminComponent implements OnInit {
         translateKey: 'ADMIN.DISPLAY_VIEWS.TITLE',
       },
       {
+        route: ['/admin/DataAndAnalyticsViews'],
+        translateKey: 'ADMIN.DATA_AND_ANALYTICS_VIEWS.TITLE',
+      },
+      {
         route: ['/admin/Themes'],
         translateKey: 'ADMIN.THEMES.TITLE',
       },

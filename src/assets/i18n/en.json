@@ -1,6 +1,11 @@
 {
   "ADMIN": {
     "TITLE": "Administration",
+    "DATA_AND_ANALYTICS_VIEWS": {
+      "TITLE": "Data and Analytics Views",
+      "NAME": "Name",
+      "LAYOUT": "Layout"
+    },
     "DIRECTORY_VIEWS": {
       "TITLE": "Directory Views",
       "NAME": "Name",
@@ -171,7 +176,7 @@
         "LAST_NAME": "Enter last name",
         "EMAIL": "Enter email",
         "PASSWORD": "Enter password",
-        "CONFIRM": "Enter password again",
+        "CONFIRM": "Confirm password",
         "ARIA_LABELLED_BY": "Registration dialog",
         "TITLE": "Registration",
         "CANCEL": "Cancel",
