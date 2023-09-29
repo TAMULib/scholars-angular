@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, take } from 'rxjs';
 
 import { Individual } from '../../core/model/discovery';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, ExportView } from '../../core/model/view';
+import { RestService } from '../../core/service/rest.service';
 import { AppState } from '../../core/store';
 
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
@@ -40,7 +41,8 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
   constructor(
     private store: Store<AppState>,
     private route: ActivatedRoute,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private rest: RestService,
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.subscriptions = [];
@@ -67,9 +69,8 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
                 if (selected) {
                   this.selectedExportView.next(exportView);
-                  this.labelEvent.next(this.translate.instant('DATA_AND_ANALYTICS.PROFILE_SUMMARIES', { timePeriod: exportView.name}));
+                  this.labelEvent.next(this.translate.instant('DATA_AND_ANALYTICS.PROFILE_SUMMARIES', { timePeriod: exportView.name }));
                 }
-
                 return {
                   label: exportView.name,
                   type: SidebarItemType.LINK,
@@ -97,9 +98,23 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     return this.selectedExportView.asObservable();
   }
 
-  public getDownloadLink(organization: Individual, exportView: ExportView): string {
+  public download(organization: Individual, exportView: ExportView): void {
     const link = exportView.name.toLowerCase().replace(/ /g, '_');
-    return organization._links[link].href;
+    this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' }, false)
+      .pipe(take(1))
+      .subscribe((response: any) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = !!contentDisposition
+          ? contentDisposition.match(/^.*filename=(.*)$/)[1]
+          : 'export.zip';
+
+
+        const url = window.URL.createObjectURL(response.body);
+        const anchor = document.createElement('a');
+        anchor.download = filename;
+        anchor.href = url;
+        anchor.click();
+      });
   }
 
 }

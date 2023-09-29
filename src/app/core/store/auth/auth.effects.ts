@@ -129,8 +129,11 @@ export class AuthEffects implements OnInitEffects {
   completeRegistrationSuccess = createEffect(() => this.actions.pipe(
     ofType(fromAuth.AuthActionTypes.COMPLETE_REGISTRATION_SUCCESS),
     map((action: fromAuth.CompleteRegistrationSuccessAction) => action.payload),
-    map((payload: { user: User }) => payload.user),
-    switchMap(() => [new fromDialog.CloseDialogAction(), new fromRouter.Go({ path: ['/'] }), this.alert.completeRegistrationSuccessAlert()])
+    switchMap(() => [
+      new fromDialog.CloseDialogAction(),
+      new fromRouter.Go({ path: ['/'] }),
+      this.alert.completeRegistrationSuccessAlert()
+    ])
   ));
 
   completeRegistrationFailure = createEffect(() => this.actions.pipe(

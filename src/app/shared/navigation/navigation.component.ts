@@ -4,8 +4,10 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { APP_CONFIG, AppConfig } from '../../app.config';
+import { Role } from '../../core/model/user';
 import { DirectoryView } from '../../core/model/view';
 import { AppState } from '../../core/store';
+import { selectHasRole } from '../../core/store/auth';
 import { selectIsNavigationCollapsed, selectIsNavigationExpanded, selectIsSidebarExpanded } from '../../core/store/layout';
 import { selectRouterUrl } from '../../core/store/router';
 import { selectAllResources } from '../../core/store/sdr';
@@ -24,6 +26,8 @@ export class NavigationComponent implements OnInit {
 
   public vivoEditorUrl: string;
 
+  public isAdmin: Observable<boolean>;
+
   public hasMenu: Observable<boolean>;
 
   public isSidebarExpanded: Observable<boolean>;
@@ -41,6 +45,7 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isAdmin = this.store.pipe(select(selectHasRole(Role.ROLE_ADMIN)));
     this.hasMenu = this.store.pipe(select(selectHasMenu));
     this.isSidebarExpanded = this.store.pipe(select(selectIsSidebarExpanded));
     this.isNavigationCollapsed = this.store.pipe(select(selectIsNavigationCollapsed));

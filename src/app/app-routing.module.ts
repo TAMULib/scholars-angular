@@ -17,8 +17,9 @@ const routes: Routes = [
   {
     path: 'data-and-analytics',
     loadChildren: () => import('./+data-and-analytics').then((m) => m.DataAndAnalyticsModule),
-    canActivate: [],
+    canActivate: [AuthGuard],
     data: {
+      roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
       tags: [{ name: 'view', content: 'Scholars Data and Analytics' }],
     },
   },

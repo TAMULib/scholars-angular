@@ -1,0 +1,16 @@
+<scholars-pagination [page]="page">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">{{ 'ADMIN.DATA_AND_ANALYTICS_VIEWS.NAME' | translate }}</th>
+        <th scope="col">{{ 'ADMIN.DATA_AND_ANALYTICS_VIEWS.LAYOUT' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="dataAndAnalyticsViews | async; let dataAndAnalyticsViews">
+      <tr *ngFor="let dataAndAnalyticsView of dataAndAnalyticsViews">
+        <td scope="row">{{dataAndAnalyticsView.name}}</td>
+        <td scope="row">{{dataAndAnalyticsView.layout}}</td>
+      </tr>
+    </tbody>
+  </table>
+</scholars-pagination>

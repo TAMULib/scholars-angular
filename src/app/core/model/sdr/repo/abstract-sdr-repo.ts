@@ -118,20 +118,19 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
   }
 
   public post(resource: R): Observable<R> {
-    return this.restService.post<R>(`${this.appConfig.serviceUrl}/${this.path()}`, resource, { withCredentials: true });
+    return this.restService.post<R>(`${this.appConfig.serviceUrl}/${this.path()}`, resource);
   }
 
   public put(resource: R): Observable<R> {
-    return this.restService.put<R>(resource._links.self.href, resource, { withCredentials: true });
+    return this.restService.put<R>(resource._links.self.href, resource);
   }
 
   public patch(resource: R): Observable<R> {
-    return this.restService.patch<R>(resource._links.self.href, resource, { withCredentials: true });
+    return this.restService.patch<R>(resource._links.self.href, resource);
   }
 
   public delete(resource: R): Observable<string> {
     return this.restService.delete<string>(resource._links.self.href, {
-      withCredentials: true,
       responseType: 'text',
     });
   }

@@ -4,9 +4,10 @@ interface AppConfig {
   host: string;
   port: number;
   baseHref: string;
+  brokerUrl: string;
   serviceUrl: string;
-  embedUrl: string;
   uiUrl: string;
+  embedUrl: string;
   vivoUrl: string;
   vivoEditorUrl: string;
   collectSearchStats: boolean;
