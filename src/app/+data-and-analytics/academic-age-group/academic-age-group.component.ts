@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, PLATFORM_ID, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, filter, map, tap } from 'rxjs';
 
@@ -73,9 +74,10 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
 
   public averagePubRateAcademicAge: Observable<BarplotInput>;
 
-  private sidebarMenuSections: { [key: string]: { facet:Facet, index: number } };
+  private sidebarMenuSections: { [key: string]: { facet: Facet, index: number } };
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: string,
     private store: Store<AppState>,
     private dialog: DialogService,
   ) {
@@ -87,9 +89,13 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    if (isPlatformServer(this.platformId)) {
+      return;
+    }
+
     const menu: SidebarMenu = {
       sections: this.dataAndAnalyticsView.facets.map((facet: Facet, index: number) => {
-        this.sidebarMenuSections[facet.field] = { facet, index};
+        this.sidebarMenuSections[facet.field] = { facet, index };
         return {
           title: facet.name,
           expandable: facet.expandable,
@@ -132,7 +138,6 @@ export class AcademicAgeGroupComponent implements OnInit, OnChanges {
       const additionalFilters = [];
 
       if (!!filters) {
-
         if (!!filters.previousValue) {
           filters.previousValue.forEach((entry: any) => {
             if (filters.currentValue.indexOf(entry) === -1) {

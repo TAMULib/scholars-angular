@@ -190,7 +190,6 @@ export class DataAndAnalyticsComponent implements OnInit {
   }
 
   public onNavigateOrganization(params: Params, organizations: Individual[], index: number): void {
-    console.log(params)
     const selectedOrganizations: string[] = !!params.selectedOrganizations
       ? params.selectedOrganizations.split(',')
       : [];

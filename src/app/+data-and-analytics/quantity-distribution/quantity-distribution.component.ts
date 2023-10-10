@@ -76,6 +76,10 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
   }
 
   ngOnInit(): void {
+    if (isPlatformServer(this.platformId)) {
+      return;
+    }
+
     const menu: SidebarMenu = {
       sections: this.dataAndAnalyticsView.facets.map((facet: Facet, index: number) => {
         this.sidebarMenuSections[facet.field] = { facet, index};
@@ -85,17 +89,13 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
           collapsible: facet.collapsible,
           collapsed: facet.collapsed,
           useDialog: facet.useDialog,
-          action: this.dialog.facetEntriesDialog(facet.name, facet.field),
+          action: this.dialog.facetEntriesDialog(facet.name, facet.field, true, 1),
           items: [],
         };
       })
     };
 
     this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
-
-    if (isPlatformServer(this.platformId)) {
-      return;
-    }
 
     this.subscriptions.push(
       this.store.pipe(
@@ -196,7 +196,6 @@ export class QuantityDistributionComponent implements OnChanges, OnDestroy, OnIn
     const additionalFilters = [];
 
     if (!!filters) {
-
       if (!!filters.previousValue) {
         filters.previousValue.forEach((entry: any) => {
           if (filters.currentValue.indexOf(entry) === -1) {
