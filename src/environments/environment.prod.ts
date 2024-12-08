@@ -12,5 +12,10 @@ export const environment = {
     ERO_0000071: 'Software',
     selectedPublicationTag: 'UN SDG',
     tags: 'UN SDG'
-  }
+  },
+  suppressAside: [
+    'Publisher',
+    'External Organization',
+    'otherUniversity'
+  ]
 };

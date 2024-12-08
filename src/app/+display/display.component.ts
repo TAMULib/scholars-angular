@@ -5,6 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
 import { filter, switchMap, take, tap } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
 import { Individual } from '../core/model/discovery';
 import { DiscoveryView, DisplayTabSectionView, DisplayTabView, DisplayView, Filter } from '../core/model/view';
 import { DisplaySubsectionView, Side } from '../core/model/view/display-view';
@@ -270,24 +271,22 @@ export class DisplayComponent implements OnDestroy, OnInit {
     return displayView.rightScanTemplate && displayView.rightScanTemplate.length > 0;
   }
 
-  public showAsideLeft(displayView: DisplayView): boolean {
-    return this.showAside(displayView) && displayView.asideLocation === Side.LEFT;
+  public showAsideLeft(displayView: DisplayView, individual: Individual): boolean {
+    return this.showAside(displayView, individual) && displayView.asideLocation === Side.LEFT;
   }
 
   public showAsideRight(displayView: DisplayView, individual: Individual): boolean {
+    return this.showAside(displayView, individual) && displayView.asideLocation === Side.RIGHT;
+  }
+
+  public showAside(displayView: DisplayView, individual: Individual): boolean {
     const isExcluded: boolean = this.excludeAsideByIndividualType(individual)
 
-    return !isExcluded && this.showAside(displayView) && displayView.asideLocation === Side.RIGHT;
+    return !isExcluded && displayView.asideTemplate && displayView.asideTemplate.length > 0;
   }
 
   private excludeAsideByIndividualType(individual: Individual): boolean {
-    const excludeTypes: Array<String> = ['Publisher', 'External Organization', 'otherUniversity'];
-
-    return individual.type.some(type => excludeTypes.includes(type));
-  }
-
-  public showAside(displayView: DisplayView): boolean {
-    return displayView.asideTemplate && displayView.asideTemplate.length > 0;
+    return individual.type.some(type => environment.suppressAside.includes(type));
   }
 
   public getMainContentColSize(displayView: DisplayView): number {
