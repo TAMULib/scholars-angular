@@ -115,6 +115,20 @@
                 </div>
               </div>
 
+              <div class="container mb-1 selectedProfile" *ngIf="organization.people && organization.people.length > 0">
+                <button class="btn btn-primary pull-right downloadSelectedPeople" type="button" (click)="downloadSelectedPeople(organization)" value="">{{ 'DATA_AND_ANALYTICS.DOWNLOAD_SELECTED_PEOPLE' | translate }}</button>
+                <ul>
+                  <li *ngFor="let person of organization.people">
+                    <div class="form-check">
+                      <!--  (ngModelChange)="onSelectedProfile(person, organization)" -->
+                      <input type="checkbox" class="form-check-input" [(ngModel)]="person.selected" />
+                      <span class="font-weight-normal"> {{ person.label }} - {{ person.title }} </span>
+                    </div>
+                  </li>
+                </ul>
+                <input type="hidden" [value]="selectedPeople | json" name="selectedPeople" />
+              </div>
+
               <div *ngSwitchCase="'CONTAINER'">
                 <div [ngSwitch]="view.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">

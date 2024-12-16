@@ -7,6 +7,7 @@ import { Individual } from '../core/model/discovery';
 import { IndividualRepo } from '../core/model/discovery/repo/individual.repo';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../core/model/view';
 import { ContainerType } from '../core/model/view/data-and-analytics-view';
+import { RestService } from '../core/service/rest.service';
 import { AppState } from '../core/store';
 import { selectRouterQueryParamFilters, selectRouterQueryParams, selectRouterState } from '../core/store/router';
 import { selectAllResources, selectDisplayViewByTypes, selectResourceSelected } from '../core/store/sdr';
@@ -59,6 +60,8 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public others: Observable<Individual[]>;
 
+  public selectedPeople:any = [];
+
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
   }
@@ -68,6 +71,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private individualRepo: IndividualRepo,
+    private restService: RestService
   ) {
     this.labelSubject = new BehaviorSubject<string>('');
   }
@@ -174,6 +178,7 @@ export class DataAndAnalyticsComponent implements OnInit {
         this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));
       });
   }
+
 
   public getDataAndAnalyticsRouterLink(view: DataAndAnalyticsView): string[] {
     return ['/data-and-analytics', view.name];
@@ -283,4 +288,31 @@ export class DataAndAnalyticsComponent implements OnInit {
       .pipe(map((collection) => collection._embedded.individual as Individual[]));
   }
 
+  public downloadSelectedPeople(organization: any) {
+
+    const selectedPeople = organization.people.filter((person: any) => person.selected);
+    console.log(organization);
+    selectedPeople.forEach((person: any) => {
+      console.log(selectedPeople);
+      let link = '';
+      this.route.queryParams.subscribe((params) => {
+        link = params.export.toLowerCase().replace(/ /g, '_');
+      });
+      const updatedHref = organization._links[link].href.replace(organization.id, person.id);
+      this.restService.get<Blob>(updatedHref, {observe: 'response', responseType: 'blob' as 'json' }, false)
+      .pipe(take(1))
+      .subscribe((response: any) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = !!contentDisposition
+          ? contentDisposition.match(/^.*filename=(.*)$/)[1]
+          : `${person.label}.zip`;
+
+        const url = window.URL.createObjectURL(response.body);
+        const anchor = document.createElement('a');
+        anchor.download = filename;
+        anchor.href = url;
+        anchor.click();
+      });
+    });
+  }
 }
