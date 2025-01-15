@@ -23,7 +23,7 @@ export class FooterComponent implements OnInit {
 
   public isAuthenticated: Observable<boolean>;
 
-  public isAdmin: Observable<boolean>;
+  public isSuperAdmin: Observable<boolean>;
 
   public user: Observable<User>;
 
@@ -38,7 +38,7 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {
     this.isAuthenticated = this.store.pipe(select(selectIsAuthenticated));
-    this.isAdmin = this.store.pipe(select(selectHasRole(Role.ROLE_ADMIN)));
+    this.isSuperAdmin = this.store.pipe(select(selectHasRole(Role.ROLE_SUPER_ADMIN)));
     this.user = this.store.pipe(select(selectUser));
     this.footer = this.store.pipe(
       select(selectActiveThemeFooter),
