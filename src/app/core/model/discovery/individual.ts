@@ -5,4 +5,5 @@ export interface Individual extends SdrResource {
   readonly type: string[];
   readonly name?: string;
   readonly class?: string;
+  readonly people?: any[];
 }
