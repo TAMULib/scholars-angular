@@ -1,5 +1,5 @@
-<div class="home-main" *ngIf="home | async; let home">
-  <ngb-carousel *ngIf="showCarousel(home)">
+<div class="home-main" *ngIf="home | async; let home" aria-live="polite">
+  <ngb-carousel *ngIf="showCarousel(home)" aria-label="Main carousel showcasing heroes">
     <ng-template ngbSlide *ngFor="let hero of home.heroes">
       <div class="carousel-caption" [ngStyle]="getCarouselBackgroundImage(hero)">
         <div class="container h-100">
@@ -31,6 +31,7 @@
     </div>
   </div>
 </div>
+
 <div class="home-recent mt-2 mb-2" *ngIf="home | async; let home">
   <div class="container">
     <div class="row">
@@ -38,7 +39,7 @@
         <span class="gallery-info">{{ 'DASHBOARD.HOME.LATEST_PUBLICATIONS_TEXT' | translate:{organization: (organization|async)} }}</span>
       </div>
       <div class="col-md-8 my-auto text-center">
-        <scholars-recent-carousel></scholars-recent-carousel>
+        <scholars-recent-carousel aria-label="Recent publications carousel"></scholars-recent-carousel>
       </div>
       <div class="col-md-2 my-auto text-center">
         <span class="gallery-info">{{ 'DASHBOARD.HOME.CLICK_PUBLICATION_TEXT' | translate }}</span>
@@ -46,6 +47,7 @@
     </div>
   </div>
 </div>
+
 <div class="sustainable-development-goals mt-2 mb-4">
   <div class="container">
     <div class="row">
@@ -61,7 +63,7 @@
         </div>
       </div>
       <div class="col-md-9">
-        <scholars-sustainable-development-goals></scholars-sustainable-development-goals>
+        <scholars-sustainable-development-goals aria-label="Sustainable development goals section"></scholars-sustainable-development-goals>
       </div>
     </div>
   </div>
@@ -70,7 +72,12 @@
 <ng-template #homeSearchBox>
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-      <scholars-search-box [styles]="getSearchStyles() | async" [view]="discoveryView | async" placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}"></scholars-search-box>
+      <scholars-search-box 
+        aria-label="Search box" 
+        [styles]="getSearchStyles() | async" 
+        [view]="discoveryView | async" 
+        placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}">
+      </scholars-search-box>
     </div>
   </div>
 </ng-template>
@@ -78,9 +85,9 @@
 <ng-template #homeStats>
   <div class="row justify-content-center home-stats">
     <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 d-flex flex-row justify-content-center">
-      <scholars-stats-box label="People" classifier="Person"></scholars-stats-box>
-      <scholars-stats-box label="Organizations" classifier="Organization"></scholars-stats-box>
-      <scholars-stats-box label="Research" classifier="Document"></scholars-stats-box>
+      <scholars-stats-box label="People" classifier="Person" aria-label="People statistics"></scholars-stats-box>
+      <scholars-stats-box label="Organizations" classifier="Organization" aria-label="Organizations statistics"></scholars-stats-box>
+      <scholars-stats-box label="Research" classifier="Document" aria-label="Research statistics"></scholars-stats-box>
     </div>
   </div>
 </ng-template>
