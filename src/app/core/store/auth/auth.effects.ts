@@ -191,11 +191,11 @@ export class AuthEffects implements OnInitEffects {
     ofType(fromAuth.AuthActionTypes.GET_USER_FAILURE),
     withLatestFrom(this.store.select(selectRouterUrl)),
     map(([action, url]) => {
-      if (isPlatformBrowser(this.platformId)) {
-        this.store.dispatch(this.dialog.loginDialog());
-        this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
-        this.store.dispatch(this.alert.unauthorizedAlert());
-      }
+//      if (isPlatformBrowser(this.platformId)) {
+//        this.store.dispatch(this.dialog.loginDialog());
+//        this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
+//        this.store.dispatch(this.alert.unauthorizedAlert());
+//      }
     })
   ), { dispatch: false });
 

@@ -8,18 +8,18 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./+admin').then((m) => m.AdminModule),
-    canActivate: [AuthGuard],
+    canActivate: [],
     data: {
-      roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
+      roles: [],
       tags: [{ name: 'view', content: 'Scholars Administration' }],
     },
   },
   {
     path: 'data-and-analytics',
     loadChildren: () => import('./+data-and-analytics').then((m) => m.DataAndAnalyticsModule),
-    canActivate: [AuthGuard],
+    canActivate: [],
     data: {
-      roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
+      roles: [],
       tags: [{ name: 'view', content: 'Scholars Data and Analytics' }],
     },
   },

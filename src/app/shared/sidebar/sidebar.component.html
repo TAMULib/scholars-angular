@@ -52,7 +52,7 @@
             <span *ngSwitchCase="'ACTION'">
               <span tabindex="0" class="link" (click)="dispatchAction($event, item.action)" (keypress)="dispatchAction($event, item.action)">
                 <span *ngIf="item.selected" class="fa fa-close mr-2"></span>
-                <span>{{item.label }}</span>
+                <span>{{item.label}}</span>
               </span>
             </span>
 
@@ -66,7 +66,7 @@
             </span>
 
             <span *ngSwitchCase="'INFO'">
-              <span>{{item.label }}</span>
+              <span>{{item.label}}</span>
             </span>
 
           </li>

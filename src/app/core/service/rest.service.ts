@@ -33,6 +33,7 @@ export class RestService {
   public get<T>(url: string, options: any = {}, cache = true): Observable<T> {
     // tslint:disable-next-line:no-shadowed-variable
     return this.processRequest<T>(url, options, (url: string, options: any): any => {
+      console.log("DEBUG: processRequest url, options are: ", url, options);
       return this.http.get<T>(url, options);
     });
   }

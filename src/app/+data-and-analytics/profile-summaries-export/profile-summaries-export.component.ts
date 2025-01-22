@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,6 +37,9 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   public selectedExportView: BehaviorSubject<ExportView>;
 
+  // @todo this is an initial test, it needs to be changed to update dynamically such as when a different org is selected.
+  public people: Object[];
+
   private subscriptions: Subscription[];
 
   constructor(
@@ -46,6 +50,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.subscriptions = [];
+    this.people = [];
   }
 
   ngOnDestroy(): void {
@@ -92,28 +97,68 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
         this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
       })
     );
+
+    this.organization?.people?.forEach((person: any) => {
+      if (person?.id && person?.label && person?.title) {
+        this.people.push({
+          id: person.id,
+          label: person.label,
+          title: person.title,
+          selected: false
+        });
+      }
+    });
   }
 
   public getSelectedExportView(): Observable<ExportView> {
     return this.selectedExportView.asObservable();
   }
 
-  public download(organization: Individual, exportView: ExportView): void {
+  public download(exportView: ExportView): void {
     const link = exportView.name.toLowerCase().replace(/ /g, '_');
-    this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' }, false)
+
+    //const ids = [];
+    let ids = "";
+
+    this.people.forEach((person: any) => {
+      if (person?.id && person?.selected === true) {
+        //ids.push(person.id);
+        ids += person.id + ',';
+      }
+    });
+
+    if (ids.length) {
+      ids = ids.substring(0, ids.length - 1);
+    }
+
+    //const params = new HttpParams().set('ids', ids);
+    const params = new HttpParams({ fromObject: { ids } });
+
+    console.log("DEBUG: ids = ", ids);
+    console.log("DEBUG: link = ", link);
+    console.log("DEBUG: href = ", this.organization._links[link].href);
+    // @todo this will require IndividualExportController, @GetMapping("/individual/{id}/export"), be updated with something like @RequestParam(value = "people", required = false) List<String> people.
+    // There are potential problems because of the size of the ids and a POST may be needed.
+
+    this.rest.get<Blob>('http://localhost:9000/individual/all/export', { observe: 'response', responseType: 'blob' as 'json', params }, false)
+    //this.rest.get<Blob>(this.organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' }, false)
       .pipe(take(1))
       .subscribe((response: any) => {
+        console.log("DEBUG: response is ", response);
+        console.log("DEBUG: response type is ", response?.type);
+        console.log("DEBUG: response body type is ", response?.body?.type);
+        /*
         const contentDisposition = response.headers.get('Content-Disposition');
         const filename = !!contentDisposition
           ? contentDisposition.match(/^.*filename=(.*)$/)[1]
           : 'export.zip';
-
 
         const url = window.URL.createObjectURL(response.body);
         const anchor = document.createElement('a');
         anchor.download = filename;
         anchor.href = url;
         anchor.click();
+        */
       });
   }
 

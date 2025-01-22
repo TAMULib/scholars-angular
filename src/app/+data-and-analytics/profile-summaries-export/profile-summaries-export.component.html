@@ -1,3 +1,15 @@
 <div class="container mb-1" *ngIf="getSelectedExportView() | async; let selected">
-  <button class="btn btn-primary pull-right" (click)="download(organization, selected)">{{ 'DATA_AND_ANALYTICS.DOWNLOAD' | translate }}</button>
+  <!-- TODO add form structure, add for="" attributes, associate span with label, and make sure download button (and do it as a submit button) is part of the form for accessibility. -->
+  <div class="container mb-1 selectedProfile" *ngIf="organization?.people?.length > 0">
+    <ul>
+      <li *ngFor="let person of people">
+        <div class="form-check">
+          <input name="person-{{ person.id }}" type="checkbox" class="form-check-input" value="{{ person.id }}" [(ngModel)]="person.selected" />
+          <label class="font-weight-normal" for="person-{{ person.id }}">{{ person.label }} - {{ person.title }}</label>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <button class="btn btn-primary pull-right" (click)="download(selected)">{{ 'DATA_AND_ANALYTICS.DOWNLOAD' | translate }}</button>
 </div>
