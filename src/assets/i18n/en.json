@@ -107,6 +107,7 @@
         }
       },
       "COINVESTIGATOR": {
+        "CLICK_TO_VIEW_PROFILE" : "Click to view profile",
         "LABEL": "Co-investigator Network",
         "ICON_ALT": "Co-investigator network icon",
         "NOTE": "Note: This information is based solely on grants that have been loaded into the VIVO system. This may only be a small sample of the person's total work.",

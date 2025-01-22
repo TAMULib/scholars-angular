@@ -1,13 +1,13 @@
 <div *ngIf="individual | async; let individual" [@fadeIn]>
   <div class="float-right">
     <div class="text-nowrap" *ngIf="individual.researcherOn !== undefined">
-      <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.ICON_ALT' | translate }}n">
+      <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.ICON_ALT' | translate }}">
       <span class="ml-2">
-        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</a>
+        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']" aria-label="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</a>
       </span>
     </div>
   </div>
-  <div class="h1"><a href="display/{{individual.id}}">{{individual.name}}</a></div>
+  <div class="h1"><a href="display/{{individual.id}}" aria-label="{{ 'VISUALIZATION.NETWORK.CLICK_TO_VIEW_PROFILE' | translate }}">{{individual.name}}</a></div>
   <div class="h2">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</div>
   <div *ngIf="dataNetwork | async; let dataNetwork" class="mb-4">
     <scholars-chord-diagram
@@ -15,7 +15,8 @@
       sourceTooltipKey="VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.SOURCE"
       targetTooltipKey="VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.TARGET"
       ribbonTooltipKey="VISUALIZATION.NETWORK.COAUTHOR.TOOLTIP.RIBBON"
-    ></scholars-chord-diagram>
+      aria-live="polite"
+      ></scholars-chord-diagram>
     <div class="row">
       <div class="col">
         <div class="alert alert-warning" role="alert">
@@ -29,7 +30,7 @@
         <div class="card">
           <div class="card-header">{{ 'VISUALIZATION.NETWORK.COAUTHOR.OBJECTS_PER_YEAR' | translate }}</div>
           <div class="card-body">
-            <table class="table table-sm">
+            <table class="table table-sm" aria-labelledby="objectsPerYearTable">
               <thead>
                 <tr>
                   <th scope="col">{{ 'VISUALIZATION.COMMON.YEAR' | translate }}</th>
@@ -50,7 +51,7 @@
         <div class="card">
           <div class="card-header">{{ 'VISUALIZATION.NETWORK.COAUTHOR.COPARTICIPANT' | translate }}</div>
           <div class="card-body">
-            <table class="table table-sm">
+            <table class="table table-sm" aria-labelledby="coparticipantTable">
               <thead>
                 <tr>
                   <th scope="col">{{ 'VISUALIZATION.NETWORK.COAUTHOR.PARTICIPANT' | translate }}</th>
