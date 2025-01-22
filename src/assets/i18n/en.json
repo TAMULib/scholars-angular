@@ -186,6 +186,9 @@
         "SUBMIT": "Sign Up"
       },
       "USER_EDIT": {
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "EMAIL": "Email",
         "ROLE": "Role",
         "ACTIVE": "Active",
         "ENABLED": "Enabled",
@@ -202,7 +205,16 @@
       "SEARCH_TIPS": {
         "ARIA_LABELLED_BY": "Search Tips dialog",
         "TITLE": "Search Tips",
-        "CANCEL": "Close"
+        "CANCEL": "Close",
+        "CASE_INSENSITIVE": "Searches are not case-sensitive",
+        "LOGIC": "Type keywords using AND or OR logic (AND or OR must be capitalized)",
+        "LOGIC_EXAMPLE_1": "e.g., nutrition AND protein",
+        "LOGIC_EXAMPLE_2": "e.g., nutrition OR protein",
+        "QUOTATION": "Type your phrase with double quotation marks",
+        "QUOTATION_EXAMPLE_1": "e.g., \"glucose absorption\"",
+        "QUOTATION_EXAMPLE_2": "e.g., \"glucose absorption\" AND nutrition",
+        "WILDCARD": "Use wildcard * character to search variations",
+        "WILDCARD_EXAMPLE": "e.g., bio*"
       },
       "VALIDATION": {
         "REQUIRED": "{{field}} is required",
