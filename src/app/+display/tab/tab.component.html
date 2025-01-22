@@ -1,7 +1,12 @@
-<div *ngIf="individual | async; let individual" class="tab-content">
-  <div *ngIf="tab | async; let tab" class="tab-pane active">
+<div *ngIf="individual | async; let individual" class="tab-content" role="tabpanel" aria-live="polite">
+  <div *ngIf="tab | async; let tab" class="tab-pane active" [attr.aria-labelledby]="tab.id + '-tab'" role="tabpanel">
     <div class="ml-3 mr-3 mt-3 card" *ngFor="let section of getSectionsToShow(tab, individual)">
-      <scholars-section [section]="section" [display]="display" [individual]="individual"></scholars-section>
+      <scholars-section 
+        [section]="section" 
+        [display]="display" 
+        [individual]="individual" 
+        aria-labelledby="{{section.id}}-section">
+      </scholars-section>
     </div>
   </div>
 </div>

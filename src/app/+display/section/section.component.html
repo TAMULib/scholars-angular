@@ -2,14 +2,14 @@
   <span>{{section.name}}</span>
   <div class="float-right" *ngIf="section.shared">
     <div class="embed-dropdown d-inline-block" placement="bottom-right" ngbDropdown>
-      <i class="fa fa-lg fa-share-alt" aria-hidden="true" ngbDropdownToggle></i>
+      <i class="fa fa-lg fa-share-alt" aria-hidden="true" ngbDropdownToggle aria-label="{{ 'DISPLAY.EMBEDDABLE.SHARE' | translate }}"></i>
       <div class="dropdown-menu" ngbDropdownMenu>
         <div class="form-group col-12">
-          <label>{{ 'DISPLAY.EMBEDDABLE.LABEL' | translate }}</label>
+          <label for="embedCode">{{ 'DISPLAY.EMBEDDABLE.LABEL' | translate }}</label>
           <div class="input-group">
-            <textarea class="form-control" type="text" rows="4" ng-bind-html [value]="getEmbedSnippet()" #embedCode></textarea>
+            <textarea class="form-control" type="text" rows="4" id="embedCode" ng-bind-html [value]="getEmbedSnippet()" #embedCode></textarea>
             <span class="input-group-btn ml-2">
-              <i class="fa fa-lg fa-copy" (click)="copyToClipBoard(embedCode, tooltip)" triggers="click" placement="top-left" ngbTooltip="{{ 'DISPLAY.EMBEDDABLE.COPIED' | translate }}" #tooltip="ngbTooltip"></i>
+              <i class="fa fa-lg fa-copy" (click)="copyToClipBoard(embedCode, tooltip)" triggers="click" placement="top-left" ngbTooltip="{{ 'DISPLAY.EMBEDDABLE.COPIED' | translate }}" #tooltip="ngbTooltip" aria-label="{{ 'DISPLAY.EMBEDDABLE.COPY_BUTTON' | translate }}"></i>
             </span>
           </div>
         </div>
@@ -22,10 +22,10 @@
   <div *ngIf="section.paginated">
     <div *ngIf="page | async">
       <div *ngIf="getResources() | async as resources">
-        <scholars-pagination *ngIf="resources.length > 0" [page]="page" [pageSizeOptions]="pageSizeOptions" [queryPrefix]="section.name">
+        <scholars-pagination *ngIf="resources.length > 0" [page]="page" [pageSizeOptions]="pageSizeOptions" [queryPrefix]="section.name" aria-live="polite">
           <div class="mb-3">
-            <ul class="list-group">
-              <li class="list-group-item border-0" *ngFor="let resource of getResourcesPage(resources, section.sort, page | async)">
+            <ul class="list-group" role="list" aria-labelledby="resource-list-label">
+              <li class="list-group-item border-0" *ngFor="let resource of getResourcesPage(resources, section.sort, page | async)" role="listitem">
                 <div [innerHtml]="section.templateFunction(resource) | safeHtml"></div>
               </li>
             </ul>

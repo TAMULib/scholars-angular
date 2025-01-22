@@ -81,6 +81,7 @@
   },
   "DISPLAY": {
     "EMBEDDABLE": {
+      "SHARE": "Share",
       "LABEL": "Embeddable",
       "COPIED": "Embeddable snippet copied!"
     }

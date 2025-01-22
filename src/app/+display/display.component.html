@@ -2,7 +2,7 @@
   <div class="container pt-2">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12" *ngIf="discoveryView | async; let discoveryView">
-        <scholars-search-box [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}"></scholars-search-box>
+        <scholars-search-box [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}" aria-label="Search box for {{discoveryView.name}} view"></scholars-search-box>
       </div>
     </div>
   </div>
@@ -10,7 +10,7 @@
 <div *ngIf="ready | async" [@fadeIn]>
   <div class="container" *ngIf="individual | async; let individual">
     <div *ngIf="displayView | async; let displayView" class="row">
-      <div *ngIf="showAsideLeft(displayView, individual)" class="d-none d-lg-block col-lg-3 p-0">
+      <div *ngIf="showAsideLeft(displayView, individual)" class="d-none d-lg-block col-lg-3 p-0" role="complementary">
         <ng-container *ngTemplateOutlet="aside"></ng-container>
       </div>
       <div [ngClass]="{ 'col-lg-9': showAside(displayView, individual), 'col-lg-12': !showAside(displayView, individual) }">
@@ -21,21 +21,21 @@
         </div>
         <div class="row mt-4 mb-4">
           <div class="col-12">
-            <ul class="nav" [ngClass]="{ 'nav-tabs': !isMobile(windowDimensions | async), 'flex-column nav-pills': isMobile(windowDimensions | async) }">
+            <ul class="nav" [ngClass]="{ 'nav-tabs': !isMobile(windowDimensions | async), 'flex-column nav-pills': isMobile(windowDimensions | async) }" role="tablist">
               <li class="nav-item" *ngFor="let tab of getTabsToShow(displayView.tabs, individual)">
-                <a class="nav-link" [routerLink]="getDisplayViewTabRoute(displayView, tab)" [routerLinkActive]="['active']">{{tab.name}}</a>
+                <a class="nav-link" [routerLink]="getDisplayViewTabRoute(displayView, tab)" [routerLinkActive]="['active']" role="tab" [attr.aria-controls]="tab.name">{{tab.name}}</a>
               </li>
             </ul>
             <router-outlet></router-outlet>
           </div>
         </div>
       </div>
-      <div *ngIf="showAsideRight(displayView, individual)" class="d-none d-lg-block col-lg-3 p-0">
+      <div *ngIf="showAsideRight(displayView, individual)" class="d-none d-lg-block col-lg-3 p-0" role="complementary">
         <ng-container *ngTemplateOutlet="aside"></ng-container>
       </div>
       <ng-template #aside>
         <div [innerHtml]="displayView.asideTemplateFunction(individual) | safeHtml"></div>
-        <scholars-youtube *ngIf="individual.youtube" [url]="individual.youtube"></scholars-youtube>
+        <scholars-youtube *ngIf="individual.youtube" [url]="individual.youtube" aria-label="YouTube video"></scholars-youtube>
       </ng-template>
     </div>
   </div>
