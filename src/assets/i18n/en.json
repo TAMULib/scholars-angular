@@ -81,6 +81,10 @@
     "EMBEDDABLE": {
       "LABEL": "Embeddable",
       "COPIED": "Embeddable snippet copied!"
+    },
+    "TAB": {
+      "NO_CONTENT_TITLE": "No Information",
+      "NO_CONTENT_TEXT": "There is no information to display yet."
     }
   },
   "VISUALIZATION": {
