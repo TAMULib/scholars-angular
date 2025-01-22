@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-sm navbar-dark" *ngIf="navbar | async; let navbar">
   <div class="container">
-    <a class="navbar-brand" href="{{navbar.brandUri}}">
-      <img *ngIf="navbar.logoUri" src="{{navbar.logoUri}}" alt="{{ 'HEADER.NAVBAR.LOGO_ALT' | translate }}">
+    <a class="navbar-brand" href="{{navbar.brandUri}}" aria-label="Go to homepage">
+      <img *ngIf="navbar.logoUri" src="{{navbar.logoUri}}" alt="{{ 'HEADER.NAVBAR.LOGO_ALT' | translate }}" aria-hidden="false">
       <span class="brand-title">{{navbar.brandText}}</span>
     </a>
-    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation menu">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div [ngbCollapse]="isNavbarCollapsed | async" class="collapse navbar-collapse justify-content-end" [ngClass]="{'expand': (isNavbarExpanded | async)}" id="navbar">
+    <div [ngbCollapse]="isNavbarCollapsed | async" class="collapse navbar-collapse justify-content-end" [ngClass]="{'expand': (isNavbarExpanded | async)}" id="navbar" aria-live="polite">
       <ul class="navbar-nav">
         <li class="nav-item" *ngFor="let link of navbar.links">
-          <a class="nav-link" href="{{link.uri}}">{{link.label}}</a>
+          <a class="nav-link" href="{{link.uri}}" [attr.aria-label]="link.label">{{link.label}}</a>
         </li>
       </ul>
     </div>
