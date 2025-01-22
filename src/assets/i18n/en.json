@@ -72,7 +72,8 @@
   },
   "DIRECTORY": {
     "ALL": "All",
-    "EXPORT": "Export Directory"
+    "EXPORT": "Export Directory",
+    "INDEX" : "Directory Index"
   },
   "DISCOVERY": {
     "TITLE": "Discovery",
@@ -248,7 +249,10 @@
       "PLACEHOLDER": "Search...",
       "VIEW_PLACEHOLDER": "Search {{view}}...",
       "ADVANCED_SEARCH": "Advanced Search",
-      "SEARCH_TIPS": "Search Tips"
+      "SEARCH_TIPS": "Search Tips",
+      "CLEAR_FILTER": "Clear filter",
+      "CLEAR_ALL_FILTERS": "Clear all filters"
+
     },
     "SIDEBAR": {
       "MENU": "Menu",

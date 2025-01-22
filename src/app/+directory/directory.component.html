@@ -2,20 +2,20 @@
   <div class="container pt-2">
     <div class="row justify-content-center" *ngIf="directoryView | async; let directoryView">
       <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12" *ngIf="discoveryView | async; let discoveryView">
-        <scholars-search-box [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}"></scholars-search-box>
+        <scholars-search-box [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}" aria-label="{{ 'SEARCH_BOX.PLACEHOLDER' | translate: {view:discoveryView.name} }}"></scholars-search-box>
       </div>
     </div>
   </div>
 </div>
-<scholars-sidebar *ngIf="directoryView | async; let directoryView">
+<scholars-sidebar *ngIf="directoryView | async; let directoryView" role="complementary" aria-labelledby="sidebar-title">
   <div class="container mt-2" *ngIf="queryParams | async; let queryParams">
     <div class="headers-row row flex-column-reverse flex-md-row">
       <div class="col-md-8">
-        <span class="h3 text-primary">{{ directoryView.name }}</span>
+        <span id="sidebar-title" class="h3 text-primary">{{ directoryView.name }}</span>
       </div>
       <div class="col-md-4 text-right">
         <span *ngIf="hasExport(directoryView)" class="column-export">
-          <a [href]="getDirectoryExportUrl(queryParams, directoryView)" download class="btn">
+          <a [href]="getDirectoryExportUrl(queryParams, directoryView)" download class="btn" aria-label="{{ 'DIRECTORY.EXPORT' | translate }}">
             <span class="fa fa-share" aria-hidden="true"></span>
             <span>{{ 'DIRECTORY.EXPORT' | translate }}</span>
           </a>
@@ -27,26 +27,26 @@
         <span *ngIf="showFilter(directoryView, filter)">
           <span class="mr-1">{{getFilterField(directoryView, filter) | formalize}}:</span>
           <span class="mr-2">{{getFilterValue(directoryView, filter) | formalize}}</span>
-          <a class="fa fa-close" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsRemovingFilter(queryParams, filter)"></a>
+          <a class="fa fa-close" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsRemovingFilter(queryParams, filter)" aria-label="{{ 'CLEAR_FILTER' | translate }}"></a>
         </span>
       </span>
       <span *ngIf="showClearFilters(directoryView, filters)" class="badge badge-light p-2 mr-2 mb-2">
-        <a [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsClearingFilters(queryParams, directoryView)">Clear</a>
+        <a [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsClearingFilters(queryParams, directoryView)" aria-label="{{ 'CLEAR_ALL_FILTERS' | translate }}">Clear</a>
       </span>
     </div>
-    <div class="index">
-      <a class="option" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsResetting(queryParams, directoryView)">
+    <div class="index" role="navigation" aria-label="{{ 'DIRECTORY.INDEX' | translate }}">
+      <a class="option" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsResetting(queryParams, directoryView)" aria-label="{{ 'DIRECTORY.ALL' | translate }}">
         <span *ngIf="isActive(directoryView, queryParams, 'All')" class="fa fa-caret-right mr-1"></span>
         <span>{{ 'DIRECTORY.ALL' | translate }}</span>
       </a>
       <ng-template ngFor let-option [ngForOf]="directoryView.index.options" [ngForTrackBy]="trackByOption">
-        <a class="option" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsWithOption(queryParams, directoryView, option)">
+        <a class="option" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsWithOption(queryParams, directoryView, option)" aria-label="{{ option }}">
           <span *ngIf="isActive(directoryView, queryParams, option)" class="fa fa-caret-right mr-1"></span>
           <span>{{option}}</span>
         </a>
       </ng-template>
     </div>
-    <scholars-pagination [page]="page" [ngSwitch]="directoryView.layout" [pageSizeOptionsType]="'list'">
+    <scholars-pagination [page]="page" [ngSwitch]="directoryView.layout" [pageSizeOptionsType]="'list'" aria-live="polite">
       <scholars-grid-view *ngSwitchCase="'GRID'" [view]="directoryView" [resources]="documents | async" [loading]="loading | async"></scholars-grid-view>
       <scholars-list-view *ngSwitchCase="'LIST'" [view]="directoryView" [resources]="documents | async" [loading]="loading | async"></scholars-list-view>
     </scholars-pagination>
