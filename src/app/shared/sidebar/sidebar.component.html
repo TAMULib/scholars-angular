@@ -5,17 +5,17 @@
 
       <div *ngIf="isBrowserRendered()" tabindex="0" class="card-header font-weight-bold {{section.classes}}" (click)="onSelectSection(section, sectionIndex)" (keyup.enter)="onSelectSection(section, sectionIndex)" role="button" [attr.aria-expanded]="!section.collapsed" [attr.aria-controls]="'section-' + sectionIndex">
         <span>{{section.title}}</span>
-        <span *ngIf="section.collapsible" class="section-collapse float-right fa" [ngClass]="{ 'fa-caret-right': section.collapsed, 'fa-caret-down': !section.collapsed }" aria-hidden="true" [attr.aria-label]="(section.collapsed ? 'SHARED.SIDEBAR.SECTION.ARIA_LABEL_EXPAND' : 'SHARED.SIDEBAR.SECTION.ARIA_LABEL_COLLAPSE') | translate:{ label: section.title }"></span>
+        <span *ngIf="section.collapsible" class="section-collapse float-right fa" [ngClass]="{ 'fa-caret-right': section.collapsed, 'fa-caret-down': !section.collapsed }" aria-hidden="true"></span>
       </div>
 
-      <a *ngIf="isServerRendered()" tabindex="0" class="card-header font-weight-bold {{section.classes}}" [routerLink]="getRouterLink()" [queryParams]="getQueryParams(section, url | async)" role="link" [attr.aria-labelledby]="'section-' + sectionIndex">
+      <a *ngIf="isServerRendered()" tabindex="0" class="card-header font-weight-bold {{section.classes}}" [routerLink]="getRouterLink()" [queryParams]="getQueryParams(section, url | async)" role="link">
         <span>{{section.title}}</span>
-        <span *ngIf="section.collapsible" class="section-collapse float-right fa" [ngClass]="{ 'fa-caret-right': section.collapsed, 'fa-caret-down': !section.collapsed }" aria-hidden="true" [attr.aria-label]="(section.collapsed ? 'SHARED.SIDEBAR.SECTION.ARIA_LABEL_EXPAND' : 'SHARED.SIDEBAR.SECTION.ARIA_LABEL_COLLAPSE') | translate:{ label: section.title }"></span>
+        <span *ngIf="section.collapsible" class="section-collapse float-right fa" [ngClass]="{ 'fa-caret-right': section.collapsed, 'fa-caret-down': !section.collapsed }" aria-hidden="true"></span>
       </a>
 
       <div id="section-{{sectionIndex}}" class="card-item" [ngbCollapse]="section.collapsed">
         <ul class="list-group list-group-flush" *ngFor="let item of section.items">
-          <li [ngSwitch]="item.type" class="list-group-item {{item.classes}}" [ngClass]="{'list-group-item-action link': item.type !== 'INFO'}" role="link" [attr.aria-label]="'SHARED.SIDEBAR.LINK.ARIA_LABEL' | translate">
+          <li [ngSwitch]="item.type" class="list-group-item {{item.classes}}" [ngClass]="{'list-group-item-action link': item.type !== 'INFO'}" role="link">
 
             <span *ngSwitchCase="'FACET'" [ngSwitch]="item.facet.type">
               <span *ngSwitchCase="'STRING'" class="d-flex flex-nowrap justify-content-between">
