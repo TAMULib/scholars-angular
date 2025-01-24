@@ -10,23 +10,23 @@
           <span class="nav-link menu-action" (click)="toggleSidebar()" role="button" [attr.aria-label]="(isSidebarExpanded | async) ? ('SHARED.SIDEBAR.BACK' | translate) : ('SHARED.SIDEBAR.MENU' | translate)">{{ ((isSidebarExpanded | async) ? 'SHARED.SIDEBAR.BACK' : 'SHARED.SIDEBAR.MENU') | translate }}</span>
         </li>
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" [routerLink]="['/']" [attr.aria-label]="'SHARED.NAVIGATION.HOME' | translate">{{ 'SHARED.NAVIGATION.HOME' | translate }}</a>
+          <a class="nav-link" [routerLink]="['/']">{{ 'SHARED.NAVIGATION.HOME' | translate }}</a>
         </li>
         <!-- NOTE: can not use routerLinkActive here due to the changes in the query parameters -->
         <li class="nav-item" *ngFor="let directoryView of directoryViews" [class.active]="isActive(directoryView, url | async)">
-          <a class="nav-link" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParams(directoryView)" [attr.aria-label]="directoryView.name">{{ directoryView.name }}</a>
+          <a class="nav-link" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParams(directoryView)">{{ directoryView.name }}</a>
         </li>
         <!-- <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">
           <a class="nav-link" [routerLink]="['/about']">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="https://scholars.library.tamu.edu/vivo_editor/pages/about_scholars/" [attr.aria-label]="'SHARED.NAVIGATION.ABOUT' | translate">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
+          <a class="nav-link" href="https://scholars.library.tamu.edu/vivo_editor/pages/about_scholars/">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
         </li>
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" *ngIf="(isAdmin | async) === true">
-          <a class="nav-link" [routerLink]="['/data-and-analytics']" [attr.aria-label]="'SHARED.NAVIGATION.DATA_AND_ANALYTICS' | translate">{{ 'SHARED.NAVIGATION.DATA_AND_ANALYTICS' | translate }}</a>
+          <a class="nav-link" [routerLink]="['/data-and-analytics']">{{ 'SHARED.NAVIGATION.DATA_AND_ANALYTICS' | translate }}</a>
         </li>
         <li *ngIf="vivoEditorUrl" class="nav-item d-sm-none">
-          <a class="nav-link edit-profile-action" [href]="vivoEditorUrl" target="_blank" [attr.aria-label]="'SHARED.NAVIGATION.EDIT_PROFILE' | translate">
+          <a class="nav-link edit-profile-action" [href]="vivoEditorUrl" target="_blank">
             <span class="fa fa-pencil-square-o" aria-hidden="true"></span>
             <span>{{ 'SHARED.NAVIGATION.EDIT_PROFILE' | translate }}</span>
           </a>

@@ -2,11 +2,11 @@
   <ul class="list-inline text-center" *ngIf="footer | async; let footer">
     <li class="list-inline-item"><span>{{footer.copyright}}</span></li>
     <li class="list-inline-item"><span aria-hidden="true">|</span></li>
-    <li class="list-inline-item"><a href="https://scholars.library.tamu.edu/vivo_editor/pages/terms_scholars" [attr.aria-label]="'FOOTER.COPYRIGHT.TERMS' | translate">{{ 'FOOTER.COPYRIGHT.TERMS' | translate }}</a></li>
+    <li class="list-inline-item"><a href="https://scholars.library.tamu.edu/vivo_editor/pages/terms_scholars">{{ 'FOOTER.COPYRIGHT.TERMS' | translate }}</a></li>
     <li class="list-inline-item"><span aria-hidden="true">|</span></li>
-    <li class="list-inline-item"><a href="https://vivo.lyrasis.org/" [attr.aria-label]="'FOOTER.COPYRIGHT.POWERED_BY' | translate">{{ 'FOOTER.COPYRIGHT.POWERED_BY' | translate }}</a></li>
+    <li class="list-inline-item"><a href="https://vivo.lyrasis.org/">{{ 'FOOTER.COPYRIGHT.POWERED_BY' | translate }}</a></li>
     <li class="list-inline-item"><span aria-hidden="true">-</span></li>
-    <li class="list-inline-item"><a href="https://github.com/TAMULib/scholars-discovery" [attr.aria-label]="'FOOTER.COPYRIGHT.SCHOLARS_DISCOVERY' | translate">{{ 'FOOTER.COPYRIGHT.SCHOLARS_DISCOVERY' | translate }}</a></li>
+    <li class="list-inline-item"><a href="https://github.com/TAMULib/scholars-discovery">{{ 'FOOTER.COPYRIGHT.SCHOLARS_DISCOVERY' | translate }}</a></li>
   </ul>
   <!-- <ul class="list-inline text-center">
     <li class="list-inline-item"><span>{{ 'FOOTER.COPYRIGHT.DATE_UPDATED' | translate:{date: (updated | date:'medium')} }}</span></li>

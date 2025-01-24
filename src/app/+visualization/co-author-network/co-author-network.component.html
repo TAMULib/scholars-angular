@@ -3,7 +3,7 @@
     <div class="text-nowrap" *ngIf="individual.researcherOn !== undefined">
       <img src="assets/images/co_investigator_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.ICON_ALT' | translate }}">
       <span class="ml-2">
-        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']" [attr.aria-label]="'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</a>
+        <a [routerLink]="['/visualization', individual.id, 'Co-investigator Network']">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</a>
       </span>
     </div>
   </div>

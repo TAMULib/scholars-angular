@@ -10,7 +10,7 @@
     <div [ngbCollapse]="isNavbarCollapsed | async" class="collapse navbar-collapse justify-content-end" [ngClass]="{'expand': (isNavbarExpanded | async)}" id="navbar" aria-live="polite">
       <ul class="navbar-nav">
         <li class="nav-item" *ngFor="let link of navbar.links">
-          <a class="nav-link" href="{{link.uri}}" [attr.aria-label]="link.label">{{link.label}}</a>
+          <a class="nav-link" href="{{link.uri}}">{{link.label}}</a>
         </li>
       </ul>
     </div>

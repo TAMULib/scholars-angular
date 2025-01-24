@@ -3,7 +3,7 @@
     <div class="text-nowrap" *ngIf="individual.publications !== undefined">
       <img src="assets/images/co_author_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COAUTHOR.ICON_ALT' | translate }}">
       <span class="ml-2">
-        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']" [attr.aria-label]="'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</a>
+        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</a>
       </span>
     </div>
   </div>
