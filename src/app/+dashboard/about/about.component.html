@@ -2,14 +2,14 @@
   <div class="container pt-2">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-        <scholars-search-box [view]="discoveryView | async" placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}"></scholars-search-box>
+        <scholars-search-box [view]="discoveryView | async" placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}" aria-label="Search Scholars"></scholars-search-box>
       </div>
     </div>
   </div>
 </div>
 
 <div class="container mt-2">
-  <h3 class="text-primary">{{ 'DASHBOARD.ABOUT.TITLE' | translate }}</h3>
+  <h3 class="text-primary" id="about-title">{{ 'DASHBOARD.ABOUT.TITLE' | translate }}</h3>
   <p>Scholars@TAMU is a profile system that hosts searchable expertise for faculty and TAMU organizations by gathering data from institution-level/enterprise systems,
     publicly available research data (e.g., grants and publications), and other authoritative sources. The data is compiled into a profile that you can edit to best represent your
     scholarship and expertise.This system helps to:
@@ -22,9 +22,9 @@
 
   <p><strong>Information Sheets</strong></p>
   <ul>
-    <li><a href="https://scholars.library.tamu.edu/pdf/Scholars%20Admin%20Info%20Sheet.pdf">Benefits for Administrators</a></li>
-    <li><a href="https://scholars.library.tamu.edu/pdf/Scholars%20Faculty%20Info%20Sheet.pdf">Benefits for Faculty</a></li>
-    <li><a href="https://scholars.library.tamu.edu/pdf/infoSheet_ScholarsVersion.pdf">Enhanced Features for Scholars@TAMU (Updates of September 2019)</a></li>
+    <li><a href="https://scholars.library.tamu.edu/pdf/Scholars%20Admin%20Info%20Sheet.pdf" target="_blank" rel="noopener noreferrer" aria-label="Benefits for Administrators PDF">Benefits for Administrators</a></li>
+    <li><a href="https://scholars.library.tamu.edu/pdf/Scholars%20Faculty%20Info%20Sheet.pdf" target="_blank" rel="noopener noreferrer" aria-label="Benefits for Faculty PDF">Benefits for Faculty</a></li>
+    <li><a href="https://scholars.library.tamu.edu/pdf/infoSheet_ScholarsVersion.pdf" target="_blank" rel="noopener noreferrer" aria-label="Enhanced Features for Scholars@TAMU PDF">Enhanced Features for Scholars@TAMU (Updates of September 2019)</a></li>
   </ul>
 
   <div id="v2">
@@ -59,7 +59,7 @@
   </div>
   <p>The Scholars@TAMU team continue to provide a system of aggregate services, outreach and training to the TAMU community, add data to profiles, and explore new features for Scholars@TAMU as we try to meet the diverse needs of the Texas A&amp;M University scholarly community.</p>
 
-  <span class="h3 text-primary">{{ 'DASHBOARD.ABOUT.NEW_SCHOLARS_TITLE' | translate }}</span>
+  <span class="h3 text-primary" id="new-scholars-title">{{ 'DASHBOARD.ABOUT.NEW_SCHOLARS_TITLE' | translate }}</span>
 
   <p><strong>Manage Your Profile</strong></p>
 
@@ -68,9 +68,9 @@
     We request your participation to update your profile and improve its accuracy.
   </p>
   <ul>
-    <li><a href="https://scholars.library.tamu.edu/howto.php">Profile Information</a></li>
-    <li><a href="https://scholars.library.tamu.edu/faq.php">FAQ</a></li>
-    <li><a href="https://scholars.library.tamu.edu/contact.php">Contact Us</a></li>
+    <li><a href="https://scholars.library.tamu.edu/howto.php" aria-label="Profile Information Page">Profile Information</a></li>
+    <li><a href="https://scholars.library.tamu.edu/faq.php" aria-label="Frequently Asked Questions">FAQ</a></li>
+    <li><a href="https://scholars.library.tamu.edu/contact.php" aria-label="Contact Us Page">Contact Us</a></li>
   </ul>
 
   <p><strong>Explore Scholars@TAMU</strong></p>
@@ -106,25 +106,25 @@
 
   <span class="h3 text-primary">{{ 'DASHBOARD.ABOUT.ABOUT_PROJECT' | translate }}</span>
 
-  <p>Scholars@TAMU is a system provided by the&#160;<a href="https://library.tamu.edu">Texas A&amp;M University Libraries</a>.
-    It is an implementation of the open-source&#160;<a href="http://www.vivoweb.org/info/about-vivo">VIVO</a>&#160;networking tool,
+  <p>Scholars@TAMU is a system provided by the&#160;<a href="https://library.tamu.edu" target="_blank" rel="noopener noreferrer">Texas A&amp;M University Libraries</a>.
+    It is an implementation of the open-source&#160;<a href="http://www.vivoweb.org/info/about-vivo" target="_blank" rel="noopener noreferrer">VIVO</a>&#160;networking tool,
     developed at&#160;<a href="http://vivo.cornell.edu/about">Cornell University</a>.
-    If you have further questions, please see our&#160;<a href="httsp://scholars.library.tamu.edu/faq.php">FAQ</a>&#160;or&#160;
+    If you have further questions, please see our&#160;<a href="httsp://scholars.library.tamu.edu/faq.php" target="_blank" rel="noopener noreferrer">FAQ</a>&#160;or&#160;
     <a href="https://scholars.library.tamu.edu/contact.php">contact the team</a>.
   </p>
 
   <p><strong>The Team</strong></p>
   <ul class="user-icon">
-    <li><i class='fa fa-user mr-1'></i><a href="display/nf489b17d">Dr. Bruce Herbert</a>, Director, Office of Scholarly Communications</li>
-    <li><i class='fa fa-user mr-1'></i><a href="display/nbef1f2f3">Dr. Dong Joon Lee</a>, Researcher Information Systems Librarian, Office of Scholarly Communications</li>
-    <li><i class='fa fa-user mr-1'></i><a href="display/n31ebd4a6">Ethel Mejia</a>, Data Analyst, Office of Scholarly Communications</li>
-    <li><i class='fa fa-user mr-1'></i><a href="display/n3e0f7747">Doug Hahn</a>, Senior IT Manager, Applications, Digital Initiatives</li>
+    <li><i class='fa fa-user mr-1'></i><a href="display/nf489b17d" aria-label="Dr. Bruce Herbert Profile">Dr. Bruce Herbert</a>, Director, Office of Scholarly Communications</li>
+    <li><i class='fa fa-user mr-1'></i><a href="display/nbef1f2f3" aria-label="Dr. Dong Joon Lee Profile">Dr. Dong Joon Lee</a>, Researcher Information Systems Librarian, Office of Scholarly Communications</li>
+    <li><i class='fa fa-user mr-1'></i><a href="display/n31ebd4a6" aria-label="Ethel Mejia Profile">Ethel Mejia</a>, Data Analyst, Office of Scholarly Communications</li>
+    <li><i class='fa fa-user mr-1'></i><a href="display/n3e0f7747" aria-label="Doug Hahn Profile">Doug Hahn</a>, Senior IT Manager, Applications, Digital Initiatives</li>
   </ul>
 
   <span class="h4 text-primary">Early Beta Version in 2016</span>
 
   <div id="about-iframe-video" class="container mt-4 mb-4">
-    <iframe allowfullscreen="allowfullscreen" frameborder="0" height="300" src="https://www.youtube.com/embed/XTs0LmChNWM?rel=0"></iframe>
+    <iframe title="Introduction to Scholars@TAMU video" allowfullscreen="allowfullscreen" frameborder="0" height="300" src="https://www.youtube.com/embed/XTs0LmChNWM?rel=0"></iframe>
   </div>
 
 </div>
