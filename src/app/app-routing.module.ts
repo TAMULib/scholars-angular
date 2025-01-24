@@ -10,7 +10,7 @@ const routes: Routes = [
     loadChildren: () => import('./+admin').then((m) => m.AdminModule),
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN],
+      roles: [Role.ROLE_SUPER_ADMIN],
       tags: [{ name: 'view', content: 'Scholars Administration' }],
     },
   },
