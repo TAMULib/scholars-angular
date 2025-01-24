@@ -2,12 +2,12 @@
   <div class="container pt-2">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12" *ngIf="discoveryView | async; let discoveryView">
-        <scholars-search-box [live]="true" [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}" aria-label="{{ 'SEARCH_BOX.PLACEHOLDER' | translate: {view:discoveryView.name} }}"></scholars-search-box>
+        <scholars-search-box [live]="true" [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}"></scholars-search-box>
       </div>
     </div>
   </div>
 </div>
-<scholars-sidebar *ngIf="discoveryView | async; let discoveryView" role="complementary" aria-labelledby="sidebar-title">
+<scholars-sidebar *ngIf="discoveryView | async; let discoveryView" role="complementary">
   <div class="container mt-2" *ngIf="queryParams | async; let queryParams">
     <div class="headers-row row flex-column-reverse flex-md-row">
       <div class="col-md-8">
@@ -21,8 +21,8 @@
       </div>
       <div class="col-md-4 text-right">
         <span *ngIf="hasExport(discoveryView)" class="column-export">
-          <a [href]="getDiscoveryExportUrl(queryParams, discoveryView)" download class="btn" aria-label="{{ 'DISCOVERY.EXPORT' | translate }}">
-            <span class="fa fa-share" aria-hidden="true"></span>
+          <a [href]="getDiscoveryExportUrl(queryParams, discoveryView)" download class="btn" [attr.aria-label]="'DISCOVERY.EXPORT' | translate">
+            <span class="fa fa-share" [attr.aria-hidden]="true"></span>
             <span>{{ 'DISCOVERY.EXPORT' | translate }}</span>
           </a>
         </span>
@@ -33,19 +33,20 @@
         <span *ngIf="showFilter(discoveryView, filter)">
           <span class="mr-1">{{getFilterField(discoveryView, filter) | formalize}}:</span>
           <span class="mr-2">{{getFilterValue(discoveryView, filter) | formalize}}</span>
-          <a class="fa fa-close" [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsRemovingFilter(queryParams, filter)" aria-label="{{ 'SEARCH_BOX.CLEAR_FILTER' | translate }}"></a>
+          <a class="fa fa-close" [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsRemovingFilter(queryParams, filter)" [attr.aria-label]="'SEARCH_BOX.CLEAR_FILTER' | translate"></a>
         </span>
       </span>
       <span *ngIf="showClearFilters(discoveryView, filters)" class="badge badge-light p-2 mr-2 mb-2">
-        <a [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsClearingFilters(queryParams, discoveryView)" aria-label="{{ 'SEARCH_BOX.CLEAR_ALL_FILTERS' | translate }}">Clear</a>
+        <a [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsClearingFilters(queryParams, discoveryView)" [attr.aria-label]="'SEARCH_BOX.CLEAR_ALL_FILTERS' | translate">Clear</a>
       </span>
     </div>
     <ul role="tablist" class="list-unstyled mt-3 nav" *ngIf="discoveryViews | async; let discoveryViews" [ngClass]="{ 'nav-tabs': showTabs(windowDimensions | async), 'nav-pills flex-column': !showTabs(windowDimensions | async) }">
       <li class="nav-item" *ngFor="let discoveryView of discoveryViews">
-        <a class="nav-link font-weight-bold" [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsSwitchingDiscoveryView(queryParams, discoveryView)" [class.active]="isActive(discoveryView, url | async)" role="tab" aria-selected="false" aria-controls="discovery-view-{{discoveryView.name}}">{{ discoveryView.name }}</a>
+        <a class="nav-link font-weight-bold" [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsSwitchingDiscoveryView(queryParams, discoveryView)" [class.active]="isActive(discoveryView, url | async)" role="tab" [attr.aria-label]="false" [attr.aria-label]="'discovery-view-' + discoveryView.name"
+        >{{ discoveryView.name }}</a>
       </li>
     </ul>
-    <scholars-pagination [page]="page" [ngSwitch]="discoveryView.layout" [pageSizeOptionsType]="'list'" aria-live="polite">
+    <scholars-pagination [page]="page" [ngSwitch]="discoveryView.layout" [pageSizeOptionsType]="'list'">
       <scholars-grid-view *ngSwitchCase="'GRID'" [view]="discoveryView" [resources]="documents | async" [loading]="loading | async"></scholars-grid-view>
       <scholars-list-view *ngSwitchCase="'LIST'" [view]="discoveryView" [resources]="documents | async" [loading]="loading | async"></scholars-list-view>
     </scholars-pagination>

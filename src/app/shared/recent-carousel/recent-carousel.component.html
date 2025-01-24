@@ -2,7 +2,7 @@
   <i class="fa fa-chevron-left my-auto mr-1" (click)="scrollLeft()" role="button" aria-label="Scroll left"></i>
   <div class="scroll-view mx-auto" #scrollView>
     <div class="card scroll-item" *ngFor="let item of getItems() | async" [ngClass]="{'hide': item.hidden}" [ngStyle]="{'background-image': getBackgroundImage(item)}">
-      <a class="card-body p-1" [routerLink]="item.link" role="link" aria-label="{{item.preferredTitle}} - {{item.name}}">
+      <a class="card-body p-1" [routerLink]="item.link" role="link" [attr.aria-label]="item.preferredTitle + '-' + item.name">
         <div class="item-subtitle">{{item.preferredTitle}}</div>
         <div class="item-title">{{item.name}}</div>
       </a>

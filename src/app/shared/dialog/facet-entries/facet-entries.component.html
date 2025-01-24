@@ -15,7 +15,7 @@
             <td scope="row" [ngSwitch]="facet.type" *ngIf="multiselect">
               <span *ngSwitchCase="'STRING'">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="{{entry.value}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="onSelectionChanged(facet, entry)" aria-labelledby="selection-{{i}}-label">
+                  <input class="form-check-input" type="checkbox" value="{{entry.value}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="onSelectionChanged(facet, entry)" aria-labelledby="'selection-' + i + '-label'">
                   <label class="form-check-label" for="selection-{{i}}" id="selection-{{i}}-label">
                     <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
                     <span> ({{entry.count}})</span>
@@ -24,7 +24,7 @@
               </span>
               <span *ngSwitchCase="'NUMBER_RANGE'">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="{{entry.value}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="onSelectionChanged(facet, entry)" aria-labelledby="selection-{{i}}-label">
+                  <input class="form-check-input" type="checkbox" value="{{entry.value}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="onSelectionChanged(facet, entry)" aria-labelledby="'selection-' + i + '-label'">
                   <label class="form-check-label" for="selection-{{i}}" id="selection-{{i}}-label">
                     <span>{{getFacetRangeValue(facet, entry)}}</span>
                     <span> ({{entry.count}})</span>
@@ -33,7 +33,7 @@
               </span>
               <span *ngSwitchCase="'DATE_YEAR'">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="{{entry.value}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="onSelectionChanged(facet, entry)" aria-labelledby="selection-{{i}}-label">
+                  <input class="form-check-input" type="checkbox" value="{{entry.value}}" [checked]="isSelected(entry)" id="selection-{{i}}" (change)="onSelectionChanged(facet, entry)" aria-labelledby="'selection-' + i + '-label'">
                   <label class="form-check-label" for="selection-{{i}}" id="selection-{{i}}-label">
                     <span>{{entry.value | date:'yyyy':'UTC'}}</span>
                     <span> ({{entry.count}})</span>
@@ -43,19 +43,19 @@
             </td>
             <td scope="row" [ngSwitch]="facet.type" *ngIf="!multiselect">
               <span *ngSwitchCase="'STRING'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="Filter by {{getStringValue(entry)}}">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="'Filter by' + getStringValue(entry)">
                   <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
                 </a>
                 <span> ({{entry.count}})</span>
               </span>
               <span *ngSwitchCase="'NUMBER_RANGE'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="Filter by {{getFacetRangeValue(facet, entry)}}">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="'Filter by' + getFacetRangeValue(facet, entry)">
                   <span>{{getFacetRangeValue(facet, entry)}}</span>
                 </a>
                 <span> ({{entry.count}})</span>
               </span>
               <span *ngSwitchCase="'DATE_YEAR'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="Filter by {{entry.value | date:'yyyy':'UTC'}}">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="'Filter by' + entry.value | date:'yyyy':'UTC'">
                   <span>{{entry.value | date:'yyyy':'UTC'}}</span>
                 </a>
                 <span> ({{entry.count}})</span>

@@ -2,13 +2,13 @@
   <div [formGroup]="dialog.form">
     <div class="form-group">
       <div class="input-group-lg">
-        <input type="text" class="form-control" name="email" placeholder="{{ 'SHARED.DIALOG.LOGIN.EMAIL' | translate }}" formControlName="email" autofocus autocomplete="username" [ngClass]="{'is-valid': isValid('email'), 'is-invalid': isInvalid('email')}" aria-label="{{ 'SHARED.DIALOG.LOGIN.EMAIL' | translate }}" aria-required="true" />
+        <input type="text" class="form-control" name="email" placeholder="{{ 'SHARED.DIALOG.LOGIN.EMAIL' | translate }}" formControlName="email" autofocus autocomplete="username" [ngClass]="{'is-valid': isValid('email'), 'is-invalid': isInvalid('email')}" [attr.aria-label]="'SHARED.DIALOG.LOGIN.EMAIL' | translate" aria-required="true" />
         <div *ngIf="isInvalid('email')" class="invalid-feedback">{{getErrorMessage('email') | async}}</div>
       </div>
     </div>
     <div class="form-group">
       <div class="input-group-lg">
-        <input type="password" class="form-control" name="password" placeholder="{{ 'SHARED.DIALOG.LOGIN.PASSWORD' | translate }}" formControlName="password" autocomplete="current-password" [ngClass]="{'is-valid': isValid('password'), 'is-invalid': isInvalid('password')}" aria-label="{{ 'SHARED.DIALOG.LOGIN.PASSWORD' | translate }}" aria-required="true" />
+        <input type="password" class="form-control" name="password" placeholder="{{ 'SHARED.DIALOG.LOGIN.PASSWORD' | translate }}" formControlName="password" autocomplete="current-password" [ngClass]="{'is-valid': isValid('password'), 'is-invalid': isInvalid('password')}" [attr.aria-label]="'SHARED.DIALOG.LOGIN.PASSWORD' | translate" aria-required="true" />
         <div *ngIf="isInvalid('password')" class="invalid-feedback">{{getErrorMessage('password') | async}}</div>
       </div>
     </div>

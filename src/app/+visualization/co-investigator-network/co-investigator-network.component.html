@@ -3,11 +3,11 @@
     <div class="text-nowrap" *ngIf="individual.publications !== undefined">
       <img src="assets/images/co_author_icon.png" height="25" width="25" alt="{{ 'VISUALIZATION.NETWORK.COAUTHOR.ICON_ALT' | translate }}">
       <span class="ml-2">
-        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']" aria-label="{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</a>
+        <a [routerLink]="['/visualization', individual.id, 'Co-author Network']" [attr.aria-label]="'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate">{{ 'VISUALIZATION.NETWORK.COAUTHOR.LABEL' | translate }}</a>
       </span>
     </div>
   </div>
-  <div class="h1"><a href="display/{{individual.id}}" aria-label="{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.CLICK_TO_VIEW_PROFILE' | translate }}">{{individual.name}}</a></div>
+  <div class="h1"><a href="display/{{individual.id}}" [attr.aria-label]="'VISUALIZATION.NETWORK.COINVESTIGATOR.CLICK_TO_VIEW_PROFILE' | translate">{{individual.name}}</a></div>
   <div class="h2">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</div>
   <div *ngIf="dataNetwork | async; let dataNetwork" class="mb-4">
     <scholars-chord-diagram
@@ -15,7 +15,6 @@
       sourceTooltipKey="VISUALIZATION.NETWORK.COINVESTIGATOR.TOOLTIP.SOURCE"
       targetTooltipKey="VISUALIZATION.NETWORK.COINVESTIGATOR.TOOLTIP.TARGET"
       ribbonTooltipKey="VISUALIZATION.NETWORK.COINVESTIGATOR.TOOLTIP.RIBBON"
-      aria-live="polite"
     ></scholars-chord-diagram>
     <div class="row">
       <div class="col">

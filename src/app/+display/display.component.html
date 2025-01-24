@@ -2,7 +2,7 @@
   <div class="container pt-2">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12" *ngIf="discoveryView | async; let discoveryView">
-        <scholars-search-box [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}" aria-label="Search box for {{discoveryView.name}} view"></scholars-search-box>
+        <scholars-search-box [view]="discoveryView" placeholder="{{ 'SHARED.SEARCH_BOX.VIEW_PLACEHOLDER' | translate: {view:discoveryView.name} }}"></scholars-search-box>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@
       </div>
       <ng-template #aside>
         <div [innerHtml]="displayView.asideTemplateFunction(individual) | safeHtml"></div>
-        <scholars-youtube *ngIf="individual.youtube" [url]="individual.youtube" aria-label="YouTube video"></scholars-youtube>
+        <scholars-youtube *ngIf="individual.youtube" [url]="individual.youtube"></scholars-youtube>
       </ng-template>
     </div>
   </div>
