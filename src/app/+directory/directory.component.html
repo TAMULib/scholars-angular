@@ -46,7 +46,7 @@
         </a>
       </ng-template>
     </div>
-    <scholars-pagination [page]="page" [ngSwitch]="directoryView.layout" [pageSizeOptionsType]="'list'" >
+    <scholars-pagination [page]="page" [ngSwitch]="directoryView.layout" [pageSizeOptionsType]="'list'">
       <scholars-grid-view *ngSwitchCase="'GRID'" [view]="directoryView" [resources]="documents | async" [loading]="loading | async"></scholars-grid-view>
       <scholars-list-view *ngSwitchCase="'LIST'" [view]="directoryView" [resources]="documents | async" [loading]="loading | async"></scholars-list-view>
     </scholars-pagination>
