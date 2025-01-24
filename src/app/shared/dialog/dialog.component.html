@@ -1,11 +1,11 @@
-<form novalidate aria-labelledby="modal-basic-title" aria-describedby="modal-body" role="dialog" aria-modal="true">
+<form novalidate aria-labelledby="modal-basic-title" role="dialog" aria-modal="true">
   <div class="modal-header">
     <span class="h4 modal-title" id="modal-basic-title">{{dialog.title | async}}</span>
     <button *ngIf="dialog.close" type="button" class="close" aria-label="Close" (click)="dialog.close.action()" [disabled]="dialog.close.disabled() | async">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body" id="modal-body">
+  <div class="modal-body">
     <scholars-alert [location]="location" role="alert" aria-live="assertive"></scholars-alert>
     <ng-content></ng-content>
   </div>

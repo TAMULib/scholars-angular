@@ -1,5 +1,5 @@
-<div class="home-main" *ngIf="home | async; let home" aria-live="polite">
-  <ngb-carousel *ngIf="showCarousel(home)" aria-label="Main carousel showcasing heroes">
+<div class="home-main" *ngIf="home | async; let home">
+  <ngb-carousel *ngIf="showCarousel(home)">
     <ng-template ngbSlide *ngFor="let hero of home.heroes">
       <div class="carousel-caption" [ngStyle]="getCarouselBackgroundImage(hero)">
         <div class="container h-100">
@@ -39,7 +39,7 @@
         <span class="gallery-info">{{ 'DASHBOARD.HOME.LATEST_PUBLICATIONS_TEXT' | translate:{organization: (organization|async)} }}</span>
       </div>
       <div class="col-md-8 my-auto text-center">
-        <scholars-recent-carousel aria-label="Recent publications carousel"></scholars-recent-carousel>
+        <scholars-recent-carousel></scholars-recent-carousel>
       </div>
       <div class="col-md-2 my-auto text-center">
         <span class="gallery-info">{{ 'DASHBOARD.HOME.CLICK_PUBLICATION_TEXT' | translate }}</span>

@@ -1,5 +1,5 @@
 <div *ngFor="let alert of alerts | async">
-  <ngb-alert [type]="alert.type" [dismissible]="alert.dismissible" (closed)="onAlertClosed(alert)" [ngClass]="{'mt-0 mb-0 rounded-0 w-100': isMain()}" role="alert" aria-live="assertive" [attr.aria-label]="alert.type === 'danger' ? 'Error alert' : alert.type === 'warning' ? 'Warning alert' : 'Information alert'">
+  <ngb-alert [type]="alert.type" [dismissible]="alert.dismissible" (closed)="onAlertClosed(alert)" [ngClass]="{'mt-0 mb-0 rounded-0 w-100': isMain()}" role="alert" aria-live="assertive">
     <div [ngClass]="{'container': isMain()}" role="alertdialog" aria-describedby="alert-message">
       <span id="alert-message" [innerHTML]="alert.message"></span>
     </div>
