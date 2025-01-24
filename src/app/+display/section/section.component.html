@@ -5,9 +5,9 @@
       <i class="fa fa-lg fa-share-alt" ngbDropdownToggle ></i>
       <div class="dropdown-menu" ngbDropdownMenu>
         <div class="form-group col-12">
-          <label for="embeddedDropdown1">{{ "DISPLAY.EMBEDDABLE.LABEL" | translate }}</label>
+          <label>{{ "DISPLAY.EMBEDDABLE.LABEL" | translate }}</label>
           <div class="input-group">
-            <textarea class="form-control" type="text" rows="4" id="embeddedDropdown1" ng-bind-html [value]="getEmbedSnippet()" #embedCode></textarea>
+            <textarea class="form-control" type="text" rows="4" ng-bind-html [value]="getEmbedSnippet()" #embedCode></textarea>
             <span class="input-group-btn ml-2">
               <i class="fa fa-lg fa-copy" (click)="copyToClipBoard(embedCode, tooltip)" triggers="click" placement="top-left" ngbTooltip="{{ 'DISPLAY.EMBEDDABLE.COPIED' | translate }}" #tooltip="ngbTooltip"></i>
             </span>
