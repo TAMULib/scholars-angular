@@ -5,16 +5,16 @@
       <a href="{{link.uri}}" [attr.aria-label]="link.label">{{link.label}}</a>
     </li>
     <li class="list-inline-item" *ngIf="(isSuperAdmin | async) === true">
-      <a [routerLink]="['/admin']" [attr.aria-label]="'FOOTER.ADMINISTRATION' | translate">{{ 'FOOTER.ADMINISTRATION' | translate }}</a>
+      <a [routerLink]="['/admin']">{{ 'FOOTER.ADMINISTRATION' | translate }}</a>
     </li>
     <li class="list-inline-item" *ngIf="(isAuthenticated | async) !== true">
-      <a class="link" (click)="openRegistrationDialog()" [attr.aria-label]="'FOOTER.REGISTRATION' | translate">{{ 'FOOTER.REGISTRATION' | translate }}</a>
+      <a class="link" (click)="openRegistrationDialog()">{{ 'FOOTER.REGISTRATION' | translate }}</a>
     </li>
     <li class="list-inline-item" *ngIf="(isAuthenticated | async) !== true">
-      <a class="link" (click)="openLoginDialog()" [attr.aria-label]="'FOOTER.LOGIN' | translate">{{ 'FOOTER.LOGIN' | translate }}</a>
+      <a class="link" (click)="openLoginDialog()">{{ 'FOOTER.LOGIN' | translate }}</a>
     </li>
     <li class="list-inline-item" *ngIf="(isAuthenticated | async) === true">
-      <a class="link" (click)="logout()" [attr.aria-label]="'FOOTER.LOGOUT' | translate">{{ 'FOOTER.LOGOUT' | translate }}</a>
+      <a class="link" (click)="logout()">{{ 'FOOTER.LOGOUT' | translate }}</a>
     </li>
     <li class="list-inline-item" *ngIf="user | async; let user">
       <span>{{user.email}}</span>
