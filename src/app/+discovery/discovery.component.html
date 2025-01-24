@@ -21,7 +21,7 @@
       </div>
       <div class="col-md-4 text-right">
         <span *ngIf="hasExport(discoveryView)" class="column-export">
-          <a [href]="getDiscoveryExportUrl(queryParams, discoveryView)" download class="btn" [attr.aria-label]="'DISCOVERY.EXPORT' | translate">
+          <a [href]="getDiscoveryExportUrl(queryParams, discoveryView)" download class="btn">
             <span class="fa fa-share" [attr.aria-hidden]="true"></span>
             <span>{{ 'DISCOVERY.EXPORT' | translate }}</span>
           </a>
@@ -37,12 +37,12 @@
         </span>
       </span>
       <span *ngIf="showClearFilters(discoveryView, filters)" class="badge badge-light p-2 mr-2 mb-2">
-        <a [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsClearingFilters(queryParams, discoveryView)" [attr.aria-label]="'SEARCH_BOX.CLEAR_ALL_FILTERS' | translate">Clear</a>
+        <a [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsClearingFilters(queryParams, discoveryView)">Clear</a>
       </span>
     </div>
     <ul role="tablist" class="list-unstyled mt-3 nav" *ngIf="discoveryViews | async; let discoveryViews" [ngClass]="{ 'nav-tabs': showTabs(windowDimensions | async), 'nav-pills flex-column': !showTabs(windowDimensions | async) }">
       <li class="nav-item" *ngFor="let discoveryView of discoveryViews">
-        <a class="nav-link font-weight-bold" [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsSwitchingDiscoveryView(queryParams, discoveryView)" [class.active]="isActive(discoveryView, url | async)" role="tab" [attr.aria-label]="false" [attr.aria-label]="'discovery-view-' + discoveryView.name"
+        <a class="nav-link font-weight-bold" [routerLink]="getDiscoveryRouterLink(discoveryView)" [queryParams]="getDiscoveryQueryParamsSwitchingDiscoveryView(queryParams, discoveryView)" [class.active]="isActive(discoveryView, url | async)" role="tab" [attr.aria-label]="false"
         >{{ discoveryView.name }}</a>
       </li>
     </ul>
