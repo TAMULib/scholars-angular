@@ -76,7 +76,8 @@ export class TabComponent implements OnDestroy, OnInit {
   }
 
   public getSectionsToShow(tab: DisplayTabView, individual: Individual): DisplayTabSectionView[] {
-    return sectionsToShow(tab.sections, individual);
+    const sections = sectionsToShow(tab.sections, individual);
+    return sections?.length ? sections : undefined;
   }
 
 }

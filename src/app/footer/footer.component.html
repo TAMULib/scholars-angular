@@ -7,10 +7,10 @@
     <li class="list-inline-item" *ngIf="(isAdmin | async) === true">
       <a [routerLink]="['/admin']" aria-label="Go to Admin Dashboard">{{ 'FOOTER.ADMINISTRATION' | translate }}</a>
     </li>
-    <li class="list-inline-item" *ngIf="(isAuthenticated | async) === false">
+    <li class="list-inline-item" *ngIf="(isAuthenticated | async) !=== true">
       <a class="link" (click)="openRegistrationDialog()" aria-label="Open Registration Dialog">{{ 'FOOTER.REGISTRATION' | translate }}</a>
     </li>
-    <li class="list-inline-item" *ngIf="(isAuthenticated | async) === false">
+    <li class="list-inline-item" *ngIf="(isAuthenticated | async) !=== true">
       <a class="link" (click)="openLoginDialog()" aria-label="Open Login Dialog">{{ 'FOOTER.LOGIN' | translate }}</a>
     </li>
     <li class="list-inline-item" *ngIf="(isAuthenticated | async) === true">

@@ -53,11 +53,9 @@
   "DATA_AND_ANALYTICS": {
     "LABEL": "Data & Analytics",
     "ORGANIZATION": "Organization",
+    "ORGANIZATIONS": "Organizations",
     "TIME_PERIOD": "Time Period",
     "PROFILE_SUMMARIES": "Profile Summaries for the {{timePeriod}}",
-    "COLLEGES_AND_SCHOOLS": "Colleges & Schools",
-    "DEPARTMENTS": "Departments",
-    "OTHERS": "Centers, Institutes, & Others",
     "SELECT": "- Select -",
     "DOWNLOAD": "Download",
     "UNKNOWN": "{{value}} Unknown",
@@ -85,6 +83,10 @@
       "SHARE": "Share",
       "LABEL": "Embeddable",
       "COPIED": "Embeddable snippet copied!"
+    },
+    "TAB": {
+      "NO_CONTENT_TITLE": "No Information",
+      "NO_CONTENT_TEXT": "There is no information to display yet."
     }
   },
   "VISUALIZATION": {
