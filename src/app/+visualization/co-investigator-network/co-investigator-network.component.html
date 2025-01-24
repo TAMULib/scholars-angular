@@ -7,7 +7,7 @@
       </span>
     </div>
   </div>
-  <div class="h1"><a href="display/{{individual.id}}">{{individual.name}}</a></div>
+  <div class="h1"><a href="display/{{individual.id}}" [attr.aria-label]="'VISUALIZATION.NETWORK.COINVESTIGATOR.CLICK_TO_VIEW_PROFILE' | translate">{{individual.name}}</a></div>
   <div class="h2">{{ 'VISUALIZATION.NETWORK.COINVESTIGATOR.LABEL' | translate }}</div>
   <div *ngIf="dataNetwork | async; let dataNetwork" class="mb-4">
     <scholars-chord-diagram

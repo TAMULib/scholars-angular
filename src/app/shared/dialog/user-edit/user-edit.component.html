@@ -1,42 +1,45 @@
-<scholars-dialog [dialog]="dialog">
+<scholars-dialog [dialog]="dialog" role="dialog" aria-describedby="formDescription">
   <div [formGroup]="dialog.form">
     <div class="form-group">
       <div class="input-group-lg">
-        <input type="text" class="form-control" name="firstName" formControlName="firstName" [ngClass]="{'is-valid': isValid('firstName'), 'is-invalid': isInvalid('firstName')}" />
-        <div *ngIf="isInvalid('firstName')" class="invalid-feedback">{{getErrorMessage('firstName') | async}}</div>
+        <label for="firstName" id="firstNameLabel" class="form-label">{{ 'SHARED.DIALOG.USER_EDIT.FIRST_NAME' | translate }}</label>
+        <input id="firstName" type="text" class="form-control" name="firstName" formControlName="firstName" [ngClass]="{'is-valid': isValid('firstName'), 'is-invalid': isInvalid('firstName')}" aria-labelledby="firstNameLabel"/>
+        <div *ngIf="isInvalid('firstName')" class="invalid-feedback" role="alert">{{getErrorMessage('firstName') | async}}</div>
       </div>
     </div>
     <div class="form-group">
       <div class="input-group-lg">
-        <input type="text" class="form-control" name="lastName" formControlName="lastName" [ngClass]="{'is-valid': isValid('lastName'), 'is-invalid': isInvalid('lastName')}" />
-        <div *ngIf="isInvalid('lastName')" class="invalid-feedback">{{getErrorMessage('lastName') | async}}</div>
+        <label for="lastName" id="lastNameLabel" class="form-label">{{ 'SHARED.DIALOG.USER_EDIT.LAST_NAME' | translate }}</label>
+        <input id="lastName" type="text" class="form-control" name="lastName" formControlName="lastName"[ngClass]="{'is-valid': isValid('lastName'), 'is-invalid': isInvalid('lastName')}" aria-labelledby="lastNameLabel"/>
+        <div *ngIf="isInvalid('lastName')" class="invalid-feedback" role="alert">{{getErrorMessage('lastName') | async}}</div>
       </div>
     </div>
     <div class="form-group">
       <div class="input-group-lg">
-        <input type="email" class="form-control" name="email" formControlName="email" autocomplete="username" [ngClass]="{'is-valid': isValid('email'), 'is-invalid': isInvalid('email')}" />
-        <div *ngIf="isInvalid('email')" class="invalid-feedback">{{getErrorMessage('email') | async}}</div>
+        <label for="email" id="emailLabel" class="form-label">{{ 'SHARED.DIALOG.USER_EDIT.EMAIL' | translate }}</label>
+        <input id="email" type="email" class="form-control" name="email" formControlName="email" autocomplete="username"[ngClass]="{'is-valid': isValid('email'), 'is-invalid': isInvalid('email')}" aria-labelledby="emailLabel"/>
+        <div *ngIf="isInvalid('email')" class="invalid-feedback" role="alert">{{getErrorMessage('email') | async}}</div>
       </div>
     </div>
     <div class="form-group">
       <div class="input-group-lg">
-        <label for="role">{{ 'SHARED.DIALOG.USER_EDIT.ROLE' | translate }}</label>
-        <select class="form-control" name="role" formControlName="role" [ngClass]="{'is-valid': isValid('role'), 'is-invalid': isInvalid('role')}">
+        <label for="role" id="roleLabel" class="form-label">{{ 'SHARED.DIALOG.USER_EDIT.ROLE' | translate }}</label>
+        <select id="role" class="form-control" name="role" formControlName="role" [ngClass]="{'is-valid': isValid('role'), 'is-invalid': isInvalid('role')}" aria-labelledby="roleLabel">
           <option *ngFor="let role of roles" [value]="role">{{getRoleValue(role)}}</option>
         </select>
-        <div *ngIf="isInvalid('role')" class="invalid-feedback">{{getErrorMessage('role') | async}}</div>
+        <div *ngIf="isInvalid('role')" class="invalid-feedback" role="alert">{{getErrorMessage('role') | async}}</div>
       </div>
     </div>
     <div class="input-group-lg">
       <div class="form-check">
-        <input id="active" type="checkbox" class="form-check-input" name="active" formControlName="active" [ngClass]="{'is-valid': isValid('active'), 'is-invalid': isInvalid('active')}" />
-        <label class="form-check-label" for="active">{{ 'SHARED.DIALOG.USER_EDIT.ACTIVE' | translate }}</label>
+        <input id="active" type="checkbox" class="form-check-input" name="active" formControlName="active" [ngClass]="{'is-valid': isValid('active'), 'is-invalid': isInvalid('active')}" aria-labelledby="activeLabel"/>
+        <label class="form-check-label" for="active" id="activeLabel">{{ 'SHARED.DIALOG.USER_EDIT.ACTIVE' | translate }}</label>
       </div>
     </div>
     <div class="input-group-lg">
       <div class="form-check">
-        <input id="enabled" type="checkbox" class="form-check-input" name="enabled" formControlName="enabled" [ngClass]="{'is-valid': isValid('enabled'), 'is-invalid': isInvalid('enabled')}" />
-        <label class="form-check-label" for="enabled">{{ 'SHARED.DIALOG.USER_EDIT.ENABLED' | translate }}</label>
+        <input id="enabled" type="checkbox" class="form-check-input" name="enabled" formControlName="enabled" [ngClass]="{'is-valid': isValid('enabled'), 'is-invalid': isInvalid('enabled')}" aria-labelledby="enabledLabel"/>
+        <label class="form-check-label" for="enabled" id="enabledLabel">{{ 'SHARED.DIALOG.USER_EDIT.ENABLED' | translate }}</label>
       </div>
     </div>
   </div>

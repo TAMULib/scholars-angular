@@ -1,4 +1,4 @@
-<form novalidate>
+<form novalidate role="dialog" aria-modal="true">
   <div class="modal-header">
     <span class="h4 modal-title" id="modal-basic-title">{{dialog.title | async}}</span>
     <button *ngIf="dialog.close" type="button" class="close" aria-label="Close" (click)="dialog.close.action()" [disabled]="dialog.close.disabled() | async">
@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <scholars-alert [location]="location"></scholars-alert>
+    <scholars-alert [location]="location" role="alert" aria-live="assertive"></scholars-alert>
     <ng-content></ng-content>
   </div>
   <div class="modal-footer">

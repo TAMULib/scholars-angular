@@ -3,32 +3,36 @@
   <div class="pagination-controls form-group mt-3">
     <ul [class]="'pagination' + (size ? ' pagination-' + size : '')" *ngIf="page.totalElements > page.size">
       <li class="page-item" [class.disabled]="previousDisabled(page.number)">
-        <a attr.aria-label="{{ 'SHARED.PAGINATION.FIRST' | translate }}" class="page-link" href="{{buildUrl(1, page.size)}}" [attr.tabindex]="(hasPrevious(page.number) ? null : '-1')">
+        <a class="page-link" href="{{buildUrl(1, page.size)}}" [attr.tabindex]="(hasPrevious(page.number) ? null : '-1')" role="button">
           <span aria-hidden="true">&laquo;&laquo;</span>
+          <span class="sr-only">{{ 'SHARED.PAGINATION.FIRST' | translate }}</span>
         </a>
       </li>
       <li class="page-item" [class.disabled]="previousDisabled(page.number)">
-        <a attr.aria-label="{{ 'SHARED.PAGINATION.PREVIOUS' | translate }}" class="page-link" href="{{buildUrl(page.number - 1, page.size)}}" [attr.tabindex]="(hasPrevious(page.number) ? null : '-1')">
+        <a class="page-link" href="{{buildUrl(page.number - 1, page.size)}}" [attr.tabindex]="(hasPrevious(page.number) ? null : '-1')" role="button">
           <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">{{ 'SHARED.PAGINATION.PREVIOUS' | translate }}</span>
         </a>
       </li>
       <li *ngFor="let pageNumber of getPages(page, windowDimensions | async)" class="page-item" [class.active]="pageNumber === page.number" [class.disabled]="isEllipsis(pageNumber)">
-        <a *ngIf="isEllipsis(pageNumber)" class="page-link">
+        <a *ngIf="isEllipsis(pageNumber)" class="page-link" aria-hidden="true">
           <span>...</span>
         </a>
-        <a *ngIf="!isEllipsis(pageNumber)" class="page-link" href="{{buildUrl(pageNumber, page.size)}}" queryParamsHandling="merge">
+        <a *ngIf="!isEllipsis(pageNumber)" class="page-link" href="{{buildUrl(pageNumber, page.size)}}" queryParamsHandling="merge" role="link" [attr.aria-label]="'SHARED.PAGINATION.PAGE' | translate:{ page: pageNumber }">
           <span>{{ pageNumber }}</span>
           <span *ngIf="page.number === pageNumber" class="sr-only">(current)</span>
         </a>
       </li>
       <li class="page-item" [class.disabled]="nextDisabled(page.number, page.totalPages)">
-        <a attr.aria-label="{{ 'SHARED.PAGINATION.NEXT' | translate }}" class="page-link" href="{{buildUrl(page.number + 1, page.size)}}" [attr.tabindex]="(hasNext(page.number, page.totalPages) ? null : '-1')">
+        <a [attr.aria-label]="'SHARED.PAGINATION.NEXT' | translate" class="page-link" href="{{buildUrl(page.number + 1, page.size)}}" [attr.tabindex]="(hasNext(page.number, page.totalPages) ? null : '-1')" role="button">
           <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">{{ 'SHARED.PAGINATION.NEXT' | translate }}</span>
         </a>
       </li>
       <li class="page-item" [class.disabled]="nextDisabled(page.number, page.totalPages)">
-        <a attr.aria-label="{{ 'SHARED.PAGINATION.LAST' | translate }}" class="page-link" href="{{buildUrl(page.totalPages, page.size)}}" [attr.tabindex]="(hasNext(page.number, page.totalPages) ? null : '-1')">
+        <a [attr.aria-label]="'SHARED.PAGINATION.LAST' | translate" class="page-link" href="{{buildUrl(page.totalPages, page.size)}}" [attr.tabindex]="(hasNext(page.number, page.totalPages) ? null : '-1')" role="button">
           <span aria-hidden="true">&raquo;&raquo;</span>
+          <span class="sr-only">{{ 'SHARED.PAGINATION.LAST' | translate }}</span>
         </a>
       </li>
     </ul>
@@ -36,16 +40,16 @@
     <div [ngSwitch]="pageSizeOptionsType" *ngIf="page.totalElements > pageSizeOptions[0]">
       <ul [class]="'pagination' + (size ? ' pagination-' + size : '')" *ngSwitchCase="'list'">
         <li *ngFor="let pageSizeOption of pageSizeOptions" class="page-item" [class.active]="pageSizeOption === page.size">
-          <a attr.aria-label="{{ 'SHARED.PAGINATION.PAGE_SIZE' | translate:{ size: pageSizeOption } }}" class="page-link" href="{{buildUrl(1, pageSizeOption)}}">
+          <a [attr.aria-label]="'SHARED.PAGINATION.PAGE_SIZE' | translate:{ size: pageSizeOption }" class="page-link" href="{{buildUrl(1, pageSizeOption)}}" role="link">
             <span>{{ pageSizeOption }}</span>
             <span *ngIf="page.size === pageSizeOption" class="sr-only">(current)</span>
           </a>
         </li>
       </ul>
       <div ngbDropdown class="d-inline-block" placement="bottom-right" *ngSwitchCase="'dropdown'">
-        <button class="btn btn-outline-secondary" ngbDropdownToggle>{{page.size}}</button>
+        <button class="btn btn-outline-secondary" ngbDropdownToggle [attr.aria-label]="'SHARED.PAGINATION.SELECT_PAGE_SIZE' | translate">{{page.size}}</button>
         <div ngbDropdownMenu>
-          <a ngbDropdownItem class="btn" *ngFor="let pageSizeOption of pageSizeOptions" href="{{buildUrl(1, pageSizeOption)}}">{{pageSizeOption}}</a>
+          <a ngbDropdownItem class="btn" *ngFor="let pageSizeOption of pageSizeOptions" href="{{buildUrl(1, pageSizeOption)}}" role="link">{{pageSizeOption}}</a>
         </div>
       </div>
     </div>
