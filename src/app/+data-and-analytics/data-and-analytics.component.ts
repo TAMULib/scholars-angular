@@ -27,7 +27,7 @@ import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
 })
 export class DataAndAnalyticsComponent implements OnInit {
 
-  @ViewChild('orgsSelect') orgsSelect: ElementRef<HTMLSelectElement>;
+  @ViewChild('organizationSelect') organizationsSelect: ElementRef<HTMLSelectElement>;
 
   public displayView: Observable<DisplayView>;
 
@@ -51,7 +51,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public labelSubject: BehaviorSubject<string>;
 
-  public orgs: Observable<Individual[]>;
+  public organizations: Observable<Individual[]>;
 
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
@@ -112,7 +112,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     // University (11)
     // External Organization (1453) *
     // * should not be in any select options
-    this.orgs = this.getOrganizationsByTypes([
+    this.organizations = this.getOrganizationsByTypes([
       'AcademicDepartment',
       'AffiliatedAgency',
       'Association',
@@ -209,8 +209,8 @@ export class DataAndAnalyticsComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
 
-    if (this.orgsSelect && this.orgsSelect.nativeElement.id !== changedSelect?.id) {
-      this.orgsSelect.nativeElement.value = '';
+    if (this.organizationsSelect && this.organizationsSelect.nativeElement.id !== changedSelect?.id) {
+      this.organizationsSelect.nativeElement.value = '';
     }
 
     this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));
