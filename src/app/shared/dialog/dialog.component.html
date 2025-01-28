@@ -1,7 +1,7 @@
 <form novalidate role="dialog" aria-modal="true">
   <div class="modal-header">
     <span class="h4 modal-title" id="modal-basic-title">{{dialog.title | async}}</span>
-    <button *ngIf="dialog.close" type="button" class="close" aria-label="Close" (click)="dialog.close.action()" [disabled]="dialog.close.disabled() | async">
+    <button *ngIf="dialog.close" type="button" class="close" [attr.aria-label]="'SHARED.DIALOG.ACCESSIBILITY.CLOSE' | translate" (click)="dialog.close.action()" [disabled]="dialog.close.disabled() | async">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

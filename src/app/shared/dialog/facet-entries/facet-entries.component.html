@@ -4,7 +4,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text fa fa-search" aria-hidden="true"></span>
       </div>
-      <input id="filter" name="filter" formControlName="filter" type="text" class="form-control" placeholder="Filter" aria-label="Filter" aria-describedby="filter-entries">
+      <input id="filter" name="filter" formControlName="filter" type="text" class="form-control" placeholder="Filter" [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER' | translate" aria-describedby="filter-entries">
     </div>
   </form>
   <div *ngIf="facet | async; let facet">
@@ -43,19 +43,20 @@
             </td>
             <td scope="row" [ngSwitch]="facet.type" *ngIf="!multiselect">
               <span *ngSwitchCase="'STRING'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="'Filter by' + getStringValue(entry)">
+                [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate | translate"
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="(('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate) + getStringValue(entry))">
                   <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
                 </a>
                 <span> ({{entry.count}})</span>
               </span>
               <span *ngSwitchCase="'NUMBER_RANGE'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="'Filter by' + getFacetRangeValue(facet, entry)">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="(('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate) + getFacetRangeValue(facet, entry))">
                   <span>{{getFacetRangeValue(facet, entry)}}</span>
                 </a>
                 <span> ({{entry.count}})</span>
               </span>
               <span *ngSwitchCase="'DATE_YEAR'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" aria-label="'Filter by' + entry.value | date:'yyyy':'UTC'">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="(('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate) + (entry.value | date:'yyyy':'UTC'))">
                   <span>{{entry.value | date:'yyyy':'UTC'}}</span>
                 </a>
                 <span> ({{entry.count}})</span>
@@ -64,7 +65,7 @@
           </tr>
         </tbody>
       </table>
-      <ngb-pagination [collectionSize]="sdrFacet.entries.content.length" [pageSize]="pageSize" [(page)]="page" [maxSize]="3" [rotate]="true" [ellipses]="true" [boundaryLinks]="true" aria-label="Pagination"></ngb-pagination>
+      <ngb-pagination [collectionSize]="sdrFacet.entries.content.length" [pageSize]="pageSize" [(page)]="page" [maxSize]="3" [rotate]="true" [ellipses]="true" [boundaryLinks]="true" [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
     </div>
     <ng-template #noEntries>
       <div>{{ 'SHARED.DIALOG.FACET_ENTRIES.EMPTY' | translate }}</div>
