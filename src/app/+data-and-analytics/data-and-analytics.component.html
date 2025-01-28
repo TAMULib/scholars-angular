@@ -86,12 +86,12 @@
               </div>
 
               <div class="row p-1">
-                <div class="col-12" *ngIf="orgs | async; let orgs">
+                <div class="col-12" *ngIf="organizations | async; let organizations">
                   <div class="form-group">
                     <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
-                    <select #orgsSelect id="orgsSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, orgsSelect)">
+                    <select #organizationSelect id="organizationSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, organizationSelect)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
-                      <option *ngFor="let so of orgs" [ngValue]="so.id">{{ so.name }}</option>
+                      <option *ngFor="let so of organizations" [ngValue]="so.id">{{ so.name }}</option>
                     </select>
                   </div>
                 </div>
