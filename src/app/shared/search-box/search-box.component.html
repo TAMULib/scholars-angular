@@ -31,20 +31,20 @@
 
       <ng-template #helpLinks>
         <small *ngIf="isServerRendered()" class="d-block text-right search-info">
-          <a href="https://scholars.library.tamu.edu/about_scholars/#searchTips" role="link" aria-label="Search Tips">
+          <a href="https://scholars.library.tamu.edu/about_scholars/#searchTips" role="link" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.SEARCH_TIPS' | translate">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
             {{ 'SHARED.SEARCH_BOX.SEARCH_TIPS' | translate }}
           </a>
           <span> | </span>
-          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()" role="link" aria-label="Advanced Search">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
+          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()" role="link" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.ADVANCED_SEARCH' | translate">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
         </small>
         <small *ngIf="isBrowserRendered()" class="d-block text-right search-info">
-          <span (click)="openSearchTips()" class="open-search-tips link" role="button" aria-label="Open Search Tips">
+          <span (click)="openSearchTips()" class="open-search-tips link" role="button" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.OPEN_TIPS' | translate">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
             {{ 'SHARED.SEARCH_BOX.SEARCH_TIPS' | translate }}
           </span>
           <span> | </span>
-          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()" role="link" aria-label="Advanced Search">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
+          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()" role="link" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.ADVANCED_SEARCH' | translate">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
         </small>
       </ng-template>
 

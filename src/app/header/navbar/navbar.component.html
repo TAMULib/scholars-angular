@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-sm navbar-dark" *ngIf="navbar | async; let navbar">
   <div class="container">
-    <a class="navbar-brand" href="{{navbar.brandUri}}" aria-label="Go to homepage">
+    <a class="navbar-brand" href="{{navbar.brandUri}}" [attr.aria-label]="'HEADER.NAVBAR.ACCESSIBILITY.GO_TO_HOMEPAGE' | translate">
       <img *ngIf="navbar.logoUri" src="{{navbar.logoUri}}" alt="{{ 'HEADER.NAVBAR.LOGO_ALT' | translate }}" aria-hidden="false">
       <span class="brand-title">{{navbar.brandText}}</span>
     </a>
-    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation menu">
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbar" aria-expanded="false" [attr.aria-label]="'HEADER.NAVBAR.ACCESSIBILITY.TOGGLE_NAVIGATION' | translate">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div [ngbCollapse]="isNavbarCollapsed | async" class="collapse navbar-collapse justify-content-end" [ngClass]="{'expand': (isNavbarExpanded | async)}" id="navbar" aria-live="polite">

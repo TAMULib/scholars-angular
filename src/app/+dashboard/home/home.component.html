@@ -63,7 +63,7 @@
         </div>
       </div>
       <div class="col-md-9">
-        <scholars-sustainable-development-goals aria-label="Sustainable development goals section"></scholars-sustainable-development-goals>
+        <scholars-sustainable-development-goals [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.SUSTAINABLE_DEVELOPMENT_GOALS' | translate"></scholars-sustainable-development-goals>
       </div>
     </div>
   </div>
@@ -73,7 +73,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
       <scholars-search-box 
-        aria-label="Search box" 
+        [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.SEARCH_BOX' | translate" 
         [styles]="getSearchStyles() | async" 
         [view]="discoveryView | async" 
         placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}">
@@ -85,9 +85,9 @@
 <ng-template #homeStats>
   <div class="row justify-content-center home-stats">
     <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 d-flex flex-row justify-content-center">
-      <scholars-stats-box label="People" classifier="Person" aria-label="People statistics"></scholars-stats-box>
-      <scholars-stats-box label="Organizations" classifier="Organization" aria-label="Organizations statistics"></scholars-stats-box>
-      <scholars-stats-box label="Research" classifier="Document" aria-label="Research statistics"></scholars-stats-box>
+      <scholars-stats-box label="People" classifier="Person" [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.PEOPLE_STATS' | translate"></scholars-stats-box>
+      <scholars-stats-box label="Organizations" classifier="Organization" [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.ORGANIZATION_STATS' | translate"></scholars-stats-box>
+      <scholars-stats-box label="Research" classifier="Document" [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.DOCUMENT_STATS' | translate"></scholars-stats-box>
     </div>
   </div>
 </ng-template>
