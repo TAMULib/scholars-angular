@@ -27,7 +27,7 @@ import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
 })
 export class DataAndAnalyticsComponent implements OnInit {
 
-  @ViewChild('organizationSelect') organizationSelect: ElementRef<HTMLSelectElement>;
+  @ViewChild('organizationSelect') organizationsSelect: ElementRef<HTMLSelectElement>;
 
   public displayView: Observable<DisplayView>;
 
@@ -209,8 +209,8 @@ export class DataAndAnalyticsComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
 
-    if (this.organizationSelect && this.organizationSelect.nativeElement.id !== changedSelect?.id) {
-      this.organizationSelect.nativeElement.value = '';
+    if (this.organizationsSelect && this.organizationsSelect.nativeElement.id !== changedSelect?.id) {
+      this.organizationsSelect.nativeElement.value = '';
     }
 
     this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));

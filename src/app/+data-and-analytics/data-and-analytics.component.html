@@ -89,7 +89,7 @@
                 <div class="col-12" *ngIf="organizations | async; let organizations">
                   <div class="form-group">
                     <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
-                    <select #organizationSelect id="organizationSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, organizationSelect)">
+                    <select #organizationsSelect id="organizationsSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, organizationsSelect)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
                       <option *ngFor="let so of organizations" [ngValue]="so.id">{{ so.name }}</option>
                     </select>
