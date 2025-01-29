@@ -64,6 +64,8 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
 
   private subscriptions: Subscription[];
 
+  private accessibilityFilterLabel: String;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -222,6 +224,22 @@ export class FacetEntriesComponent implements OnDestroy, OnInit {
         this.store.dispatch(new fromDialog.CloseDialogAction());
       })
     );
+  }
+
+  public getAccessibilityLabelEntry(entry: SdrFacetEntry): string {
+    const translatedString = this.translate.instant('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY');
+    return `${this.accessibilityFilterLabel = translatedString}-${this.getStringValue(entry)}`;  
+  }
+
+  public getAccessibilityLabelFacetRange(facet: Facet, entry: SdrFacetEntry): string {
+    const translatedString = this.translate.instant('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY');
+    return `${this.accessibilityFilterLabel = translatedString}-${this.getFacetRangeValue(facet, entry)}`;  
+  }
+
+  public getAccessibilityLabelDateYear(entry: SdrFacetEntry): string {
+    const translatedString = this.translate.instant('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY');
+    const formattedDate = new Date(entry.value).getUTCFullYear();
+    return `${translatedString}-${formattedDate}`;
   }
 
   public getSelected(entry: SdrFacetEntry): number {
