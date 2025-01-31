@@ -9,6 +9,7 @@ import { AcademicAgeGroupComponent } from './academic-age-group/academic-age-gro
 import { BarplotComponent } from './academic-age-group/barplot/barplot.component';
 import { DataAndAnalyticsComponent } from './data-and-analytics.component';
 import { routes } from './data-and-analytics.routes';
+import { FrequencyGraphComponent } from './frequency-graph/frequency-graph.component';
 import { ProfileSummariesExportComponent } from './profile-summaries-export/profile-summaries-export.component';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
 
@@ -17,6 +18,7 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
     AcademicAgeGroupComponent,
     BarplotComponent,
     DataAndAnalyticsComponent,
+    FrequencyGraphComponent,
     ProfileSummariesExportComponent,
     QuantityDistributionComponent
   ],

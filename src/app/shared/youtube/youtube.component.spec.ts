@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../shared.module';
 import { YouTubeComponent } from './youtube.component';
@@ -9,7 +10,10 @@ describe('YouTubeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [
+        SharedModule,
+        TranslateModule.forRoot(),
+      ],
     }).compileComponents();
   }));
 
