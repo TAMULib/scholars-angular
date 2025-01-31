@@ -43,20 +43,20 @@
             </td>
             <td scope="row" [ngSwitch]="facet.type" *ngIf="!multiselect">
               <span *ngSwitchCase="'STRING'">
-                [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate | translate"
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="(('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate) + getStringValue(entry))">
+                [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate"
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate: { item: getStringValue(entry) })">
                   <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
                 </a>
                 <span> ({{entry.count}})</span>
               </span>
               <span *ngSwitchCase="'NUMBER_RANGE'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="(('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate) + getFacetRangeValue(facet, entry))">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate: { item: getFacetRangeValue(facet, entry) })">
                   <span>{{getFacetRangeValue(facet, entry)}}</span>
                 </a>
                 <span> ({{entry.count}})</span>
               </span>
               <span *ngSwitchCase="'DATE_YEAR'">
-                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="(('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate) + (entry.value | date:'yyyy':'UTC'))">
+                <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate: { item: entry.value | date:'yyyy':'UTC' })">
                   <span>{{entry.value | date:'yyyy':'UTC'}}</span>
                 </a>
                 <span> ({{entry.count}})</span>
