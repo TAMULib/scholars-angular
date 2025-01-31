@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 
 import { testAppConfig } from '../../../../test.config';
 import { metaReducers, reducers } from '../../../core/store';
@@ -37,10 +36,6 @@ describe('ScatterplotComponent', () => {
     });
     fixture = TestBed.createComponent(ScatterplotComponent);
     component = fixture.componentInstance;
-    component.input = of({
-      label: 'Test',
-      data: []
-    });
     fixture.detectChanges();
   }));
 
