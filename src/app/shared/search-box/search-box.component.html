@@ -16,35 +16,35 @@
           <ng-container *ngTemplateOutlet="searchLabel"></ng-container>
           <label for="search" class="d-none">Search</label>
           <input id="search" type="text" class="form-control" [placeholder]="placeholder" name="query" formControlName="query" [style.box-shadow]="styles?.inputBoxShadow" />
-          <input type="text" class="form-control invisible" name="collection" formControlName="collection" />
-          <input type="text" class="form-control invisible" name="facets" formControlName="facets" />
-          <input *ngFor="let filter of view.filters" type="text" class="form-control invisible" [name]="getFilterName(filter)" [formControlName]="getFilterName(filter)" />
+          <input type="text" class="form-control invisible" name="collection" formControlName="collection" aria-hidden="true" />
+          <input type="text" class="form-control invisible" name="facets" formControlName="facets" aria-hidden="true" />
+          <input *ngFor="let filter of view.filters" type="text" class="form-control invisible" [name]="getFilterName(filter)" [formControlName]="getFilterName(filter)" aria-hidden="true" />
           <input type="submit" class="d-none" />
           <ng-container *ngTemplateOutlet="helpLinks"></ng-container>
         </div>
       </form>
 
       <ng-template #searchLabel>
-        <span class="search-label d-inline-block" [ngStyle]="styles?.label">{{ 'SHARED.SEARCH_BOX.LABEL' | translate:{organization: (organization | async)} }}</span>
-        <span class="fa fa-search form-control-feedback"></span>
+        <span id="searchLabel" class="search-label d-inline-block" [ngStyle]="styles?.label">{{ 'SHARED.SEARCH_BOX.LABEL' | translate:{organization: (organization | async)} }}</span>
+        <span class="fa fa-search form-control-feedback" aria-hidden="true"></span>
       </ng-template>
 
       <ng-template #helpLinks>
         <small *ngIf="isServerRendered()" class="d-block text-right search-info">
-          <a href="https://scholars.library.tamu.edu/about_scholars/#searchTips">
-            <i class="fa fa-info-circle"></i>
+          <a href="https://scholars.library.tamu.edu/about_scholars/#searchTips" role="link" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.SEARCH_TIPS' | translate">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
             {{ 'SHARED.SEARCH_BOX.SEARCH_TIPS' | translate }}
           </a>
           <span> | </span>
-          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
+          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()" role="link" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.ADVANCED_SEARCH' | translate">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
         </small>
         <small *ngIf="isBrowserRendered()" class="d-block text-right search-info">
-          <span (click)="openSearchTips()" class="open-search-tips link">
-            <i class="fa fa-info-circle"></i>
+          <span (click)="openSearchTips()" class="open-search-tips link" role="button" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.OPEN_TIPS' | translate">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
             {{ 'SHARED.SEARCH_BOX.SEARCH_TIPS' | translate }}
           </span>
           <span> | </span>
-          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
+          <a [routerLink]="getDiscoveryRouterLink()" [queryParams]="getDefaultDiscoveryQueryParams()" role="link" [attr.aria-label]="'SHARED.SEARCH_BOX.ACCESSIBILITY.ADVANCED_SEARCH' | translate">{{ 'SHARED.SEARCH_BOX.ADVANCED_SEARCH' | translate }}</a>
         </small>
       </ng-template>
 

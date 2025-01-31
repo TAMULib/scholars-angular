@@ -31,6 +31,7 @@
     </div>
   </div>
 </div>
+
 <div class="home-recent mt-2 mb-2" *ngIf="home | async; let home">
   <div class="container">
     <div class="row">
@@ -46,6 +47,7 @@
     </div>
   </div>
 </div>
+
 <div class="sustainable-development-goals mt-2 mb-4">
   <div class="container">
     <div class="row">
@@ -61,7 +63,7 @@
         </div>
       </div>
       <div class="col-md-9">
-        <scholars-sustainable-development-goals></scholars-sustainable-development-goals>
+        <scholars-sustainable-development-goals [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.SUSTAINABLE_DEVELOPMENT_GOALS' | translate"></scholars-sustainable-development-goals>
       </div>
     </div>
   </div>
@@ -70,7 +72,12 @@
 <ng-template #homeSearchBox>
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-      <scholars-search-box [styles]="getSearchStyles() | async" [view]="discoveryView | async" placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}"></scholars-search-box>
+      <scholars-search-box 
+        [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.SEARCH_BOX' | translate" 
+        [styles]="getSearchStyles() | async" 
+        [view]="discoveryView | async" 
+        placeholder="{{ 'SHARED.SEARCH_BOX.PLACEHOLDER' | translate }}">
+      </scholars-search-box>
     </div>
   </div>
 </ng-template>
@@ -78,9 +85,9 @@
 <ng-template #homeStats>
   <div class="row justify-content-center home-stats">
     <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 d-flex flex-row justify-content-center">
-      <scholars-stats-box label="People" classifier="Person"></scholars-stats-box>
-      <scholars-stats-box label="Organizations" classifier="Organization"></scholars-stats-box>
-      <scholars-stats-box label="Research" classifier="Document"></scholars-stats-box>
+      <scholars-stats-box label="People" classifier="Person" [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.PEOPLE_STATS' | translate"></scholars-stats-box>
+      <scholars-stats-box label="Organizations" classifier="Organization" [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.ORGANIZATION_STATS' | translate"></scholars-stats-box>
+      <scholars-stats-box label="Research" classifier="Document" [attr.aria-label]="'DASHBOARD.HOME.ACCESSIBILITY.DOCUMENT_STATS' | translate"></scholars-stats-box>
     </div>
   </div>
 </ng-template>

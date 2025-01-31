@@ -1,11 +1,11 @@
 <div class="card-header font-weight-bold text-primary text-capitalize">
-  <span>{{section.name}}</span>
+  <span>{{ section.name }}</span>
   <div class="float-right" *ngIf="section.shared">
     <div class="embed-dropdown d-inline-block" placement="bottom-right" ngbDropdown>
-      <i class="fa fa-lg fa-share-alt" aria-hidden="true" ngbDropdownToggle></i>
+      <i class="fa fa-lg fa-share-alt" ngbDropdownToggle ></i>
       <div class="dropdown-menu" ngbDropdownMenu>
         <div class="form-group col-12">
-          <label>{{ 'DISPLAY.EMBEDDABLE.LABEL' | translate }}</label>
+          <label>{{ "DISPLAY.EMBEDDABLE.LABEL" | translate }}</label>
           <div class="input-group">
             <textarea class="form-control" type="text" rows="4" ng-bind-html [value]="getEmbedSnippet()" #embedCode></textarea>
             <span class="input-group-btn ml-2">

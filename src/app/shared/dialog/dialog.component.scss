@@ -6,4 +6,32 @@
       color: var(--dialog-header-color);
     }
   }
+
+  .modal-body {
+    ::ng-deep .pagination {
+
+      .page-item .page-link {
+        background-color: #ffffff;
+        color: #0056b3;
+      }
+
+      .page-item .page-link:hover {
+        background-color: #e9ecef;
+        color: #004a99;
+      }
+
+      .page-item.active .page-link {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        color: #ffffff;
+      }
+
+      .page-item.active .page-link:focus,
+      .page-item.active .page-link:hover {
+        background-color: #003b7a;
+        border-color: #003b7a;
+        color: #ffffff;
+      }
+    }
+  }
 }

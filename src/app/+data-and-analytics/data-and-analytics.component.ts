@@ -27,9 +27,7 @@ import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
 })
 export class DataAndAnalyticsComponent implements OnInit {
 
-  @ViewChild('collegesSelect') collegesSelect: ElementRef<HTMLSelectElement>;
-  @ViewChild('departmentsSelect') departmentsSelect: ElementRef<HTMLSelectElement>;
-  @ViewChild('othersSelect') othersSelect: ElementRef<HTMLSelectElement>;
+  @ViewChild('organizationSelect') organizationsSelect: ElementRef<HTMLSelectElement>;
 
   public displayView: Observable<DisplayView>;
 
@@ -53,11 +51,7 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public labelSubject: BehaviorSubject<string>;
 
-  public colleges: Observable<Individual[]>;
-
-  public departments: Observable<Individual[]>;
-
-  public others: Observable<Individual[]>;
+  public organizations: Observable<Individual[]>;
 
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
@@ -118,24 +112,20 @@ export class DataAndAnalyticsComponent implements OnInit {
     // University (11)
     // External Organization (1453) *
     // * should not be in any select options
-    this.colleges = this.getOrganizationsByTypes([
-      'College',
-      'School',
-    ]);
-    this.departments = this.getOrganizationsByTypes([
-      'AcademicDepartment'
-    ]);
-    this.others = this.getOrganizationsByTypes([
+    this.organizations = this.getOrganizationsByTypes([
+      'AcademicDepartment',
       'AffiliatedAgency',
       'Association',
       'BranchCampus',
       'Center',
+      'College',
       'Hospital',
       'Institute',
       'Laboratory',
       'Library',
       'Program',
-      'University'
+      'School',
+      'University',
     ]);
 
     this.themeOrganization = this.store.pipe(
@@ -219,16 +209,8 @@ export class DataAndAnalyticsComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
 
-    if (this.collegesSelect && this.collegesSelect.nativeElement.id !== changedSelect?.id) {
-      this.collegesSelect.nativeElement.value = '';
-    }
-
-    if (this.departmentsSelect && this.departmentsSelect.nativeElement.id !== changedSelect?.id) {
-      this.departmentsSelect.nativeElement.value = '';
-    }
-
-    if (this.othersSelect && this.othersSelect.nativeElement.id !== changedSelect?.id) {
-      this.othersSelect.nativeElement.value = '';
+    if (this.organizationsSelect && this.organizationsSelect.nativeElement.id !== changedSelect?.id) {
+      this.organizationsSelect.nativeElement.value = '';
     }
 
     this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));
@@ -280,7 +262,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     }
 
     return this.individualRepo.search({ filters, page })
-      .pipe(map((collection) => collection._embedded.individual as Individual[]));
+      .pipe(map(collection => (collection._embedded.individual as Individual[]).sort((a, b) => a.name.localeCompare(b.name))));
   }
 
 }

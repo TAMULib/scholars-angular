@@ -86,30 +86,12 @@
               </div>
 
               <div class="row p-1">
-                <div class="col-4" *ngIf="colleges | async; let colleges">
+                <div class="col-12" *ngIf="organizations | async; let organizations">
                   <div class="form-group">
-                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.COLLEGES_AND_SCHOOLS' | translate }}</label>
-                    <select #collegesSelect id="collegesSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, collegesSelect)">
+                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
+                    <select #organizationsSelect id="organizationsSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, organizationsSelect)">
                       <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
-                      <option *ngFor="let so of colleges" [ngValue]="so.id">{{ so.name }}</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-4" *ngIf="departments | async; let departments">
-                  <div class="form-group">
-                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.DEPARTMENTS' | translate }}</label>
-                    <select #departmentsSelect id="departmentsSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, departmentsSelect)">
-                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
-                      <option *ngFor="let so of departments" [ngValue]="so.id">{{ so.name }}</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-4" *ngIf="others | async; let others">
-                  <div class="form-group">
-                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.OTHERS' | translate }}</label>
-                    <select #othersSelect id="othersSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, othersSelect)">
-                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
-                      <option *ngFor="let so of others" [ngValue]="so.id">{{ so.name }}</option>
+                      <option *ngFor="let so of organizations" [ngValue]="so.id">{{ so.name }}</option>
                     </select>
                   </div>
                 </div>

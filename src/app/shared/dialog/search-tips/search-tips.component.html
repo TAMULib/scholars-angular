@@ -1,22 +1,26 @@
-<scholars-dialog [dialog]="dialog">
-  <ul>
-    <li>Searches are not case-sensitive</li>
-    <li>Type keywords using AND or OR logic (AND or OR must be capitalized)
-      <ul>
-        <li>eg., nutrition AND protein</li>
-        <li>eg., nutrition OR protein</li>
-      </ul>
-    </li>
-    <li>Type your phrase with double quotation marks
-      <ul>
-        <li>eg., "glucose absorption"</li>
-        <li>eg., "glucose absorption" AND nutrition</li>
-      </ul>
-    </li>
-    <li>Use wildcard * character to search variations
-      <ul>
-        <li>eg., bio*</li>
-      </ul>
-    </li>
-  </ul>
+<scholars-dialog [dialog]="dialog" role="dialog" aria-describedby="search-instructions">
+  <div id="dialogTitle" class="h4">{{ 'SHARED.DIALOG.ARIA_LABELLED_BY' | translate }}</div>
+  
+  <div id="search-instructions">
+    <ul>
+      <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.CASE_INSENSITIVE' | translate }}</li>
+      <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.LOGIC' | translate }}
+        <ul>
+          <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.LOGIC_EXAMPLE_1' | translate }}</li>
+          <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.LOGIC_EXAMPLE_2' | translate }}</li>
+        </ul>
+      </li>
+      <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.QUOTATION' | translate }}
+        <ul>
+          <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.QUOTATION_EXAMPLE_1' | translate }}</li>
+          <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.QUOTATION_EXAMPLE_2' | translate }}</li>
+        </ul>
+      </li>
+      <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.WILDCARD' | translate }}
+        <ul>
+          <li>{{ 'SHARED.DIALOG.SEARCH_TIPS.WILDCARD_EXAMPLE' | translate }}</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </scholars-dialog>

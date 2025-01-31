@@ -7,16 +7,16 @@
     </div>
   </div>
 </div>
-<scholars-sidebar *ngIf="directoryView | async; let directoryView">
+<scholars-sidebar *ngIf="directoryView | async; let directoryView" role="complementary">
   <div class="container mt-2" *ngIf="queryParams | async; let queryParams">
     <div class="headers-row row flex-column-reverse flex-md-row">
       <div class="col-md-8">
-        <span class="h3 text-primary">{{ directoryView.name }}</span>
+        <span id="sidebar-title" class="h3 text-primary">{{ directoryView.name }}</span>
       </div>
       <div class="col-md-4 text-right">
         <span *ngIf="hasExport(directoryView)" class="column-export">
           <a [href]="getDirectoryExportUrl(queryParams, directoryView)" download class="btn">
-            <span class="fa fa-share" aria-hidden="true"></span>
+            <span class="fa fa-share" [attr.aria-hidden]="true"></span>
             <span>{{ 'DIRECTORY.EXPORT' | translate }}</span>
           </a>
         </span>
@@ -27,15 +27,15 @@
         <span *ngIf="showFilter(directoryView, filter)">
           <span class="mr-1">{{getFilterField(directoryView, filter) | formalize}}:</span>
           <span class="mr-2">{{getFilterValue(directoryView, filter) | formalize}}</span>
-          <a class="fa fa-close" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsRemovingFilter(queryParams, filter)"></a>
+          <a class="fa fa-close" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsRemovingFilter(queryParams, filter)" [attr.aria-label]="'DIRECTORY.CLEAR_FILTER' | translate"></a>
         </span>
       </span>
       <span *ngIf="showClearFilters(directoryView, filters)" class="badge badge-light p-2 mr-2 mb-2">
         <a [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsClearingFilters(queryParams, directoryView)">Clear</a>
       </span>
     </div>
-    <div class="index">
-      <a class="option" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsResetting(queryParams, directoryView)">
+    <div class="index" role="navigation" [attr.aria-label]="'DIRECTORY.INDEX' | translate">
+      <a class="option" [routerLink]="getDirectoryRouterLink(directoryView)" [queryParams]="getDirectoryQueryParamsResetting(queryParams, directoryView)" >
         <span *ngIf="isActive(directoryView, queryParams, 'All')" class="fa fa-caret-right mr-1"></span>
         <span>{{ 'DIRECTORY.ALL' | translate }}</span>
       </a>
