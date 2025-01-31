@@ -183,7 +183,7 @@
         "SUBMIT": "Submit",
         "ACCESSIBILITY" : {
           "FILTER" : "Filter",
-          "FILTER_BY" : "Filter by",
+          "FILTER_BY" : "Filter by {{item}}",
           "PAGINATION" : "Pagination"
         }
       },
