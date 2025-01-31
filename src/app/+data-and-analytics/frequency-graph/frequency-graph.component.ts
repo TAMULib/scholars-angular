@@ -32,12 +32,6 @@ export class FrequencyGraphComponent implements OnInit {
   @Input()
   public defaultId: string;
 
-  @Input()
-  public upperLimitInYears = 40;
-
-  @Input()
-  public groupingIntervalInYears = 5;
-
   @Output()
   public labelEvent: EventEmitter<string>;
 
