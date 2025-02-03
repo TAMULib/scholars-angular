@@ -86,7 +86,22 @@ export class FrequencyGraphComponent implements OnInit, OnChanges {
     if (this.routerState) {
       this.routerState.pipe(take(1)).subscribe((routerState: CustomRouterState) => {
         const originalSdrRequest = createSdrRequest(routerState);
-        const sdrRequest = Object.assign(originalSdrRequest);
+        const sdrRequest = Object.assign(originalSdrRequest, {
+          page: {
+            number: 1,
+            size: 1,
+            sort: originalSdrRequest.page.sort
+          },
+          facets: originalSdrRequest.facets.map((f: Facetable) => {
+            f.pageNumber = 1;
+            f.pageSize = 2147483647;
+            return f;
+          }),
+          highlight: {},
+          query: Object.assign(originalSdrRequest.query, {
+            fields: 'class'
+          })
+        });
 
         sdrRequest.filters.push({
           field: 'authorOrganization',
