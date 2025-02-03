@@ -1,9 +1,48 @@
 <div class="container mb-1">
   <div class="text-center h2">{{organization.name}}</div>
   <div class="row">
-    <div class="col-xl-4">
 
+    <div class="col-xl-4">
+      <div *ngIf="facets | async; let facets">
+        <span class="h4">What do you want to compare?</span>
+
+        <span *ngFor="let facet of facets; let last = last">
+          <span class="facet-option" [class.active]="selectedFacet === facet" (click)="selectedFacet = facet">
+            {{ facet.field }}
+          </span>
+          <span> | </span>
+          <span *ngIf="last" (click)="selectViewAll(facets)">View All</span>
+        </span>
+
+        <table class="table table-bordered" *ngIf="selectedFacet">
+          <thead>
+            <tr>
+              <th scope="col" colspan="2">Entity Label</th>
+              <th scope="col">Publication Count</th>
+              <th scope="col">Entity Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of selectedFacet?.entries?.content | slice: (page - 1) * pageSize : ((page - 1) * pageSize) + pageSize">
+              <th scope="row"><input type="checkbox"></th>
+              <td>{{ entry.value }}</td>
+              <td>{{ entry.count }}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination
+          [collectionSize]="selectedFacet?.entries?.content.length"
+          [pageSize]="pageSize"
+          [(page)]="page"
+          [maxSize]="3"
+          [rotate]="true"
+          [ellipses]="true"
+          [boundaryLinks]="true"
+          [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
+      </div>
     </div>
+
     <div class="col-xl-8">
 
     </div>
