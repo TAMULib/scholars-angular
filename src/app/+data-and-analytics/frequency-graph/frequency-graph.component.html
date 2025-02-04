@@ -4,43 +4,57 @@
 
     <div class="col-xl-4">
       <div *ngIf="facets | async; let facets">
-        <span class="h4">What do you want to compare?</span>
+        <div *ngIf="selectedFacet | async; let selectedFacet">
+          <div class="h5">What do you want to compare?</div>
 
-        <span *ngFor="let facet of facets; let last = last">
-          <span class="facet-option" [class.active]="selectedFacet === facet" (click)="selectedFacet = facet">
-            {{ facet.field }}
-          </span>
-          <span> | </span>
-          <span *ngIf="last" (click)="selectViewAll(facets)">View All</span>
-        </span>
+          <div>
+            <span *ngFor="let facet of facets; let last = last">
+              <span href="#" class="frequency-graph-compare" [class.active]="selectedFacet.field === facet.field" (click)="selectFacet(facet)">{{ getFacetLabel(facet) }}</span>
+              <span *ngIf="!last"> | </span>
+            </span>
+          </div>
 
-        <table class="table table-bordered" *ngIf="selectedFacet">
-          <thead>
-            <tr>
-              <th scope="col" colspan="2">Entity Label</th>
-              <th scope="col">Publication Count</th>
-              <th scope="col">Entity Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let entry of selectedFacet?.entries?.content | slice: (page - 1) * pageSize : ((page - 1) * pageSize) + pageSize">
-              <th scope="row"><input type="checkbox"></th>
-              <td>{{ entry.value }}</td>
-              <td>{{ entry.count }}</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-        <ngb-pagination
-          [collectionSize]="selectedFacet?.entries?.content.length"
-          [pageSize]="pageSize"
-          [(page)]="page"
-          [maxSize]="3"
-          [rotate]="true"
-          [ellipses]="true"
-          [boundaryLinks]="true"
-          [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
-      </div>
+          <div>
+            <form novalidate>
+              <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
+                <input id="filter" name="filter" formControlName="filter" type="text" class="form-control" placeholder="Filter" [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER' | translate" aria-describedby="filter-entries">
+                <div class="input-group-append">
+                  <span class="input-group-text fa fa-close" aria-hidden="true"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col" colspan="2">Entity Label</th>
+                <th scope="col">Publication Count</th>
+                <th scope="col">Entity Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
+                <th scope="row"><input type="checkbox"></th>
+                <td>{{ entry.value }}</td>
+                <td>{{ entry.count }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ngb-pagination
+            [collectionSize]="selectedFacet.entries?.content.length"
+            [pageSize]="selectedFacet.pageSize"
+            [(page)]="selectedFacet.page"
+            [maxSize]="3"
+            [rotate]="true"
+            [ellipses]="true"
+            [boundaryLinks]="true"
+            [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
+          </div>
+        </div>
+
     </div>
 
     <div class="col-xl-8">

@@ -2,4 +2,25 @@
   .col-xl-6 {
     padding: 0px;
   }
+
+  .input-group-append>.fa-close {
+    padding-top: 9px;
+    cursor: pointer;
+  }
+
+  .frequency-graph-compare {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .frequency-graph-compare.active {
+    color: gray;
+    text-decoration: none;
+  }
+
+  .frequency-graph-compare:hover {
+    color: darkblue;
+    text-decoration: underline;
+  }
 }
