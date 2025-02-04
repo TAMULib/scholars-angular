@@ -179,7 +179,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           .pipe(
             tap((collection: SdrCollection) => {
               if (collection?.facets.length > 0) {
-                this.onSelectFacet(collection?.facets[0]);
+                this.onSelectFacet(collection.facets[0]);
               }
             }),
             map((collection: SdrCollection) => collection.facets.concat([
@@ -256,10 +256,15 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   buildViewAllFacet(facets): SdrFacet {
+    let defaultSelected = 3;
     const content = facets
       .flatMap(facet => facet.entries.content.map(entry => {
         entry.field = facet.field;
-        entry.selected = false;
+        entry.selected = defaultSelected > 0;
+        if (defaultSelected > 0) {
+          this.onSelectFilter(entry);
+          defaultSelected--;
+        }
         return entry;
       }))
       .sort((a, b) => b.count - a.count);
