@@ -16,6 +16,10 @@ import { CustomRouterState } from '../../core/store/router/router.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { createSdrRequest } from '../../shared/utilities/discovery.utility';
 
+export interface FrequencyGraphFilter extends Filter {
+  color: string;
+}
+
 @Component({
   selector: 'scholars-frequency-graph',
   templateUrl: './frequency-graph.component.html',
@@ -44,7 +48,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   public labelEvent: EventEmitter<string>;
 
   @Output()
-  public selectedFilters: Observable<Filter[]>;
+  public selectedFilters: Observable<FrequencyGraphFilter[]>;
 
   public routerState: Observable<CustomRouterState>;
 
@@ -52,7 +56,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   public selectedFacet: Observable<SdrFacet>;
 
-  public selectedFiltersSubject: BehaviorSubject<Filter[]>;
+  public selectedFiltersSubject: BehaviorSubject<FrequencyGraphFilter[]>;
 
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
 
@@ -68,7 +72,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     readonly individualRepo: IndividualRepo
   ) {
     this.labelEvent = new EventEmitter<string>();
-    this.selectedFiltersSubject = new BehaviorSubject<Filter[]>([]);
+    this.selectedFiltersSubject = new BehaviorSubject<FrequencyGraphFilter[]>([]);
     this.selectedFilters = this.selectedFiltersSubject.asObservable();
     this.selectedFacetSubject = new BehaviorSubject<SdrFacet>(undefined);
     this.selectedFacet = this.selectedFacetSubject.asObservable()
@@ -183,7 +187,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     const filter = {
       field: entry.field,
       value: entry.value,
-      opKey: OpKey.EQUALS
+      opKey: OpKey.EQUALS,
+      color: 'green'
     };
 
     if (entry.selected) {
