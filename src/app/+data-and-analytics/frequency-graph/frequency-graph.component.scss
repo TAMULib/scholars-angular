@@ -24,6 +24,13 @@
     text-decoration: underline;
   }
 
+  .frequency-graph-option {
+    color-key: {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
   .frequency-graph-option.selected {
     font-weight: bolder;
     background-color: #ECFFB3;

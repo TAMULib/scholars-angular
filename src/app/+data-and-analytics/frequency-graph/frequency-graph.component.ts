@@ -16,6 +16,37 @@ import { CustomRouterState } from '../../core/store/router/router.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { createSdrRequest } from '../../shared/utilities/discovery.utility';
 
+const TURQUOISE = "#8DD3C7";
+const DARK_TURQUOISE = "#009999";
+const LIGHT_YELLOW = "#FFFFB3";
+const LIGHT_VIOLET = "#BEBADA";
+const RED = "#CC0000";
+const LIGHT_RED = "#FB8072";
+const DARK_RED = "#520000";
+const SKY_BLUE = "#80B1D3";
+const DARK_BLUE = "#80B1D3";
+const NAVY_BLUE = "#003366";
+const LIGHT_BLUE = "#3399FF";
+const ORANGE = "#FDB462";
+const DARK_ORANGE = "#FF9900";
+const LIGHT_GREEN = "#B3DE69";
+const DARK_GREEN = "#006600";
+const VIBRANT_GREEN = "#99CC00";
+const LIGHT_PINK = "#FCCDE5";
+const LIGHT_GREY = "#D9D9D9";
+const PURPLE = "#BC80BD";
+const DARK_PURPLE = "#6600CC";
+const PINK_PURPLE = "#CC00CC";
+const HOT_PINK = "#FF00B4";
+const MEHENDI_GREEN = "#7A7900";
+
+const colorConstantQueue = [
+  LIGHT_BLUE, DARK_ORANGE, VIBRANT_GREEN,
+  NAVY_BLUE, RED, PINK_PURPLE,
+  DARK_TURQUOISE, MEHENDI_GREEN, HOT_PINK,
+  DARK_RED
+];
+
 export interface FrequencyGraphFilter extends Filter {
   color: string;
 }
@@ -61,6 +92,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
 
   public form: UntypedFormGroup;
+
+  public availableColors = [...colorConstantQueue].reverse();
 
   private filterSubscription: Subscription;
 
@@ -183,26 +216,29 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelectFilter(entry): void {
-    const filters = this.selectedFiltersSubject.value;
-    const filter = {
-      field: entry.field,
-      value: entry.value,
-      opKey: OpKey.EQUALS,
-      color: 'green'
-    };
+    const filters = [...this.selectedFiltersSubject.value];
 
     if (entry.selected) {
-      filters.push(filter);
+      entry.color = this.availableColors.pop();
+      // when available colors is empty the unselected input that invokes this method is disabled
+      filters.push({
+        field: entry.field,
+        value: entry.value,
+        opKey: OpKey.EQUALS,
+        color: entry.color
+      });
     } else {
       const index = filters.findIndex(
         f => f.field === entry.field &&
-          f.value === entry.value &&
-          f.opKey === OpKey.EQUALS
+          f.value === entry.value
       );
       if (index !== -1) {
         filters.splice(index, 1);
+        this.availableColors.push(entry.color);
+        delete entry.color;
       }
     }
+
     this.selectedFiltersSubject.next(filters);
   }
 
