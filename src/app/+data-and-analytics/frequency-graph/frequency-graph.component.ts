@@ -8,7 +8,7 @@ import { SdrCollection, SdrFacet } from 'src/app/core/model/sdr';
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
 import { Facetable } from '../../core/model/request';
-import { DataAndAnalyticsView, DisplayView, OpKey } from '../../core/model/view';
+import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
 import { AppState } from '../../core/store';
 import { selectRouterState } from '../../core/store/router';
@@ -43,19 +43,20 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public labelEvent: EventEmitter<string>;
 
-  public form: UntypedFormGroup;
+  @Output()
+  public selectedFilters: Observable<Filter[]>;
 
   public routerState: Observable<CustomRouterState>;
 
   public facets: Observable<SdrFacet[]>;
 
-  public page = 1;
+  public selectedFacet: Observable<SdrFacet>;
 
-  public pageSize = 10;
+  public selectedFiltersSubject: BehaviorSubject<Filter[]>;
 
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
 
-  public selectedFacet: Observable<SdrFacet>;
+  public form: UntypedFormGroup;
 
   private filterSubscription: Subscription;
 
@@ -67,6 +68,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     readonly individualRepo: IndividualRepo
   ) {
     this.labelEvent = new EventEmitter<string>();
+    this.selectedFiltersSubject = new BehaviorSubject<Filter[]>([]);
+    this.selectedFilters = this.selectedFiltersSubject.asObservable();
     this.selectedFacetSubject = new BehaviorSubject<SdrFacet>(undefined);
     this.selectedFacet = this.selectedFacetSubject.asObservable()
       .pipe(filter(facet => !!facet));
@@ -137,7 +140,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           .pipe(
             tap((collection: SdrCollection) => {
               if (collection?.facets.length > 0) {
-                this.selectFacet(collection?.facets[0]);
+                this.onSelectFacet(collection?.facets[0]);
               }
             }),
             map((collection: SdrCollection) => collection.facets.concat([
@@ -148,7 +151,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  selectFacet(facet): void {
+  onSelectFacet(facet): void {
     this.form.controls.filter.setValue('');
 
     if (this.filterSubscription) {
@@ -171,6 +174,31 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.selectedFacetSubject.next(facet);
+
+    this.selectedFilters.subscribe(console.log);
+  }
+
+  onSelectFilter(entry): void {
+    const filters = this.selectedFiltersSubject.value;
+    const filter = {
+      field: entry.field,
+      value: entry.value,
+      opKey: OpKey.EQUALS
+    };
+
+    if (entry.selected) {
+      filters.push(filter);
+    } else {
+      const index = filters.findIndex(
+        f => f.field === entry.field &&
+          f.value === entry.value &&
+          f.opKey === OpKey.EQUALS
+      );
+      if (index !== -1) {
+        filters.splice(index, 1);
+      }
+    }
+    this.selectedFiltersSubject.next(filters);
   }
 
   getFacetLabel(facet = { field: 'all' }): string {
@@ -183,7 +211,11 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   buildViewAllFacet(facets): SdrFacet {
     const content = facets
-      .flatMap(facet => facet.entries.content)
+      .flatMap(facet => facet.entries.content.map(entry => {
+        entry.field = facet.field;
+        entry.selected = false;
+        return entry;
+      }))
       .sort((a, b) => b.count - a.count);
 
     const page = {
