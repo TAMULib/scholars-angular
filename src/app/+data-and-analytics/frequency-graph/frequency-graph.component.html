@@ -6,7 +6,7 @@
       <div *ngIf="facets | async; let facets">
         <div *ngIf="selectedFacet | async; let selectedFacet">
 
-          <ngb-alert *ngIf="availableColors.length === 0" [type]="'warning'">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.MAXIMUM_SELECTED' | translate }}</ngb-alert>
+          <ngb-alert *ngIf="availableColors.length === 0" [type]="'warning'" [dismissible]="false">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.MAXIMUM_SELECTED' | translate }}</ngb-alert>
 
           <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
 
