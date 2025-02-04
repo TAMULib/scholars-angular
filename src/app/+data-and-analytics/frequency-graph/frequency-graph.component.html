@@ -5,11 +5,14 @@
     <div class="col-xl-4">
       <div *ngIf="facets | async; let facets">
         <div *ngIf="selectedFacet | async; let selectedFacet">
-          <div class="h5">What do you want to compare?</div>
+          <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
 
           <div>
             <span *ngFor="let facet of facets; let last = last">
-              <span class="frequency-graph-compare" [class.active]="selectedFacet.field === facet.field" (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
+              <span
+                class="frequency-graph-compare"
+                [class.active]="selectedFacet.field === facet.field"
+                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
               <span *ngIf="!last"> | </span>
             </span>
           </div>
@@ -17,7 +20,13 @@
           <div>
             <form novalidate>
               <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
-                <input id="filter" name="filter" formControlName="filter" type="text" class="form-control" placeholder="Filter" [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER' | translate" aria-describedby="filter-entries">
+                <input
+                  id="filter"
+                  name="filter"
+                  formControlName="filter"
+                  type="text"
+                  class="form-control"
+                  placeholder="Search">
                 <div class="input-group-append">
                   <span class="input-group-text fa fa-close" aria-hidden="true"></span>
                 </div>
@@ -28,14 +37,23 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col" colspan="2">Entity Label</th>
-                <th scope="col">Publication Count</th>
-                <th scope="col">Entity Type</th>
+                <th scope="col" colspan="2">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_TYPE' | translate }}</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="frequency-graph-option" [class.selected]="entry.selected" *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
-                <th scope="row"><input type="checkbox" [(ngModel)]="entry.selected" (change)="onSelectFilter(entry)" [disabled]="!entry.selected && availableColors.length === 0"></th>
+              <tr
+                class="frequency-graph-option"
+                [class.selected]="entry.selected"
+                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
+                <th scope="row">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="entry.selected"
+                    (change)="onSelectFilter(entry)"
+                    [disabled]="!entry.selected && availableColors.length === 0">
+                </th>
                 <td>{{ entry.value }}</td>
                 <td>{{ entry.count }}</td>
                 <td>

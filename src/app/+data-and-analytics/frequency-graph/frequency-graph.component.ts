@@ -15,6 +15,7 @@ import { selectRouterState } from '../../core/store/router';
 import { CustomRouterState } from '../../core/store/router/router.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { createSdrRequest } from '../../shared/utilities/discovery.utility';
+import { TranslateService } from '@ngx-translate/core';
 
 const TURQUOISE = "#8DD3C7";
 const DARK_TURQUOISE = "#009999";
@@ -100,6 +101,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) readonly platformId: string,
     readonly formBuilder: UntypedFormBuilder,
+    readonly translate: TranslateService,
     readonly store: Store<AppState>,
     readonly dialog: DialogService,
     readonly individualRepo: IndividualRepo
@@ -244,9 +246,12 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   getFacetLabel(facet = { field: 'all' }): string {
     switch (facet.field) {
-      case 'authorOrganization': return 'Organizations';
-      case 'authors': return 'People';
-      default: return 'View All';
+      case 'authorOrganization':
+        return this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATIONS');
+      case 'authors':
+        return this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PEOPLE');
+      default:
+        return this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.VIEW_ALL');
     }
   }
 
