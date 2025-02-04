@@ -9,7 +9,7 @@
 
           <div>
             <span *ngFor="let facet of facets; let last = last">
-              <span href="#" class="frequency-graph-compare" [class.active]="selectedFacet.field === facet.field" (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
+              <span class="frequency-graph-compare" [class.active]="selectedFacet.field === facet.field" (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
               <span *ngIf="!last"> | </span>
             </span>
           </div>
@@ -34,7 +34,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
+              <tr class="frequency-graph-option" [class.selected]="entry.selected" *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
                 <th scope="row"><input type="checkbox" [(ngModel)]="entry.selected" (change)="onSelectFilter(entry)"></th>
                 <td>{{ entry.value }}</td>
                 <td>{{ entry.count }}</td>

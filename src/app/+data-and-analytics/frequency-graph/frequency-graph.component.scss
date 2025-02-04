@@ -23,4 +23,9 @@
     color: darkblue;
     text-decoration: underline;
   }
+
+  .frequency-graph-option.selected {
+    font-weight: bolder;
+    background-color: #ECFFB3;
+  }
 }
