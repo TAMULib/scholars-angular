@@ -224,8 +224,6 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.selectedFacetSubject.next(facet);
-
-    this.selectedFilters.subscribe(console.log);
   }
 
   onSelectFilter(entry): void {
