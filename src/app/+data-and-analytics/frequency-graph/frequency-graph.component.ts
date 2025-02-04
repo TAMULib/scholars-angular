@@ -1,13 +1,15 @@
 import { isPlatformServer } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subscription, take, tap } from 'rxjs';
-import { SdrCollection, SdrFacet } from 'src/app/core/model/sdr';
+
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
 import { Facetable } from '../../core/model/request';
+import { SdrCollection, SdrFacet } from '../../core/model/sdr';
+import { SdrFacetPivot } from '../../core/model/sdr/sdr-facet-pivot';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
 import { AppState } from '../../core/store';
@@ -15,7 +17,6 @@ import { selectRouterState } from '../../core/store/router';
 import { CustomRouterState } from '../../core/store/router/router.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { createSdrRequest } from '../../shared/utilities/discovery.utility';
-import { TranslateService } from '@ngx-translate/core';
 
 const TURQUOISE = "#8DD3C7";
 const DARK_TURQUOISE = "#009999";
@@ -50,6 +51,7 @@ const colorConstantQueue = [
 
 export interface FrequencyGraphFilter extends Filter {
   color: string;
+  series: SdrFacetPivot[];
 }
 
 @Component({
@@ -138,6 +140,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     this.loadFacets(this.organization);
+
+    this.selectedFilters.subscribe(console.log);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -226,7 +230,9 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedFacetSubject.next(facet);
   }
 
-  onSelectFilter(entry): void {
+
+
+  onSelectFilter(facet, entry): void {
     const filters = [...this.selectedFiltersSubject.value];
 
     if (entry.selected) {
@@ -236,7 +242,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
         field: entry.field,
         value: entry.value,
         opKey: OpKey.EQUALS,
-        color: entry.color
+        color: entry.color,
+        series: this.getPivotForEntry(facet, entry)
       });
     } else {
       const index = filters.findIndex(
@@ -251,6 +258,21 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.selectedFiltersSubject.next(filters);
+  }
+
+  getPivotForEntry(facet, entry): SdrFacetPivot[] {
+    for (const [key, values] of Object.entries(facet.pivot)) {
+      const typedValues = values as SdrFacetPivot[];
+      if (key.startsWith(entry.field)) {
+        for (const typedValue of typedValues) {
+          if (typedValue.value === entry.value) {
+            return typedValue.pivot;
+          }
+        }
+      }
+    }
+
+    return [];
   }
 
   clearSearchFilter(): void {
@@ -275,7 +297,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
         entry.field = facet.field;
         entry.selected = defaultSelected > 0;
         if (defaultSelected > 0) {
-          this.onSelectFilter(entry);
+          this.onSelectFilter(facet, entry);
           defaultSelected--;
         }
         return entry;
@@ -294,8 +316,19 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       entries: {
         content,
         page
-      }
+      },
+      pivot: this.mergePivotMaps(facets)
     };
+  }
+
+  mergePivotMaps(facets: SdrFacet[]): Map<string, SdrFacetPivot[]> {
+    return facets.reduce((acc, facet) => {
+      Object.entries(facet.pivot).forEach(([key, pivots]) => {
+        const existing = acc.get(key) || [];
+        acc.set(key, [...existing, ...pivots]);
+      });
+      return acc;
+    }, new Map<string, SdrFacetPivot[]>());
   }
 
 }

@@ -32,6 +32,7 @@ export interface Facetable {
   pageNumber?: number;
   sort?: string;
   filter?: string;
+  pivot?: string;
 }
 
 export interface Filterable {
