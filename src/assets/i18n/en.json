@@ -75,6 +75,7 @@
       "DESCRIPTION": "These two bar charts highlight the age distribution in five-year groupings by ‘academic age’. Starting point of academic age is the first year of publication activity and followed through continuously. Each bar is underpinned by a list of researchers in this age bracket for further drill down. Left, the red line indicates the overall number of publications per age group and on the right the average number of publication output per researcher in an age group is displayed."
     },
     "FREQUENCY_GRAPH": {
+      "MAXIMUM_SELECTED": "A Maximum 10 entities can be compared. Please remove some & try again.",
       "WHAT_TO_COMPARE": "What do you want to compare?",
       "ENTITY_LABEL": "Entity Label",
       "PUBLICATION_COUNT": "Publication Count",
@@ -87,7 +88,7 @@
   "DIRECTORY": {
     "ALL": "All",
     "EXPORT": "Export Directory",
-    "INDEX" : "Directory Index"
+    "INDEX": "Directory Index"
   },
   "DISCOVERY": {
     "TITLE": "Discovery",
@@ -127,7 +128,7 @@
         }
       },
       "COINVESTIGATOR": {
-        "CLICK_TO_VIEW_PROFILE" : "Click to view profile",
+        "CLICK_TO_VIEW_PROFILE": "Click to view profile",
         "LABEL": "Co-investigator Network",
         "ICON_ALT": "Co-investigator network icon",
         "NOTE": "Note: This information is based solely on grants that have been loaded into the VIVO system. This may only be a small sample of the person's total work.",
@@ -150,9 +151,9 @@
     },
     "NAVBAR": {
       "LOGO_ALT": "TAMU Libraries logo",
-      "ACCESSIBILITY" : {
-        "GO_TO_HOMEPAGE" : "Go to homepage",
-        "TOGGLE_NAVIGATION" : "Toggle navigation menu"
+      "ACCESSIBILITY": {
+        "GO_TO_HOMEPAGE": "Go to homepage",
+        "TOGGLE_NAVIGATION": "Toggle navigation menu"
       }
     }
   },
@@ -190,10 +191,10 @@
         "EMPTY": "No facet entries matching current filter. Try removing some filters.",
         "CANCEL": "Close",
         "SUBMIT": "Submit",
-        "ACCESSIBILITY" : {
-          "FILTER" : "Filter",
-          "FILTER_BY" : "Filter by {{item}}",
-          "PAGINATION" : "Pagination"
+        "ACCESSIBILITY": {
+          "FILTER": "Filter",
+          "FILTER_BY": "Filter by {{item}}",
+          "PAGINATION": "Pagination"
         }
       },
       "LOGIN": {
@@ -253,8 +254,8 @@
         "MAX_LENGTH": "{{field}} must be less than {{max}}",
         "CONFIRM_PASSWORD": "{{field}} must match password"
       },
-      "ACCESSIBILITY" : {
-        "CLOSE" : "Close"
+      "ACCESSIBILITY": {
+        "CLOSE": "Close"
       }
     },
     "NAVIGATION": {
@@ -282,12 +283,11 @@
       "SEARCH_TIPS": "Search Tips",
       "CLEAR_FILTER": "Clear filter",
       "CLEAR_ALL_FILTERS": "Clear all filters",
-      "ACCESSIBILITY" : {
-        "SEARCH_TIPS" : "Search Tips",
+      "ACCESSIBILITY": {
+        "SEARCH_TIPS": "Search Tips",
         "ADVANCED_SEARCH": "Advanced Search",
-        "OPEN_TIPS" : "Open Search Tips"
+        "OPEN_TIPS": "Open Search Tips"
       }
-
     },
     "SIDEBAR": {
       "MENU": "Menu",
@@ -307,22 +307,22 @@
         "ARIA_LABEL_EXPAND": "Expand the {{label}} section."
       },
       "ACCESSIBILITY": {
-        "SECTION" : "section"
+        "SECTION": "section"
       }
     },
     "SUSTAINABLE_DEVELOPMENT_GOALS": {
       "PROFILES_COUNT": "{{count}} Profiles",
       "RESEARCH_COUNT": "{{count}} Research"
     },
-    "CAROUSEL" : {
-      "ACCESSIBILITY" : {
-        "SCROLL_LEFT" : "Scroll left",
-        "SCROLL_RIGHT" : "Scroll right"
+    "CAROUSEL": {
+      "ACCESSIBILITY": {
+        "SCROLL_LEFT": "Scroll left",
+        "SCROLL_RIGHT": "Scroll right"
       }
     },
-    "YOUTUBE" : {
-      "ACCESSIBILITY" : {
-        "VIDEO_PLAYER" : "YouTube video player"
+    "YOUTUBE": {
+      "ACCESSIBILITY": {
+        "VIDEO_PLAYER": "YouTube video player"
       }
     }
   },
