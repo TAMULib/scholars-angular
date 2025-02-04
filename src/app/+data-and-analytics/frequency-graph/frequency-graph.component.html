@@ -31,7 +31,7 @@
                   class="form-control"
                   placeholder="Search">
                 <div class="input-group-append">
-                  <span class="input-group-text fa fa-close" aria-hidden="true"></span>
+                  <span class="input-group-text fa fa-close" aria-hidden="true" (click)="clearSearchFilter()"></span>
                 </div>
               </div>
             </form>
@@ -59,9 +59,7 @@
                 </th>
                 <td>{{ entry.value }}</td>
                 <td>{{ entry.count }}</td>
-                <td>
-                  <div *ngIf="entry.selected" class="color-key" [style.background-color]="entry.color"></div>
-                </td>
+                <td [style.background-color]="entry.color"></td>
               </tr>
             </tbody>
           </table>

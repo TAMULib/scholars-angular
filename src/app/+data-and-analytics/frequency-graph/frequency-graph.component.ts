@@ -253,6 +253,10 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedFiltersSubject.next(filters);
   }
 
+  clearSearchFilter(): void {
+    this.form.controls.filter.setValue('');
+  }
+
   getFacetLabel(facet = { field: 'all' }): string {
     switch (facet.field) {
       case 'authorOrganization':
