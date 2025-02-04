@@ -74,7 +74,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   public filters: any[];
 
   @Input()
-  public defaultId: string;
+  public themeOrganization: string;
 
   @Output()
   public labelEvent: EventEmitter<string>;
@@ -180,6 +180,12 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
             tap((collection: SdrCollection) => {
               if (collection?.facets.length > 0) {
                 this.onSelectFacet(collection.facets[0]);
+                for (let facet of collection.facets) {
+                  for (const exclude of [this.organization.name, this.themeOrganization]) {
+                    const index = facet.entries.content.findIndex(entry => entry.value === exclude);
+                    facet.entries.content.splice(index, 1);
+                  }
+                }
               }
             }),
             map((collection: SdrCollection) => collection.facets.concat([
