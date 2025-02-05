@@ -335,7 +335,11 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     const organization = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATION');
     const person = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PERSON');
 
-    const rows = entries.map(entry => `"${entry.value}", ${entry.count}, ${entry.field === 'authorOrganization' ? organization : person}`).join('\n');
+    const rows = entries.map(entry => {
+      const value = entry.value.includes(',') ? `"${entry.value}"` : entry.value;
+      const type = entry.field === 'authorOrganization' ? organization : person;
+      return `${value}, ${entry.count}, ${type}`;
+    }).join('\n');
 
     const csv = header + rows;
 
