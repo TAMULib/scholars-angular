@@ -3,11 +3,11 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnChan
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subscription, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observable, of, Subscription, switchMap, take, tap } from 'rxjs';
 
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
-import { Facetable } from '../../core/model/request';
+import { Facetable, SdrRequest } from '../../core/model/request';
 import { SdrCollection, SdrFacet } from '../../core/model/sdr';
 import { SdrFacetPivot } from '../../core/model/sdr/sdr-facet-pivot';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../../core/model/view';
@@ -84,15 +84,17 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public selectedFilters: Observable<FrequencyGraphFilter[]>;
 
+  public selectedFiltersSubject: BehaviorSubject<FrequencyGraphFilter[]>;
+
   public routerState: Observable<CustomRouterState>;
 
   public facets: Observable<SdrFacet[]>;
 
   public selectedFacet: Observable<SdrFacet>;
 
-  public selectedFiltersSubject: BehaviorSubject<FrequencyGraphFilter[]>;
-
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
+
+  private sdrRequestSubject: BehaviorSubject<SdrRequest>;
 
   public form: UntypedFormGroup;
 
@@ -110,10 +112,12 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.selectedFiltersSubject = new BehaviorSubject<FrequencyGraphFilter[]>([]);
-    this.selectedFilters = this.selectedFiltersSubject.asObservable();
+    this.selectedFilters = this.selectedFiltersSubject.asObservable()
+      .pipe();
     this.selectedFacetSubject = new BehaviorSubject<SdrFacet>(undefined);
     this.selectedFacet = this.selectedFacetSubject.asObservable()
       .pipe(filter(facet => !!facet));
+    this.sdrRequestSubject = new BehaviorSubject<SdrRequest>(undefined);
   }
 
   ngOnDestroy() {
@@ -184,6 +188,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           value: organization.name
         });
 
+        this.sdrRequestSubject.next(sdrRequest);
+
         this.facets = this.individualRepo.search(sdrRequest)
           .pipe(
             tap((collection: SdrCollection) => {
@@ -230,22 +236,73 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedFacetSubject.next(facet);
   }
 
-
-
-  onSelectFilter(facet, entry): void {
-    const filters = [...this.selectedFiltersSubject.value];
-
+  onSelectFilter(entry): void {
     if (entry.selected) {
       entry.color = this.availableColors.pop();
-      // when available colors is empty the unselected input that invokes this method is disabled
-      filters.push({
+
+      const newFilter: FrequencyGraphFilter = {
         field: entry.field,
         value: entry.value,
         opKey: OpKey.EQUALS,
         color: entry.color,
-        series: this.getPivotForEntry(facet, entry)
+        series: []
+      };
+
+      this.sdrRequestSubject.pipe(
+        take(1),
+        switchMap(originalSdrRequest => {
+          const sdrRequest = {
+            ...originalSdrRequest,
+            page: {
+              number: 1,
+              size: 1,
+              sort: originalSdrRequest.page.sort
+            },
+            facets: [{
+              field: 'publicationDate',
+              pageNumber: 1,
+              pageSize: 2147483647
+            }],
+            query: {
+              ...originalSdrRequest.query,
+              fields: 'class'
+            },
+            filters: [
+              ...this.mergeFiltersWithSameField([
+                ...originalSdrRequest.filters,
+                {
+                  field: entry.field,
+                  opKey: OpKey.EQUALS,
+                  value: entry.value
+                }
+              ])
+            ]
+          };
+
+          return this.individualRepo.search(sdrRequest).pipe(
+            map((collection: SdrCollection) => {
+              newFilter.series = collection.facets[0]?.entries?.content.map(entry => ({
+                field: 'publicationDate',
+                value: entry.value,
+                count: entry.count
+              })) || [];
+              return newFilter;
+            }),
+            catchError(error => {
+              console.error('Failed to fetch series', error);
+              return of(newFilter);
+            })
+          );
+        })
+      ).subscribe(filterWithSeries => {
+        const filters = [...this.selectedFiltersSubject.value];
+        filters.push(filterWithSeries);
+
+        this.selectedFiltersSubject.next(filters);
       });
     } else {
+      const filters = [...this.selectedFiltersSubject.value];
+
       const index = filters.findIndex(
         f => f.field === entry.field &&
           f.value === entry.value
@@ -255,24 +312,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
         this.availableColors.push(entry.color);
         delete entry.color;
       }
+      this.selectedFiltersSubject.next(filters);
     }
-
-    this.selectedFiltersSubject.next(filters);
-  }
-
-  getPivotForEntry(facet, entry): SdrFacetPivot[] {
-    for (const [key, values] of Object.entries(facet.pivot)) {
-      const typedValues = values as SdrFacetPivot[];
-      if (key.startsWith(entry.field)) {
-        for (const typedValue of typedValues) {
-          if (typedValue.value === entry.value) {
-            return typedValue.pivot;
-          }
-        }
-      }
-    }
-
-    return [];
   }
 
   clearSearchFilter(): void {
@@ -290,14 +331,14 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  buildViewAllFacet(facets): SdrFacet {
+  private buildViewAllFacet(facets): SdrFacet {
     let defaultSelected = 3;
     const content = facets
       .flatMap(facet => facet.entries.content.map(entry => {
         entry.field = facet.field;
         entry.selected = defaultSelected > 0;
         if (defaultSelected > 0) {
-          this.onSelectFilter(facet, entry);
+          this.onSelectFilter(entry);
           defaultSelected--;
         }
         return entry;
@@ -316,19 +357,26 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       entries: {
         content,
         page
-      },
-      pivot: this.mergePivotMaps(facets)
+      }
     };
   }
 
-  mergePivotMaps(facets: SdrFacet[]): Map<string, SdrFacetPivot[]> {
-    return facets.reduce((acc, facet) => {
-      Object.entries(facet.pivot).forEach(([key, pivots]) => {
-        const existing = acc.get(key) || [];
-        acc.set(key, [...existing, ...pivots]);
-      });
+  private mergeFiltersWithSameField(filters: any[]): any[] {
+    const mergedFilters = filters.reduce((acc, filter) => {
+      const existingFilter = acc.find(f => f.field === filter.field);
+
+      if (existingFilter) {
+        existingFilter.value = existingFilter.value
+          ? `${existingFilter.value};;${filter.value}`
+          : filter.value;
+      } else {
+        acc.push({ ...filter });
+      }
+
       return acc;
-    }, new Map<string, SdrFacetPivot[]>());
+    }, []);
+
+    return mergedFilters;
   }
 
 }

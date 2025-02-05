@@ -54,7 +54,7 @@
                   <input
                     type="checkbox"
                     [(ngModel)]="entry.selected"
-                    (change)="onSelectFilter(selectedFacet, entry)"
+                    (change)="onSelectFilter(entry)"
                     [disabled]="!entry.selected && availableColors.length === 0">
                 </th>
                 <td>{{ entry.value }}</td>

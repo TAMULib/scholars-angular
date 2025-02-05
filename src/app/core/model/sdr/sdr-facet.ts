@@ -8,5 +8,5 @@ export interface SdrFacet {
     content: SdrFacetEntry[];
     page: SdrPage;
   };
-  readonly pivot: Map<string, SdrFacetPivot[]>;
+  readonly pivot?: Map<string, SdrFacetPivot[]>;
 }
