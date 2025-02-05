@@ -39,7 +39,7 @@
 
           <table class="table table-bordered">
             <thead>
-              <tr>
+              <tr class="frequency-graph-option-header">
                 <th scope="col" colspan="2">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.COLOR_KEY' | translate }}</th>
@@ -50,13 +50,13 @@
                 class="frequency-graph-option"
                 [class.selected]="entry.selected"
                 *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
-                <th scope="row">
+                <td scope="row">
                   <input
                     type="checkbox"
                     [(ngModel)]="entry.selected"
                     (change)="onSelectFilter(entry)"
                     [disabled]="!entry.selected && availableColors.length === 0">
-                </th>
+                </td>
                 <td>{{ entry.value }}</td>
                 <td>{{ entry.count }}</td>
                 <td [style.background-color]="entry.color"></td>

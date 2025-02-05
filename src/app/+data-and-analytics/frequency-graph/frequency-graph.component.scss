@@ -24,6 +24,24 @@
     text-decoration: underline;
   }
 
+
+  .frequency-graph-option-header {
+    background-color: #F1F2ee;
+
+    th {
+      padding: 0.25rem;
+      vertical-align: top;
+      border-top: 1px #3D454E solid;
+      line-height: normal;
+    }
+  }
+
+  .frequency-graph-option {
+    td {
+      padding: 0.25rem;
+    }
+  }
+
   .frequency-graph-option.selected {
     font-weight: bolder;
     background-color: #ECFFB3;
