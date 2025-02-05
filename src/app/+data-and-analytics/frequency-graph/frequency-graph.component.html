@@ -12,10 +12,11 @@
 
           <div>
             <span *ngFor="let facet of facets; let last = last">
-              <span
-                class="frequency-graph-compare"
+              <button
+                type="button"
+                class="frequency-graph-compare btn btn-link"
                 [class.active]="selectedFacet.field === facet.field"
-                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
+                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</button>
               <span *ngIf="!last"> | </span>
             </span>
           </div>
@@ -31,7 +32,7 @@
                   class="form-control"
                   placeholder="Search">
                 <div class="input-group-append">
-                  <span class="input-group-text fa fa-close" aria-hidden="true" (click)="clearSearchFilter()"></span>
+                  <button class="input-group-text btn fa fa-close" (click)="clearSearchFilter()"></button>
                 </div>
               </div>
             </form>
@@ -50,7 +51,7 @@
                 class="frequency-graph-option"
                 [class.selected]="entry.selected"
                 *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
-                <td scope="row">
+                <td>
                   <input
                     type="checkbox"
                     [(ngModel)]="entry.selected"
