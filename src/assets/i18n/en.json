@@ -78,11 +78,16 @@
       "MAXIMUM_SELECTED": "A Maximum 10 entities can be compared. Please remove some & try again.",
       "WHAT_TO_COMPARE": "What do you want to compare?",
       "ENTITY_LABEL": "Entity Label",
+      "ENTITY_NAME": "Entity Name",
+      "ENTITY_TYPE": "Entity Type",
       "PUBLICATION_COUNT": "Publication Count",
       "COLOR_KEY": "Color Key",
       "ORGANIZATIONS": "Organizations",
       "PEOPLE": "People",
-      "VIEW_ALL": "View All"
+      "VIEW_ALL": "View All",
+      "SAVE_ALL": "Save All as CSV",
+      "ORGANIZATION": "Organization",
+      "PERSON": "Person"
     }
   },
   "DIRECTORY": {

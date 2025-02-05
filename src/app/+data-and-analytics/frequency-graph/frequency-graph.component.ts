@@ -4,6 +4,7 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angul
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observable, of, Subscription, switchMap, take, tap } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
@@ -318,6 +319,29 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   clearSearchFilter(): void {
     this.form.controls.filter.setValue('');
+  }
+
+  saveAll(facets: SdrFacet[]): void {
+    if (!facets?.length) {
+      return
+    };
+
+    const entries = facets[facets.length - 1].entries.content;
+
+    const header = `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL')}, ` +
+      `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_NAME')}, ` +
+      `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_TYPE')}\n`;
+
+    const organization = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATION');
+    const person = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PERSON');
+
+    const rows = entries.map(entry => `"${entry.value}", ${entry.count}, ${entry.field === 'authorOrganization' ? organization : person}`).join('\n');
+
+    const csv = header + rows;
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+
+    saveAs(blob, this.organization.name.toLowerCase().replace(/\s+/g, '-') + '_publications.csv');
   }
 
   getFacetLabel(facet = { field: 'all' }): string {
