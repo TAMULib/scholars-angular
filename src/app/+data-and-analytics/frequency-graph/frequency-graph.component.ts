@@ -8,7 +8,7 @@ import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observa
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
 import { Facetable, SdrRequest } from '../../core/model/request';
-import { SdrCollection, SdrFacet } from '../../core/model/sdr';
+import { SdrCollection, SdrFacet, SdrFacetEntry } from '../../core/model/sdr';
 import { SdrFacetPivot } from '../../core/model/sdr/sdr-facet-pivot';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../../core/model/view';
 import { DialogService } from '../../core/service/dialog.service';
@@ -94,11 +94,11 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
 
-  private sdrRequestSubject: BehaviorSubject<SdrRequest>;
-
   public form: UntypedFormGroup;
 
   public availableColors = [...colorConstantQueue].reverse();
+
+  readonly sdrRequestSubject: BehaviorSubject<SdrRequest>;
 
   private filterSubscription: Subscription;
 
@@ -130,6 +130,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     if (isPlatformServer(this.platformId)) {
       return;
     }
+
+    console.log(this.organization);
 
     const formGroup = {
       filter: new UntypedFormControl()
@@ -195,17 +197,35 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
             tap((collection: SdrCollection) => {
               if (collection?.facets.length > 0) {
                 for (let facet of collection.facets) {
-                  for (const exclude of [this.organization.name, this.themeOrganization]) {
-                    const index = facet.entries.content.findIndex(entry => entry.value === exclude);
-                    facet.entries.content.splice(index, 1);
+                  if (facet.field === 'authorOrganization') {
+                    facet.entries.content = this.filterContent(facet.entries.content, 'hasSubOrganizations');
+                  } else if (facet.field === 'authors' && this.organization.name !== this.themeOrganization) {
+                    facet.entries.content = this.filterContent(facet.entries.content, 'people');
                   }
                 }
-                this.onSelectFacet(collection.facets[0]);
               }
             }),
-            map((collection: SdrCollection) => collection.facets.concat([
-              this.buildViewAllFacet(collection.facets)
-            ]))
+            map((collection: SdrCollection) => {
+              const facets = collection.facets.filter(facet => facet.entries.content.length);
+
+              this.onSelectFacet(facets[0]);
+
+              let defaultSelected = 3;
+              for (const entry of facets[0].entries.content) {
+                entry.selected = defaultSelected > 0;
+                if (defaultSelected > 0) {
+                  this.onSelectFilter(entry);
+                  defaultSelected--;
+                } else {
+                  break;
+                }
+              }
+
+              return facets.length > 1 ?
+                collection.facets.concat([
+                  this.buildViewAllFacet(collection.facets)
+                ]) : facets;
+            })
           );
       });
     }
@@ -331,16 +351,26 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  private filterContent(content: SdrFacetEntry[], property: string): SdrFacetEntry[] {
+    if (this.organization.hasOwnProperty(property)) {
+      return content.filter(entry => {
+        for (const organization of this.organization[property]) {
+          if (organization.label === entry.value) {
+            return true;
+          }
+        }
+
+        return false;
+      });
+    }
+
+    return [];
+  }
+
   private buildViewAllFacet(facets): SdrFacet {
-    let defaultSelected = 3;
     const content = facets
       .flatMap(facet => facet.entries.content.map(entry => {
         entry.field = facet.field;
-        entry.selected = defaultSelected > 0;
-        if (defaultSelected > 0) {
-          this.onSelectFilter(entry);
-          defaultSelected--;
-        }
         return entry;
       }))
       .sort((a, b) => b.count - a.count);
