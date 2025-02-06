@@ -197,9 +197,9 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
               if (collection?.facets.length > 0) {
                 for (let facet of collection.facets) {
                   if (facet.field === 'authorOrganization') {
-                    facet.entries.content = this.filterContent(facet.entries.content, 'hasSubOrganizations');
+                    facet.entries.content = this.filterContent(facet, 'hasSubOrganizations');
                   } else if (facet.field === 'authors' && this.organization.name !== this.themeOrganization) {
-                    facet.entries.content = this.filterContent(facet.entries.content, 'people');
+                    facet.entries.content = this.filterContent(facet, 'people');
                   }
                 }
               }
@@ -321,7 +321,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       const filters = [...this.selectedFiltersSubject.value];
       const index = filters.findIndex(
-        f => f.value === entry.value
+        f => f.field === entry.field && f.value === entry.value
       );
       if (index !== -1) {
         filters.splice(index, 1);
@@ -336,7 +336,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     this.form.controls.filter.setValue('');
   }
 
-  saveAll(facets: SdrFacet[]): void {
+  onSaveAll(facets: SdrFacet[]): void {
     if (!facets?.length) {
       return
     };
@@ -374,11 +374,13 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private filterContent(content: SdrFacetEntry[], property: string): SdrFacetEntry[] {
+  private filterContent(facet: SdrFacet, property: string): SdrFacetEntry[] {
     if (this.organization.hasOwnProperty(property)) {
-      return content.filter(entry => {
+      return facet.entries.content.filter(entry => {
         for (const organization of this.organization[property]) {
           if (organization.label === entry.value) {
+            entry.field = facet.field;
+
             return true;
           }
         }
