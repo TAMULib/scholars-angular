@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, combineLatest, filter, map, take, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, OperatorFunction, combineLatest, debounceTime, distinctUntilChanged, filter, map, take, withLatestFrom } from 'rxjs';
 
 import { Individual } from '../core/model/discovery';
 import { IndividualRepo } from '../core/model/discovery/repo/individual.repo';
@@ -29,6 +29,8 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   @ViewChild('organizationSelect') organizationsSelect: ElementRef<HTMLSelectElement>;
 
+  public model: any;
+
   public displayView: Observable<DisplayView>;
 
   public dataAndAnalyticsView: Observable<DataAndAnalyticsView>;
@@ -51,6 +53,8 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public labelSubject: BehaviorSubject<string>;
 
+  public organizationsSubject: BehaviorSubject<Individual[]>;
+
   public organizations: Observable<Individual[]>;
 
   public get label(): Observable<string> {
@@ -64,6 +68,8 @@ export class DataAndAnalyticsComponent implements OnInit {
     private individualRepo: IndividualRepo,
   ) {
     this.labelSubject = new BehaviorSubject<string>('');
+    this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
+    this.organizations = this.organizationsSubject.asObservable();
   }
 
   ngOnInit(): void {
@@ -112,7 +118,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     // University (11)
     // External Organization (1453) *
     // * should not be in any select options
-    this.organizations = this.getOrganizationsByTypes([
+    this.getOrganizationsByTypes([
       'AcademicDepartment',
       'AffiliatedAgency',
       'Association',
@@ -126,7 +132,9 @@ export class DataAndAnalyticsComponent implements OnInit {
       'Program',
       'School',
       'University',
-    ]);
+    ]).pipe(take(1)).subscribe((organizations: Individual[]) => {
+      this.organizationsSubject.next(organizations);
+    });
 
     this.themeOrganization = this.store.pipe(
       select(selectActiveThemeOrganization),
@@ -201,17 +209,30 @@ export class DataAndAnalyticsComponent implements OnInit {
     return index;
   }
 
-  public onSelectOrganization(id: any, params: Params, changedSelect?: any): void {
+  public search: OperatorFunction<string, readonly Individual[]> = (text: Observable<string>) => {
+    return text.pipe(
+      distinctUntilChanged(),
+      map((term) => this.organizationsSubject.value
+        .filter(org => org.name.toLowerCase().includes(term.toLowerCase()))
+      )
+    );
+  }
+
+  public formatter = (organization: Individual) => organization.name;
+
+  public onSelectOrganization(event: any, params: Params): void {
+    let id = event;
+
+    if (event.hasOwnProperty('item')) {
+      const { item } = event;
+      id = item.id;
+    }
 
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { ...params, selectedOrganization: id },
       queryParamsHandling: 'merge'
     });
-
-    if (this.organizationsSelect && this.organizationsSelect.nativeElement.id !== changedSelect?.id) {
-      this.organizationsSelect.nativeElement.value = '';
-    }
 
     this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));
   }

@@ -88,11 +88,16 @@
               <div class="row p-1">
                 <div class="col-12" *ngIf="organizations | async; let organizations">
                   <div class="form-group">
-                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
-                    <select #organizationsSelect id="organizationsSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, organizationsSelect)">
-                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
-                      <option *ngFor="let so of organizations" [ngValue]="so.id">{{ so.name }}</option>
-                    </select>
+                    <label class="font-weight-bold" for="typeahead-organizations">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
+                    <input
+                      id="typeahead-organizations"
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="model"
+                      [ngbTypeahead]="search"
+                      (selectItem)="onSelectOrganization($event, params)"
+                      [resultFormatter]="formatter"
+                      [inputFormatter]="formatter"/>
                   </div>
                 </div>
               </div>
