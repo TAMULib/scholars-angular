@@ -70,6 +70,9 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
     this.organizations = this.organizationsSubject.asObservable();
+    this.model = {
+      term: '',
+    };
   }
 
   ngOnInit(): void {
@@ -233,6 +236,8 @@ export class DataAndAnalyticsComponent implements OnInit {
       queryParams: { ...params, selectedOrganization: id },
       queryParamsHandling: 'merge'
     });
+
+    this.model.term = '';
 
     this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));
   }

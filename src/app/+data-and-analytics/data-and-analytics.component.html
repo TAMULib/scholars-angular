@@ -93,7 +93,7 @@
                       id="typeahead-organizations"
                       type="text"
                       class="form-control"
-                      [(ngModel)]="model"
+                      [(ngModel)]="model.term"
                       [ngbTypeahead]="search"
                       (selectItem)="onSelectOrganization($event, params)"
                       [resultFormatter]="formatter"
