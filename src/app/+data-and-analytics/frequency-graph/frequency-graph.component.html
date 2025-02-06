@@ -10,7 +10,7 @@
 
           <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
 
-          <div>
+          <div *ngIf="facets.length > 1">
             <span *ngFor="let facet of facets; let last = last">
               <span
                 class="frequency-graph-compare"
