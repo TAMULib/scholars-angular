@@ -3,4 +3,5 @@ export interface SdrFacetEntry {
   readonly count: number;
   valueHtml: string;
   field?: string;
+  selected?: boolean;
 }
