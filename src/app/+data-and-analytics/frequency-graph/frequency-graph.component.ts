@@ -207,16 +207,18 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
             map((collection: SdrCollection) => {
               const facets = collection.facets.filter(facet => facet.entries.content.length);
 
-              this.onSelectFacet(facets[0]);
+              if (facets.length > 0) {
+                this.onSelectFacet(facets[0]);
 
-              let defaultSelected = 3;
-              for (const entry of facets[0].entries.content) {
-                entry.selected = defaultSelected > 0;
-                if (defaultSelected > 0) {
-                  this.onSelectFilter(entry);
-                  defaultSelected--;
-                } else {
-                  break;
+                let defaultSelected = 3;
+                for (const entry of facets[0].entries.content) {
+                  entry.selected = defaultSelected > 0;
+                  if (defaultSelected > 0) {
+                    this.onSelectFilter(entry);
+                    defaultSelected--;
+                  } else {
+                    break;
+                  }
                 }
               }
 
