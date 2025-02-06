@@ -131,8 +131,6 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    console.log(this.organization);
-
     const formGroup = {
       filter: new UntypedFormControl()
     };
@@ -317,15 +315,12 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       ).subscribe(filterWithSeries => {
         const filters = [...this.selectedFiltersSubject.value];
         filters.push(filterWithSeries);
-
         this.selectedFiltersSubject.next(filters);
       });
     } else {
       const filters = [...this.selectedFiltersSubject.value];
-
       const index = filters.findIndex(
-        f => f.field === entry.field &&
-          f.value === entry.value
+        f => f.value === entry.value
       );
       if (index !== -1) {
         filters.splice(index, 1);
@@ -369,10 +364,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   private buildViewAllFacet(facets): SdrFacet {
     const content = facets
-      .flatMap(facet => facet.entries.content.map(entry => {
-        entry.field = facet.field;
-        return entry;
-      }))
+      .flatMap(facet => facet.entries.content)
       .sort((a, b) => b.count - a.count);
 
     const page = {
