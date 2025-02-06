@@ -334,7 +334,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  clearSearchFilter(): void {
+  onClearSearchFilter(): void {
     this.form.controls.filter.setValue('');
   }
 
