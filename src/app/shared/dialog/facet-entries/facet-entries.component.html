@@ -43,7 +43,6 @@
             </td>
             <td scope="row" [ngSwitch]="facet.type" *ngIf="!multiselect">
               <span *ngSwitchCase="'STRING'">
-                [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate"
                 <a [routerLink]="routerLink" [queryParams]="getQueryParams(queryParams | async, facet, entry)" queryParamsHandling="merge" [attr.aria-label]="('SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.FILTER_BY' | translate: { item: getStringValue(entry) })">
                   <span [innerHTML]="getStringValue(entry) | formalize | safeHtml"></span>
                 </a>
