@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
   public clickEvent(event): void {
     if (this.isPlatformBrowser) {
       const target = this.findLinkTarget(event.target, 1);
-      if (target.href && target.href.indexOf(target.baseURI) >= 0) {
+      if (target?.href && target.href.indexOf(target.baseURI) >= 0) {
         const path = target.href.replace(target.baseURI, '');
         if (path.length > 0 && !path.startsWith('mailto:') && !path.startsWith('tel:')) {
           this.store.dispatch(new fromRouter.Link({ url: path }));
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
   }
 
   private findLinkTarget(target: any, depth: number): any {
-    return target.href ? target : depth < 3 ? this.findLinkTarget(target.parentElement, ++depth) : target;
+    return target?.href ? target : depth < 3 ? this.findLinkTarget(target.parentElement, ++depth) : target;
   }
 
 }

@@ -89,6 +89,7 @@
       "ORGANIZATION": "Organization",
       "PERSON": "Person",
       "SEARCH": "Search",
+      "CLEAR": "Clear",
       "CLEAR_SEARCH": "Clear search",
       "SELECT": "Select",
       "SELECT_ENTRY": "Select {{ value }}"

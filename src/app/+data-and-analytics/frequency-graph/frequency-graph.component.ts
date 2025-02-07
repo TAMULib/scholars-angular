@@ -335,6 +335,16 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  onClear(facets: SdrFacet[]): void {
+    this.onClearSearchFilter();
+    facets.forEach(facet => facet.entries.content.filter(entry => entry.selected)
+      .reverse()
+      .forEach(entry => {
+        entry.selected = false;
+        this.onSelectFilter(entry);
+      }));
+  }
+
   onClearSearchFilter(): void {
     this.form.controls.filter.setValue('');
   }

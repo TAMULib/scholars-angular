@@ -85,7 +85,8 @@
             [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
 
             <div>
-              <button class="btn btn-primary" (click)="onSaveAll(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SAVE_ALL' | translate}}</button>
+              <button class="btn btn-primary mr-2" (click)="onSaveAll(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SAVE_ALL' | translate}}</button>
+              <button class="btn btn-warning" (click)="onClear(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR' | translate}}</button>
             </div>
           </div>
         </div>

@@ -169,7 +169,7 @@ const showClearFilters = (collectionView: CollectionView, filters: Filter[]): bo
 };
 
 const getFilterField = (collectionView: CollectionView, actualFilter: Filter): string => {
-  return collectionView.facets.find(f => f.field === actualFilter.field).name;
+  return collectionView.facets.find(f => f.field === actualFilter.field)?.name;
 };
 
 const getFilterValue = (collectionView: CollectionView, actualFilter: Filter): string => {
