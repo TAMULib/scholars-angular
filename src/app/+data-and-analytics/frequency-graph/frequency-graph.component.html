@@ -73,6 +73,10 @@
             [ellipses]="true"
             [boundaryLinks]="true"
             [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
+
+            <div>
+              <button class="btn btn-warning" (click)="clear(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR' | translate}}</button>
+            </div>
           </div>
         </div>
 

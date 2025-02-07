@@ -82,7 +82,8 @@
       "COLOR_KEY": "Color Key",
       "ORGANIZATIONS": "Organizations",
       "PEOPLE": "People",
-      "VIEW_ALL": "View All"
+      "VIEW_ALL": "View All",
+      "CLEAR": "Clear"
     }
   },
   "DIRECTORY": {
