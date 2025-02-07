@@ -23,6 +23,7 @@
 
           <div>
             <form novalidate>
+              <label for="filter" class="sr-only">Search</label>
               <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
                 <input
                   id="filter"
@@ -32,7 +33,9 @@
                   class="form-control"
                   placeholder="Search">
                 <div class="input-group-append">
-                  <button class="input-group-text btn fa fa-close" (click)="onClearSearchFilter()"></button>
+                  <button class="input-group-text btn fa fa-close" (click)="onClearSearchFilter()">
+                    <span class="sr-only">Clear search</span>
+                  </button>
                 </div>
               </div>
             </form>
@@ -41,7 +44,9 @@
           <table class="table table-bordered">
             <thead>
               <tr class="frequency-graph-option-header">
-                <th scope="col"></th>
+                <th scope="col">
+                  <span class="sr-only">Select</span>
+                </th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.COLOR_KEY' | translate }}</th>
@@ -51,10 +56,12 @@
               <tr
                 class="frequency-graph-option"
                 [class.selected]="entry.selected"
-                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
+                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize; let i = index">
                 <td>
+                  <label class="sr-only" [for]="'entry-option-' + i">Select {{ entry.value }}</label>
                   <input
                     type="checkbox"
+                    [id]="'entry-option-' + i"
                     [(ngModel)]="entry.selected"
                     (change)="onSelectFilter(entry)"
                     [disabled]="!entry.selected && availableColors.length === 0">
