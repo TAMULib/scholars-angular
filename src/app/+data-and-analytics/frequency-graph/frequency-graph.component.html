@@ -1,9 +1,83 @@
 <div class="container mb-1">
   <div class="text-center h2">{{organization.name}}</div>
   <div class="row">
+
     <div class="col-xl-4">
+      <div *ngIf="facets | async; let facets">
+        <div *ngIf="selectedFacet | async; let selectedFacet">
+
+          <ngb-alert *ngIf="availableColors.length === 0" [type]="'warning'" [dismissible]="false">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.MAXIMUM_SELECTED' | translate }}</ngb-alert>
+
+          <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
+
+          <div *ngIf="facets.length > 1">
+            <span *ngFor="let facet of facets; let last = last">
+              <span
+                class="frequency-graph-compare"
+                [class.active]="selectedFacet.field === facet.field"
+                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
+              <span *ngIf="!last"> | </span>
+            </span>
+          </div>
+
+          <div>
+            <form novalidate>
+              <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
+                <input
+                  id="filter"
+                  name="filter"
+                  formControlName="filter"
+                  type="text"
+                  class="form-control"
+                  placeholder="Search">
+                <div class="input-group-append">
+                  <span class="input-group-text fa fa-close" aria-hidden="true" (click)="clearSearchFilter()"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr class="frequency-graph-option-header">
+                <th scope="col" colspan="2">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.COLOR_KEY' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="frequency-graph-option"
+                [class.selected]="entry.selected"
+                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
+                <td scope="row">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="entry.selected"
+                    (change)="onSelectFilter(entry)"
+                    [disabled]="!entry.selected && availableColors.length === 0">
+                </td>
+                <td>{{ entry.value }}</td>
+                <td>{{ entry.count }}</td>
+                <td [style.background-color]="entry.color"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ngb-pagination
+            [collectionSize]="selectedFacet.entries?.content.length"
+            [pageSize]="selectedFacet.pageSize"
+            [(page)]="selectedFacet.page"
+            [maxSize]="3"
+            [rotate]="true"
+            [ellipses]="true"
+            [boundaryLinks]="true"
+            [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
+          </div>
+        </div>
 
     </div>
+
     <div class="col-xl-8">
 
     </div>

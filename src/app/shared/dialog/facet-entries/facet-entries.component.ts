@@ -16,7 +16,7 @@ import { selectRouterQueryParams, selectRouterState } from '../../../core/store/
 import { CustomRouterState } from '../../../core/store/router/router.reducer';
 import { selectCollectionViewByName } from '../../../core/store/sdr';
 
-import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetEntryLabel, hasFilter } from '../../utilities/discovery.utility';
+import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetEntryLabel } from '../../utilities/discovery.utility';
 
 import * as fromDialog from '../../../core/store/dialog/dialog.actions';
 

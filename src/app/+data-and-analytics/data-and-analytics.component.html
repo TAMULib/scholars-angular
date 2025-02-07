@@ -128,7 +128,7 @@
                       [displayView]="displayView"
                       [dataAndAnalyticsView]="view"
                       [filters]="filters | async"
-                      [defaultId]="themeOrganizationId | async"
+                      [themeOrganization]="themeOrganization | async"
                       (labelEvent)="onLabelEvent($event)">
                     </scholars-frequency-graph>
                   </div>

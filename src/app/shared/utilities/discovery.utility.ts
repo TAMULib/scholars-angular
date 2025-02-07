@@ -87,7 +87,7 @@ const buildFacets = (queryParams: Params): Facetable[] => {
   const fields: string[] = queryParams.facets !== undefined ? queryParams.facets.split(',') : [];
   fields.forEach((field: string) => {
     const facet: Facetable = { field };
-    ['type', 'pageSize', 'pageNumber', 'sort', 'rangeStart', 'rangeEnd', 'rangeGap'].forEach((key: string) => {
+    ['type', 'pageSize', 'pageNumber', 'sort', 'pivot', 'rangeStart', 'rangeEnd', 'rangeGap'].forEach((key: string) => {
       if (queryParams[`${field}.${key}`]) {
         facet[key] = queryParams[`${field}.${key}`];
       }

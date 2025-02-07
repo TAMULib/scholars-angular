@@ -2,4 +2,48 @@
   .col-xl-6 {
     padding: 0px;
   }
+
+  .input-group-append>.fa-close {
+    padding-top: 9px;
+    cursor: pointer;
+  }
+
+  .frequency-graph-compare {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .frequency-graph-compare.active {
+    color: gray;
+    text-decoration: none;
+  }
+
+  .frequency-graph-compare:hover {
+    color: darkblue;
+    text-decoration: underline;
+  }
+
+
+  .frequency-graph-option-header {
+    background-color: #F1F2ee;
+
+    th {
+      padding: 0.25rem;
+      vertical-align: top;
+      border-top: 1px #3D454E solid;
+      line-height: normal;
+    }
+  }
+
+  .frequency-graph-option {
+    td {
+      padding: 0.25rem;
+    }
+  }
+
+  .frequency-graph-option.selected {
+    font-weight: bolder;
+    background-color: #ECFFB3;
+  }
 }
