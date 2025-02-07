@@ -87,7 +87,11 @@
       "VIEW_ALL": "View All",
       "SAVE_ALL": "Save All as CSV",
       "ORGANIZATION": "Organization",
-      "PERSON": "Person"
+      "PERSON": "Person",
+      "SEARCH": "Search",
+      "CLEAR_SEARCH": "Clear search",
+      "SELECT": "Select",
+      "SELECT_ENTRY": "Select {{ value }}"
     }
   },
   "DIRECTORY": {

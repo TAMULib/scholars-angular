@@ -23,7 +23,7 @@
 
           <div>
             <form novalidate>
-              <label for="filter" class="sr-only">Search</label>
+              <label for="filter" class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SEARCH' | translate }}</label>
               <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
                 <input
                   id="filter"
@@ -31,10 +31,10 @@
                   formControlName="filter"
                   type="text"
                   class="form-control"
-                  placeholder="Search">
+                  placeholder="{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SEARCH' | translate }}">
                 <div class="input-group-append">
                   <button class="input-group-text btn fa fa-close" (click)="onClearSearchFilter()">
-                    <span class="sr-only">Clear search</span>
+                    <span class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR_SEARCH' | translate }}</span>
                   </button>
                 </div>
               </div>
@@ -45,7 +45,8 @@
             <thead>
               <tr class="frequency-graph-option-header">
                 <th scope="col">
-                  <span class="sr-only">Select</span>
+                  <span class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SELECT' | translate }}</span>
+
                 </th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
@@ -58,7 +59,7 @@
                 [class.selected]="entry.selected"
                 *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize; let i = index">
                 <td>
-                  <label class="sr-only" [for]="'entry-option-' + i">Select {{ entry.value }}</label>
+                  <label class="sr-only" [for]="'entry-option-' + i">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SELECT_ENTRY' | translate: { value: entry.value } }}</label>
                   <input
                     type="checkbox"
                     [id]="'entry-option-' + i"
