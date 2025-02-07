@@ -196,6 +196,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
             tap((collection: SdrCollection) => {
               if (collection?.facets.length > 0) {
                 for (let facet of collection.facets) {
+                  facet.entries.content.forEach(entry => entry.field = facet.field);
                   if (facet.field === 'authorOrganization') {
                     facet.entries.content = this.filterContent(facet, 'hasSubOrganizations');
                   } else if (facet.field === 'authors' && this.organization.name !== this.themeOrganization) {
@@ -381,8 +382,6 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       return facet.entries.content.filter(entry => {
         for (const organization of this.organization[property]) {
           if (organization.label === entry.value) {
-            entry.field = facet.field;
-
             return true;
           }
         }
