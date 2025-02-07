@@ -12,20 +12,25 @@ html {
 body {
   font-family: "Lato", Calibri, Arial, sans-serif;
   min-width: 320px;
+
   .search {
     background: var(--search-gradient);
   }
+
   .link {
     color: var(--link-color);
   }
+
   .link:hover {
     color: var(--link-color-hover);
     text-decoration: none;
     cursor: pointer;
   }
+
   a {
     color: var(--link-color);
   }
+
   a:hover {
     color: var(--link-color-hover);
   }
@@ -33,11 +38,37 @@ body {
   padding-right: 0px !important;
 }
 
-.bs-popover-bottom > .arrow::after,
-.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+.bs-popover-bottom>.arrow::after,
+.bs-popover-auto[x-placement^="bottom"]>.arrow::after {
   border-bottom-color: #f7f7f7;
 }
 
 .sdg-popover {
   box-shadow: 2px 2px 5px #888888;
 }
+
+.pagination {
+  .page-item .page-link {
+    background-color: #ffffff;
+    color: #0056b3;
+  }
+
+  .page-item .page-link:hover {
+    background-color: #e9ecef;
+    color: #004a99;
+  }
+
+  .page-item.active .page-link {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    color: #ffffff;
+  }
+
+  .page-item.active .page-link:focus,
+  .page-item.active .page-link:hover {
+    background-color: #003b7a;
+    border-color: #003b7a;
+    color: #ffffff;
+  }
+}
+

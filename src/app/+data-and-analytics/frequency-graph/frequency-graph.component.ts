@@ -4,6 +4,7 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angul
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observable, of, Subscription, switchMap, take, tap } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
@@ -195,10 +196,11 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
             tap((collection: SdrCollection) => {
               if (collection?.facets.length > 0) {
                 for (let facet of collection.facets) {
+                  facet.entries.content.forEach(entry => entry.field = facet.field);
                   if (facet.field === 'authorOrganization') {
-                    facet.entries.content = this.filterContent(facet.entries.content, 'hasSubOrganizations');
+                    facet.entries.content = this.filterContent(facet, 'hasSubOrganizations');
                   } else if (facet.field === 'authors' && this.organization.name !== this.themeOrganization) {
-                    facet.entries.content = this.filterContent(facet.entries.content, 'people');
+                    facet.entries.content = this.filterContent(facet, 'people');
                   }
                 }
               }
@@ -206,16 +208,18 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
             map((collection: SdrCollection) => {
               const facets = collection.facets.filter(facet => facet.entries.content.length);
 
-              this.onSelectFacet(facets[0]);
+              if (facets.length > 0) {
+                this.onSelectFacet(facets[0]);
 
-              let defaultSelected = 3;
-              for (const entry of facets[0].entries.content) {
-                entry.selected = defaultSelected > 0;
-                if (defaultSelected > 0) {
-                  this.onSelectFilter(entry);
-                  defaultSelected--;
-                } else {
-                  break;
+                let defaultSelected = 3;
+                for (const entry of facets[0].entries.content) {
+                  entry.selected = defaultSelected > 0;
+                  if (defaultSelected > 0) {
+                    this.onSelectFilter(entry);
+                    defaultSelected--;
+                  } else {
+                    break;
+                  }
                 }
               }
 
@@ -320,7 +324,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       const filters = [...this.selectedFiltersSubject.value];
       const index = filters.findIndex(
-        f => f.value === entry.value
+        f => f.field === entry.field && f.value === entry.value
       );
       if (index !== -1) {
         filters.splice(index, 1);
@@ -331,8 +335,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  clear(facets: SdrFacet[]): void {
-    this.clearSearchFilter();
+  onClear(facets: SdrFacet[]): void {
+    this.onClearSearchFilter();
     facets.forEach(facet => facet.entries.content.filter(entry => entry.selected)
       .reverse()
       .forEach(entry => {
@@ -341,8 +345,35 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       }));
   }
 
-  clearSearchFilter(): void {
+  onClearSearchFilter(): void {
     this.form.controls.filter.setValue('');
+  }
+
+  onSaveAll(facets: SdrFacet[]): void {
+    if (!facets?.length) {
+      return
+    };
+
+    const entries = facets[facets.length - 1].entries.content;
+
+    const header = `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL')}, ` +
+      `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_NAME')}, ` +
+      `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_TYPE')}\n`;
+
+    const organization = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATION');
+    const person = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PERSON');
+
+    const rows = entries.map(entry => {
+      const value = entry.value.includes(',') ? `"${entry.value}"` : entry.value;
+      const type = entry.field === 'authorOrganization' ? organization : person;
+      return `${value}, ${entry.count}, ${type}`;
+    }).join('\n');
+
+    const csv = header + rows;
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+
+    saveAs(blob, this.organization.name.toLowerCase().replace(/\s+/g, '-') + '_publications.csv');
   }
 
   getFacetLabel(facet = { field: 'all' }): string {
@@ -356,9 +387,9 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private filterContent(content: SdrFacetEntry[], property: string): SdrFacetEntry[] {
+  private filterContent(facet: SdrFacet, property: string): SdrFacetEntry[] {
     if (this.organization.hasOwnProperty(property)) {
-      return content.filter(entry => {
+      return facet.entries.content.filter(entry => {
         for (const organization of this.organization[property]) {
           if (organization.label === entry.value) {
             return true;

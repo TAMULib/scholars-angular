@@ -12,16 +12,18 @@
 
           <div *ngIf="facets.length > 1">
             <span *ngFor="let facet of facets; let last = last">
-              <span
-                class="frequency-graph-compare"
+              <button
+                type="button"
+                class="frequency-graph-compare btn btn-link"
                 [class.active]="selectedFacet.field === facet.field"
-                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</span>
+                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</button>
               <span *ngIf="!last"> | </span>
             </span>
           </div>
 
           <div>
             <form novalidate>
+              <label for="filter" class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SEARCH' | translate }}</label>
               <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
                 <input
                   id="filter"
@@ -29,9 +31,11 @@
                   formControlName="filter"
                   type="text"
                   class="form-control"
-                  placeholder="Search">
+                  placeholder="{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SEARCH' | translate }}">
                 <div class="input-group-append">
-                  <span class="input-group-text fa fa-close" aria-hidden="true" (click)="clearSearchFilter()"></span>
+                  <button class="input-group-text btn fa fa-close" (click)="onClearSearchFilter()">
+                    <span class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR_SEARCH' | translate }}</span>
+                  </button>
                 </div>
               </div>
             </form>
@@ -40,7 +44,11 @@
           <table class="table table-bordered">
             <thead>
               <tr class="frequency-graph-option-header">
-                <th scope="col" colspan="2">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
+                <th scope="col">
+                  <span class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SELECT' | translate }}</span>
+
+                </th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
                 <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.COLOR_KEY' | translate }}</th>
               </tr>
@@ -49,10 +57,12 @@
               <tr
                 class="frequency-graph-option"
                 [class.selected]="entry.selected"
-                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize">
-                <td scope="row">
+                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize; let i = index">
+                <td>
+                  <label class="sr-only" [for]="'entry-option-' + i">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SELECT_ENTRY' | translate: { value: entry.value } }}</label>
                   <input
                     type="checkbox"
+                    [id]="'entry-option-' + i"
                     [(ngModel)]="entry.selected"
                     (change)="onSelectFilter(entry)"
                     [disabled]="!entry.selected && availableColors.length === 0">
@@ -75,7 +85,8 @@
             [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
 
             <div>
-              <button class="btn btn-warning" (click)="clear(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR' | translate}}</button>
+              <button class="btn btn-primary mr-2" (click)="onSaveAll(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SAVE_ALL' | translate}}</button>
+              <button class="btn btn-warning" (click)="onClear(facets)">{{'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR' | translate}}</button>
             </div>
           </div>
         </div>

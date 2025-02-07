@@ -75,15 +75,24 @@
       "DESCRIPTION": "These two bar charts highlight the age distribution in five-year groupings by ‘academic age’. Starting point of academic age is the first year of publication activity and followed through continuously. Each bar is underpinned by a list of researchers in this age bracket for further drill down. Left, the red line indicates the overall number of publications per age group and on the right the average number of publication output per researcher in an age group is displayed."
     },
     "FREQUENCY_GRAPH": {
-      "MAXIMUM_SELECTED": "A Maximum 10 entities can be compared. Please remove some & try again.",
+      "MAXIMUM_SELECTED": "A maximum 10 entities can be compared. Please remove some and try again.",
       "WHAT_TO_COMPARE": "What do you want to compare?",
       "ENTITY_LABEL": "Entity Label",
+      "ENTITY_NAME": "Entity Name",
+      "ENTITY_TYPE": "Entity Type",
       "PUBLICATION_COUNT": "Publication Count",
       "COLOR_KEY": "Color Key",
       "ORGANIZATIONS": "Organizations",
       "PEOPLE": "People",
       "VIEW_ALL": "View All",
-      "CLEAR": "Clear"
+      "SAVE_ALL": "Save All as CSV",
+      "ORGANIZATION": "Organization",
+      "PERSON": "Person",
+      "SEARCH": "Search",
+      "CLEAR": "Clear",
+      "CLEAR_SEARCH": "Clear search",
+      "SELECT": "Select",
+      "SELECT_ENTRY": "Select {{ value }}"
     }
   },
   "DIRECTORY": {
