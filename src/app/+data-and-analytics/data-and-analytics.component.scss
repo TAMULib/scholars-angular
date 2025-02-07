@@ -1,3 +1,10 @@
+:host ::ng-deep {
+  ngb-typeahead-window.dropdown-menu {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+
 :host {
   width: 100%;
   .card-columns {
