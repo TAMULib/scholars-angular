@@ -10,6 +10,7 @@ import { BarplotComponent } from './academic-age-group/barplot/barplot.component
 import { DataAndAnalyticsComponent } from './data-and-analytics.component';
 import { routes } from './data-and-analytics.routes';
 import { FrequencyGraphComponent } from './frequency-graph/frequency-graph.component';
+import { ScatterplotComponent } from './frequency-graph/scatterplot/scatterplot.component';
 import { ProfileSummariesExportComponent } from './profile-summaries-export/profile-summaries-export.component';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
 
@@ -20,7 +21,8 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
     DataAndAnalyticsComponent,
     FrequencyGraphComponent,
     ProfileSummariesExportComponent,
-    QuantityDistributionComponent
+    QuantityDistributionComponent,
+    ScatterplotComponent,
   ],
   imports: [
     CommonModule,
