@@ -34,7 +34,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
   // D3 chart variables.
   private svg: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
   private margin = { top: 20, right: 20, bottom: 30, left: 50 };
-  // Note: max width is reduced from 800 to 700.
+  // Overall width is reduced from 800 to 700.
   private width: number;
   private height: number;
   private dataSubscription: Subscription;
@@ -49,7 +49,6 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
    * Create the chart once the view has been initialized.
    */
   ngAfterViewInit(): void {
-    // Only run D3 code in the browser.
     if (isPlatformBrowser(this.platformId)) {
       this.initChart();
       this.subscribeToFilters();
@@ -79,15 +78,11 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
    * Initialize the SVG element inside the <figure> container.
    */
   private initChart(): void {
-    // Select the container by its unique id.
     const element = d3.select(`#${this.id}`);
-
-    // Define the overall SVG width/height and inner chart dimensions.
-    // Max width reduced from 800 to 700.
+    // Set overall width to 700 (instead of 800) before subtracting margins.
     this.width = 700 - this.margin.left - this.margin.right;
     this.height = 400 - this.margin.top - this.margin.bottom;
 
-    // Append an SVG element and a group (g) element for margins.
     const svgContainer = element
       .append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
@@ -100,7 +95,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
   /**
    * Subscribe to the selectedFilters observable.
-   * Every time new filter data arrives, the chart is redrawn.
+   * Redraws the chart when new data arrives.
    */
   private subscribeToFilters(): void {
     if (this.selectedFilters) {
@@ -120,24 +115,27 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
    * For each filter we:
    * 1. Convert the ISO date string into a Date (set to Jan 1 of that year).
    * 2. Sort the series data in chronological order.
-   * 3. Draw a line connecting the points.
+   * 3. Extend the series so that it starts at the overall grid minimum and ends at the overall maximum,
+   *    inserting a 0 count if necessary.
+   * 4. Draw a line connecting the points.
    *
-   * The x-axis uses a time scale with tick marks every 10 years and the y-axis represents the count.
+   * The x-axis uses a time scale whose grid always starts at at least “10 years ago” and
+   * uses a tick interval that remains 5 years until the data spans 100 or more years.
+   * Grid lines are styled in gray with no axis domain lines.
    */
   private drawScatterplot(filters: FrequencyGraphFilter[]): void {
     // Clear any existing chart content.
     this.svg.selectAll('*').remove();
 
-    // Prepare arrays to compute overall domain and group series by filter.
+    // Prepare arrays for overall domain computation and group series by filter.
     let allDataPoints: Array<{ date: Date; count: number }> = [];
     const seriesByFilter = filters.map(filter => {
-      // Convert each pivot in the series to a data point.
       const seriesData = filter.series
         .map((pivot: SdrFacetPivot) => {
           const rawDate = new Date(pivot.value);
           if (!isNaN(rawDate.getTime())) {
             const year = rawDate.getFullYear();
-            // Set the date to January 1st of the year.
+            // Set the date to January 1st of that year.
             return { date: new Date(year, 0, 1), count: pivot.count };
           }
           return null;
@@ -146,8 +144,6 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
       // Sort the series data by date.
       seriesData.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-      // Add these points to the overall array.
       allDataPoints = allDataPoints.concat(seriesData);
       return { color: filter.color, seriesData };
     });
@@ -157,34 +153,83 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       return;
     }
 
-    // Compute the x-axis domain based on the extent of dates.
-    const [minDate, maxDate] = d3.extent(allDataPoints, d => d.date) as [Date, Date];
-    const startYear = new Date(minDate.getFullYear(), 0, 1);
-    const endYear = new Date(maxDate.getFullYear() + 1, 0, 1);
+    // Compute overall min and max dates from the data.
+    let [minDate, maxDate] = d3.extent(allDataPoints, d => d.date) as [Date, Date];
 
-    // Compute the y-axis domain from 0 to the maximum count.
-    const maxCount = d3.max(allDataPoints, d => d.count) || 0;
+    // Always render the grid with a minimum of 10 years ago.
+    const tenYearsAgo = new Date(new Date().getFullYear() - 10, 0, 1);
+    // If the data's minimum is more recent than 10 years ago, use 10 years ago.
+    const startYearDate = (minDate > tenYearsAgo ? tenYearsAgo : minDate);
+    const endYearDate = new Date(maxDate.getFullYear(), 0, 1);
+
+    // For each series, extend the data so it starts at startYearDate and ends at endYearDate.
+    seriesByFilter.forEach(seriesObj => {
+      const seriesData = seriesObj.seriesData;
+      if (seriesData.length > 0) {
+        if (seriesData[0].date.getTime() > startYearDate.getTime()) {
+          seriesData.unshift({ date: startYearDate, count: 0 });
+        }
+        if (seriesData[seriesData.length - 1].date.getTime() < endYearDate.getTime()) {
+          seriesData.push({ date: endYearDate, count: 0 });
+        }
+      }
+    });
+
+    // Compute the data span in years.
+    const dataSpanYears = endYearDate.getFullYear() - startYearDate.getFullYear();
+    // Use a 5-year tick interval until the data spans 100 years; thereafter, use 10-year intervals.
+    let gridTickInterval: number = 5;
+    if (dataSpanYears >= 100) {
+      gridTickInterval = 10;
+    }
 
     // Create scales.
     const xScale = d3.scaleTime()
-      .domain([startYear, endYear])
+      .domain([startYearDate, endYearDate])
       .range([0, this.width]);
 
     const yScale = d3.scaleLinear()
-      .domain([0, maxCount])
+      .domain([0, d3.max(allDataPoints, d => d.count) || 0])
       .nice()
       .range([this.height, 0]);
 
-    // Create axes.
-    // Use tick marks every 10 years for the x-axis.
-    const xAxis = d3.axisBottom(xScale)
-      .ticks(d3.timeYear.every(10))
-      .tickFormat(d3.timeFormat('%Y'));
+    // Add vertical grid lines.
+    const xGrid = this.svg.append("g")
+      .attr("class", "grid x-grid")
+      .attr("transform", "translate(0," + this.height + ")")
+      .call(
+        d3.axisBottom(xScale)
+          .ticks(d3.timeYear.every(gridTickInterval))
+          .tickSize(-this.height)
+          .tickFormat(() => "")
+      );
+    // Remove the domain line and style grid lines.
+    xGrid.select(".domain").remove();
+    xGrid.selectAll("line")
+      .attr("stroke", "gray")
+      .attr("stroke-opacity", 0.7);
 
+    // Add horizontal grid lines.
+    const yGrid = this.svg.append("g")
+      .attr("class", "grid y-grid")
+      .call(
+        d3.axisLeft(yScale)
+          .ticks(5)
+          .tickSize(-this.width)
+          .tickFormat(() => "")
+      );
+    yGrid.select(".domain").remove();
+    yGrid.selectAll("line")
+      .attr("stroke", "gray")
+      .attr("stroke-opacity", 0.7);
+
+    // Create and append axes.
+    const xAxis = d3.axisBottom(xScale)
+      .ticks(d3.timeYear.every(gridTickInterval))
+      .tickFormat(d3.timeFormat('%Y'));
     const yAxis = d3.axisLeft(yScale)
       .ticks(5);
 
-    // Append axes.
     this.svg.append('g')
       .attr('transform', `translate(0, ${this.height})`)
       .call(xAxis);
@@ -192,7 +237,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     this.svg.append('g')
       .call(yAxis);
 
-    // Draw a line for each filter's series.
+    // Draw a line for each filter's series with a bolder stroke.
     seriesByFilter.forEach(filterSeries => {
       if (filterSeries.seriesData.length > 0) {
         const lineGenerator = d3.line<{ date: Date; count: number }>()
@@ -204,7 +249,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
           .datum(filterSeries.seriesData)
           .attr('fill', 'none')
           .attr('stroke', filterSeries.color)
-          .attr('stroke-width', 2)
+          .attr('stroke-width', 3)
           .attr('d', lineGenerator);
       }
     });
