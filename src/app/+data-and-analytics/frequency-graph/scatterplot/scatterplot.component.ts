@@ -41,6 +41,10 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
+  ngOnInit(): void {
+    
+  }
+
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initChart();
@@ -210,5 +214,14 @@ private drawScatterplot(filters: FrequencyGraphFilter[]): void {
         .attr('d', lineGenerator);
     }
   });
+
+  this.svg.append('line')
+  .attr('class', 'right-border')
+  .attr('x1', this.width)
+  .attr('y1', 0)
+  .attr('x2', this.width)
+  .attr('y2', this.height)
+  .attr('stroke', 'black')
+  .attr('stroke-width', 1);
 }
 }
