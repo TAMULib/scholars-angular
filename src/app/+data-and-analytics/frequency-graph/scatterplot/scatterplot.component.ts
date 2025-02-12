@@ -31,7 +31,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
   private svg: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
-  private margin = { top: 20, right: 20, bottom: 30, left: 50 };
+  private margin = { top: 20, right: 20, bottom: 50, left: 70 };
   private width: number;
   private height: number;
 
@@ -72,7 +72,8 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     const svgContainer = element
       .append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', this.height + this.margin.top + this.margin.bottom);
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .style('overflow', 'visible');
 
     this.svg = svgContainer
       .append('g')
@@ -96,9 +97,15 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .domain([startDate, endDate])
       .range([0, this.width]);
 
+    const desiredTicks = 5;
+    let adjustedMax = maxCount;
+    if (maxCount > 0) {
+      const tickStep = d3.tickStep(0, maxCount, desiredTicks);
+      adjustedMax = maxCount + tickStep;
+    }
     const yScale = d3.scaleLinear()
-      .domain([0, maxCount])
-      .nice()
+      .domain([0, adjustedMax])
+      .nice(desiredTicks)
       .range([this.height, 0]);
 
     return { xScale, yScale };
@@ -142,11 +149,14 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     this.svg.append('g')
       .call(d3.axisLeft(yScale).ticks(5));
 
+    const xLabelPadding = -10;
+    const yLabelPadding = 35;
+
     this.svg.append('text')
       .attr('class', 'x-axis-label')
       .attr('text-anchor', 'middle')
       .attr('x', this.width / 2)
-      .attr('y', this.height + this.margin.bottom - 5)
+      .attr('y', this.height + this.margin.bottom + xLabelPadding)
       .text('Years');
 
     this.svg.append('text')
@@ -154,7 +164,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .attr('text-anchor', 'middle')
       .attr('transform', 'rotate(-90)')
       .attr('x', -this.height / 2)
-      .attr('y', -this.margin.left + 15)
+      .attr('y', -this.margin.left + yLabelPadding)
       .text('Publication Count');
   }
 
@@ -246,11 +256,6 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
     const dataSpanYears = endYearDate.getFullYear() - startYearDate.getFullYear();
     const gridTickInterval = dataSpanYears >= 100 ? 10 : 5;
-    const tickValues = d3.timeYear.range(
-      startYearDate,
-      d3.timeYear.offset(endYearDate, 1),
-      gridTickInterval
-    );
 
     const completeAllDataPoints = seriesByFilter.flatMap(seriesObj => seriesObj.seriesData);
     const maxCount = d3.max(completeAllDataPoints, d => d.count) || 0;
