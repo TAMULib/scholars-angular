@@ -66,8 +66,11 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
   private initChart(): void {
     const element = d3.select(`#${this.id}`);
-    this.width = 700 - this.margin.left - this.margin.right;
-    this.height = 400 - this.margin.top - this.margin.bottom;
+
+    const isMobile = window.innerWidth <= 768;
+
+    this.width = (isMobile ? 380 : 700) - this.margin.left - this.margin.right;
+    this.height = (isMobile ? 250 : 400) - this.margin.top - this.margin.bottom;
 
     const svgContainer = element
       .append('svg')
@@ -150,7 +153,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .call(d3.axisLeft(yScale).ticks(5));
 
     const xLabelPadding = -10;
-    const yLabelPadding = 35;
+    const yLabelPadding = 30;
 
     this.svg.append('text')
       .attr('class', 'x-axis-label')
