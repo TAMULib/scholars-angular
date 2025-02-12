@@ -33,6 +33,7 @@
     "dev:preview": "npm run ncu"
   },
   "dependencies": {
+    "@angular-slider/ngx-slider": "19.0.0",
     "@angular/animations": "16.2.7",
     "@angular/common": "16.2.7",
     "@angular/compiler": "16.2.7",
