@@ -126,8 +126,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.selectedFiltersSubject = new BehaviorSubject<FrequencyGraphFilter[]>([]);
-    this.selectedFilters = this.selectedFiltersSubject.asObservable()
-      .pipe();
+    this.selectedFilters = this.selectedFiltersSubject.asObservable();
     this.selectedFacetSubject = new BehaviorSubject<SdrFacet>(undefined);
     this.selectedFacet = this.selectedFacetSubject.asObservable()
       .pipe(filter(facet => !!facet));
@@ -330,9 +329,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           );
         })
       ).subscribe(filterWithSeries => {
-        const filters = [...this.selectedFiltersSubject.value];
-        filters.push(filterWithSeries);
-        this.selectedFiltersSubject.next(filters);
+        this.selectedFiltersSubject.next([...this.selectedFiltersSubject.value, filterWithSeries]);
       });
     } else {
       const filters = [...this.selectedFiltersSubject.value];
