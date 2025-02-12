@@ -1,9 +1,9 @@
 import { isPlatformServer } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observable, of, Subscription, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observable, of, Subject, Subscription, switchMap, take, tap } from 'rxjs';
 import { saveAs } from 'file-saver';
 
 import { Individual } from '../../core/model/discovery';
@@ -116,13 +116,16 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   private filterSubscription: Subscription;
 
+  private markForChangesTimer: any;
+
   constructor(
     @Inject(PLATFORM_ID) readonly platformId: string,
     readonly formBuilder: UntypedFormBuilder,
     readonly translate: TranslateService,
     readonly store: Store<AppState>,
     readonly dialog: DialogService,
-    readonly individualRepo: IndividualRepo
+    readonly individualRepo: IndividualRepo,
+    readonly changeDetectorRef: ChangeDetectorRef
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.selectedFiltersSubject = new BehaviorSubject<FrequencyGraphFilter[]>([]);
@@ -171,9 +174,12 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   loadFacets(organization): void {
     if (this.routerState) {
+
       this.selectedFacetSubject.next(undefined);
       this.selectedFiltersSubject.next([]);
       this.availableColors = [...colorConstantQueue].reverse();
+      this.resetYearRange();
+
       this.routerState.pipe(take(1)).subscribe((routerState: CustomRouterState) => {
 
         const originalSdrRequest = createSdrRequest(routerState);
@@ -320,6 +326,47 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
                 value: entry.value,
                 count: entry.count
               })) || [];
+
+
+              // update options with new series data added
+              const options = { ...this.yearRangeOptions };
+
+              let updateYearEnd = this.yearEnd === this.yearRangeOptions.ceil;
+              let updateYearStart = this.yearStart === this.yearRangeOptions.floor;
+
+              for (let entry of newFilter.series) {
+                const year = this.getYearFromDate(entry.value);
+                if (year < options.floor) {
+                  options.floor = year;
+                }
+                if (year > options.ceil) {
+                  options.ceil = year;
+                }
+              }
+
+              if (this.yearRangeOptions.floor !== options.floor || this.yearRangeOptions.ceil !== options.ceil) {
+
+                this.yearRangeOptions = {
+                  ...options
+                };
+
+                if (updateYearEnd || this.yearEnd > options.ceil) {
+                  this.yearEnd = options.ceil;
+                }
+
+                if (updateYearStart || this.yearStart < options.floor) {
+                  this.yearStart = options.floor;
+                }
+
+                if (this.markForChangesTimer) {
+                  clearTimeout(this.markForChangesTimer);
+                }
+
+                this.markForChangesTimer = setTimeout(() => {
+                  this.changeDetectorRef.markForCheck();
+                }, 50);
+              }
+
               return newFilter;
             }),
             catchError(error => {
@@ -329,7 +376,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           );
         })
       ).subscribe(filterWithSeries => {
-        this.selectedFiltersSubject.next([...this.selectedFiltersSubject.value, filterWithSeries]);
+        const filters = [...this.selectedFiltersSubject.value, filterWithSeries];
+        this.selectedFiltersSubject.next(filters);
       });
     } else {
       const filters = [...this.selectedFiltersSubject.value];
@@ -337,9 +385,59 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
         f => f.field === entry.field && f.value === entry.value
       );
       if (index !== -1) {
+        const filterRemoved = filters[index];
+
         filters.splice(index, 1);
         this.availableColors.push(entry.color);
         delete entry.color;
+
+
+        // update options when series data removed
+        const options = { ...this.yearRangeOptions };
+
+        let findNext = false;
+
+        if (filters.length > 0) {
+          for (const entry of filterRemoved.series) {
+            const year = this.getYearFromDate(entry.value);
+            if (year === options.ceil || year === options.floor) {
+              findNext = true;
+              break;
+            }
+          }
+        } else {
+          this.resetYearRange();
+        }
+
+        if (findNext) {
+          let ceil = new Date().getFullYear();
+          let floor = ceil - 10;
+          for (const filter of filters) {
+            for (const entry of filter.series) {
+              const year = this.getYearFromDate(entry.value);
+              if (year < floor) {
+                floor = year;
+              }
+              if (year > ceil) {
+                ceil = year;
+              }
+            }
+          }
+
+          this.yearRangeOptions = {
+            ...options,
+            floor,
+            ceil
+          };
+
+          if (this.markForChangesTimer) {
+            clearTimeout(this.markForChangesTimer);
+          }
+
+          this.markForChangesTimer = setTimeout(() => {
+            this.changeDetectorRef.markForCheck();
+          }, 50);
+        }
       }
       this.selectedFiltersSubject.next(filters);
     }
@@ -395,6 +493,26 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       default:
         return this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.VIEW_ALL');
     }
+  }
+
+  private getYearFromDate(date: string): number {
+    return new Date(date).getFullYear();
+  }
+
+  private resetYearRange(): void {
+    this.yearEnd = new Date().getFullYear();
+
+    this.yearStart = this.yearEnd - 10;
+
+    this.yearRangeOptions = {
+      floor: this.yearStart,
+      ceil: this.yearEnd,
+      step: 1,
+      showTicks: true,
+      noSwitching: true
+    };
+
+    delete this.markForChangesTimer;
   }
 
   private filterContent(facet: SdrFacet, property: string): SdrFacetEntry[] {
