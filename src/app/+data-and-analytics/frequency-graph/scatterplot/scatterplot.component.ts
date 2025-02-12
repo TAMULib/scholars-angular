@@ -34,6 +34,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
   private margin = { top: 20, right: 20, bottom: 50, left: 70 };
   private width: number;
   private height: number;
+  private isMobile: Boolean;
 
   private dataSubscription: Subscription;
 
@@ -67,10 +68,10 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
   private initChart(): void {
     const element = d3.select(`#${this.id}`);
 
-    const isMobile = window.innerWidth <= 768;
+    this.isMobile = window.innerWidth <= 768;
 
-    this.width = (isMobile ? 380 : 700) - this.margin.left - this.margin.right;
-    this.height = (isMobile ? 250 : 400) - this.margin.top - this.margin.bottom;
+    this.width = (this.isMobile ? 380 : 700) - this.margin.left - this.margin.right;
+    this.height = (this.isMobile ? 250 : 400) - this.margin.top - this.margin.bottom;
 
     const svgContainer = element
       .append('svg')
