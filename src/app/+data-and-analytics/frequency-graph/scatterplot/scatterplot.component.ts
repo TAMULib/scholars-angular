@@ -141,6 +141,21 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
     this.svg.append('g')
       .call(d3.axisLeft(yScale).ticks(5));
+
+    this.svg.append('text')
+      .attr('class', 'x-axis-label')
+      .attr('text-anchor', 'middle')
+      .attr('x', this.width / 2)
+      .attr('y', this.height + this.margin.bottom - 5)
+      .text('Years');
+
+    this.svg.append('text')
+      .attr('class', 'y-axis-label')
+      .attr('text-anchor', 'middle')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -this.height / 2)
+      .attr('y', -this.margin.left + 15)
+      .text('Publication Count');
   }
 
   private drawRightBorder(): void {
