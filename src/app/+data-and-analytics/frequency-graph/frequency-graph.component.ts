@@ -18,6 +18,7 @@ import { selectRouterState } from '../../core/store/router';
 import { CustomRouterState } from '../../core/store/router/router.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { createSdrRequest } from '../../shared/utilities/discovery.utility';
+import { Options } from '@angular-slider/ngx-slider';
 
 const TURQUOISE = "#8DD3C7";
 const DARK_TURQUOISE = "#009999";
@@ -96,6 +97,18 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
 
   public form: UntypedFormGroup;
+
+  public yearEnd = new Date().getFullYear();
+
+  public yearStart = this.yearEnd - 10;
+
+  public yearRangeOptions: Options = {
+    floor: this.yearStart,
+    ceil: this.yearEnd,
+    step: 1,
+    showTicks: true,
+    noSwitching: true
+  };
 
   public availableColors = [...colorConstantQueue].reverse();
 
