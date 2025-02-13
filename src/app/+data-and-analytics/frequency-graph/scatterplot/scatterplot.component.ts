@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges, PLATFORM_ID } from '@angular/core';
 import * as d3 from 'd3';
 import { Observable, Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { FrequencyGraphFilter } from '../frequency-graph.component';
   styleUrls: ['./scatterplot.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy {
   public id: string = id();
 
   @Input() public selectedFilters: Observable<FrequencyGraphFilter[]>;
@@ -53,8 +53,6 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
   private dataSubscription: Subscription;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-
-  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
