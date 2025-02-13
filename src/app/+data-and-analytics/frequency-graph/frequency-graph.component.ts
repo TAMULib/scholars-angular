@@ -175,7 +175,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public onSelectFacet(facet): void {
+  public onSelectFacet(facet: any): void {
     this.form.controls.filter.setValue('');
     if (this.filterSubscription) {
       this.filterSubscription.unsubscribe();
@@ -244,8 +244,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
         })
       ).subscribe(filterWithSeries => {
         this.originalFilters.push(filterWithSeries);
-        this.selectedFiltersSubject.next(this.filterFiltersByYearRange(this.originalFilters));
         this.updateYearRangeFromFilters();
+        this.selectedFiltersSubject.next(this.filterFiltersByYearRange(this.originalFilters));
       });
     } else {
       const origIndex = this.originalFilters.findIndex(
@@ -253,18 +253,11 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       );
       if (origIndex !== -1) {
         this.originalFilters.splice(origIndex, 1);
-      }
-      const filters = [...this.selectedFiltersSubject.value];
-      const index = filters.findIndex(
-        f => f.field === entry.field && f.value === entry.value
-      );
-      if (index !== -1) {
-        filters.splice(index, 1);
         this.availableColors.push(entry.color);
         delete entry.color;
       }
-      this.selectedFiltersSubject.next(filters);
       this.updateYearRangeFromFilters();
+      this.selectedFiltersSubject.next(this.filterFiltersByYearRange(this.originalFilters));
     }
   }
 
@@ -442,11 +435,13 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       ceil: computedMax
     };
 
-    if ((computedMin < oldFloor && this.yearStart === oldFloor) || (computedMin > oldFloor && this.yearStart < computedMin)) {
+    if ((computedMin < oldFloor && this.yearStart === oldFloor) ||
+      (computedMin > oldFloor && this.yearStart < computedMin)) {
       this.yearStart = computedMin;
     }
 
-    if ((computedMax > oldCeil && this.yearEnd === oldCeil) || (computedMax < oldCeil && this.yearEnd > computedMax)) {
+    if ((computedMax > oldCeil && this.yearEnd === oldCeil) ||
+      (computedMax < oldCeil && this.yearEnd > computedMax)) {
       this.yearEnd = computedMax;
     }
 
