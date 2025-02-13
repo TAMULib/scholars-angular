@@ -1,16 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-  PLATFORM_ID
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, PLATFORM_ID } from '@angular/core';
 import * as d3 from 'd3';
 import { Observable, Subscription } from 'rxjs';
 
@@ -31,17 +20,41 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
   private svg: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
-  private margin = { top: 20, right: 20, bottom: 50, left: 70 };
+  private readonly MARGIN_TOP: number = 20;
+  private readonly MARGIN_RIGHT: number = 20;
+  private readonly MARGIN_BOTTOM: number = 50;
+  private readonly MARGIN_LEFT: number = 70;
+  private margin = { top: this.MARGIN_TOP, right: this.MARGIN_RIGHT, bottom: this.MARGIN_BOTTOM, left: this.MARGIN_LEFT };
+
   private width: number;
   private height: number;
-  private isMobile: Boolean;
+  private isMobile: boolean;
+
+  private readonly MOBILE_BREAKPOINT: number = 768;
+  private readonly MOBILE_WIDTH: number = 380;
+  private readonly DESKTOP_WIDTH: number = 700;
+  private readonly MOBILE_HEIGHT: number = 250;
+  private readonly DESKTOP_HEIGHT: number = 400;
+
+  private readonly X_LABEL_PADDING: number = -10;
+  private readonly Y_LABEL_PADDING: number = 30;
+
+  private readonly RIGHT_BORDER_STROKE_WIDTH: number = 1;
+  private readonly LINE_STROKE_WIDTH: number = 3;
+
+  private readonly DEFAULT_TIMELINE_YEARS: number = 10;
+  private readonly FALLBACK_GRID_TICK_INTERVAL: number = 1;
+  private readonly FALLBACK_MAX_COUNT: number = 1;
+
+  private readonly LARGE_TIMESPAN_THRESHOLD: number = 100;
+  private readonly TICK_INTERVAL_LARGE_TIMESPAN: number = 10;
+  private readonly TICK_INTERVAL_DEFAULT: number = 5;
 
   private dataSubscription: Subscription;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -52,14 +65,16 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedFilters'] && !changes['selectedFilters'].isFirstChange()) {
-      if (this.dataSubscription) {
-        this.dataSubscription.unsubscribe();
-      }
+      this.unsubscribeToFilters();
       this.subscribeToFilters();
     }
   }
 
   ngOnDestroy(): void {
+    this.unsubscribeToFilters();
+  }
+
+  private unsubscribeToFilters(): void {
     if (this.dataSubscription) {
       this.dataSubscription.unsubscribe();
     }
@@ -68,10 +83,10 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
   private initChart(): void {
     const element = d3.select(`#${this.id}`);
 
-    this.isMobile = window.innerWidth <= 768;
+    this.isMobile = window.innerWidth <= this.MOBILE_BREAKPOINT;
 
-    this.width = (this.isMobile ? 380 : 700) - this.margin.left - this.margin.right;
-    this.height = (this.isMobile ? 250 : 400) - this.margin.top - this.margin.bottom;
+    this.width = (this.isMobile ? this.MOBILE_WIDTH : this.DESKTOP_WIDTH) - this.margin.left - this.margin.right;
+    this.height = (this.isMobile ? this.MOBILE_HEIGHT : this.DESKTOP_HEIGHT) - this.margin.top - this.margin.bottom;
 
     const svgContainer = element
       .append('svg')
@@ -92,6 +107,14 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     }
   }
 
+  /**
+   * Creates the x and y scales for the chart.
+   *
+   * @param startDate The start date for the x-scale domain.
+   * @param endDate The end date for the x-scale domain.
+   * @param maxCount The maximum count for the y-scale domain.
+   * @returns An object containing both xScale and yScale.
+   */
   private createScales(
     startDate: Date,
     endDate: Date,
@@ -101,7 +124,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .domain([startDate, endDate])
       .range([0, this.width]);
 
-    const desiredTicks = 5;
+    const desiredTicks = this.TICK_INTERVAL_DEFAULT;
     let adjustedMax = maxCount;
     if (maxCount > 0) {
       const tickStep = d3.tickStep(0, maxCount, desiredTicks);
@@ -115,6 +138,14 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     return { xScale, yScale };
   }
 
+  /**
+   * Draws the grid and axes on the chart.
+   *
+   * @param xScale The x-axis scale.
+   * @param yScale The y-axis scale.
+   * @param gridTickInterval The interval for grid ticks.
+   * @param tickValues Optional custom tick values for the x-axis.
+   */
   private drawGridAndAxes(
     xScale: d3.ScaleTime<number, number>,
     yScale: d3.ScaleLinear<number, number>,
@@ -140,7 +171,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
     const yGrid = this.svg.append('g')
       .attr('class', 'grid y-grid')
-      .call(d3.axisLeft(yScale).ticks(5).tickSize(-this.width).tickFormat(() => ''));
+      .call(d3.axisLeft(yScale).ticks(this.TICK_INTERVAL_DEFAULT).tickSize(-this.width).tickFormat(() => ''));
     yGrid.select('.domain').remove();
     yGrid.selectAll('line')
       .attr('stroke', 'gray')
@@ -151,16 +182,13 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .call(xAxisGenerator);
 
     this.svg.append('g')
-      .call(d3.axisLeft(yScale).ticks(5));
-
-    const xLabelPadding = -10;
-    const yLabelPadding = 30;
+      .call(d3.axisLeft(yScale).ticks(this.TICK_INTERVAL_DEFAULT));
 
     this.svg.append('text')
       .attr('class', 'x-axis-label')
       .attr('text-anchor', 'middle')
       .attr('x', this.width / 2)
-      .attr('y', this.height + this.margin.bottom + xLabelPadding)
+      .attr('y', this.height + this.margin.bottom + this.X_LABEL_PADDING)
       .text('Years');
 
     this.svg.append('text')
@@ -168,7 +196,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .attr('text-anchor', 'middle')
       .attr('transform', 'rotate(-90)')
       .attr('x', -this.height / 2)
-      .attr('y', -this.margin.left + yLabelPadding)
+      .attr('y', -this.margin.left + this.Y_LABEL_PADDING)
       .text('Publication Count');
   }
 
@@ -180,9 +208,17 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .attr('x2', this.width)
       .attr('y2', this.height)
       .attr('stroke', 'black')
-      .attr('stroke-width', 1);
+      .attr('stroke-width', this.RIGHT_BORDER_STROKE_WIDTH);
   }
 
+  /**
+   * Draws a line representing a data series.
+   *
+   * @param seriesData The data points for the series.
+   * @param color The color of the line.
+   * @param xScale The x-axis scale.
+   * @param yScale The y-axis scale.
+   */
   private drawLine(
     seriesData: Array<{ date: Date; count: number }>,
     color: string,
@@ -198,14 +234,22 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
       .datum(seriesData)
       .attr('fill', 'none')
       .attr('stroke', color)
-      .attr('stroke-width', 3)
+      .attr('stroke-width', this.LINE_STROKE_WIDTH)
       .attr('d', lineGenerator);
   }
 
+  /**
+   * Draws the scatterplot using the provided filters.
+   *
+   * @param filters The filters containing series data.
+   */
   private drawScatterplot(filters: FrequencyGraphFilter[]): void {
     this.svg.selectAll('*').remove();
 
+    const defaultTimeline: number = this.DEFAULT_TIMELINE_YEARS;
+
     let allDataPoints: Array<{ date: Date; count: number }> = [];
+
     const seriesByFilter = filters.map(filter => {
       const seriesData = filter.series
         .map((pivot: SdrFacetPivot) => {
@@ -225,10 +269,10 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
 
     if (allDataPoints.length === 0) {
       const currentYear = new Date().getFullYear();
-      const fallbackStartYearDate = new Date(currentYear - 4, 0, 1);
+      const fallbackStartYearDate = new Date(currentYear - defaultTimeline, 0, 1);
       const fallbackEndYearDate = new Date(currentYear, 0, 1);
-      const gridTickInterval = 1;
-      const maxCount = 1;
+      const gridTickInterval = this.FALLBACK_GRID_TICK_INTERVAL;
+      const maxCount = this.FALLBACK_MAX_COUNT;
 
       const { xScale, yScale } = this.createScales(fallbackStartYearDate, fallbackEndYearDate, maxCount);
       const tickValues = d3.timeYear.range(
@@ -243,7 +287,7 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     }
 
     const [minDate, maxDate] = d3.extent(allDataPoints, d => d.date) as [Date, Date];
-    const tenYearsAgo = new Date(new Date().getFullYear() - 10, 0, 1);
+    const tenYearsAgo = new Date(new Date().getFullYear() - this.DEFAULT_TIMELINE_YEARS, 0, 1);
     const startYearDate = minDate > tenYearsAgo ? tenYearsAgo : minDate;
     const endYearDate = new Date(maxDate.getFullYear(), 0, 1);
 
@@ -259,7 +303,9 @@ export class ScatterplotComponent implements OnInit, OnChanges, AfterViewInit, O
     });
 
     const dataSpanYears = endYearDate.getFullYear() - startYearDate.getFullYear();
-    const gridTickInterval = dataSpanYears >= 100 ? 10 : 5;
+    const gridTickInterval = dataSpanYears >= this.LARGE_TIMESPAN_THRESHOLD
+      ? this.TICK_INTERVAL_LARGE_TIMESPAN
+      : this.TICK_INTERVAL_DEFAULT;
 
     const completeAllDataPoints = seriesByFilter.flatMap(seriesObj => seriesObj.seriesData);
     const maxCount = d3.max(completeAllDataPoints, d => d.count) || 0;
