@@ -160,7 +160,6 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     this.loadFacets(this.organization);
-    this.selectedFilters.subscribe(console.log);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
