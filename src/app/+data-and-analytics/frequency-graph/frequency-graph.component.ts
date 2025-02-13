@@ -1,10 +1,40 @@
 import { isPlatformServer } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  SimpleChanges
+} from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, catchError, distinctUntilChanged, filter, map, Observable, of, Subject, Subscription, switchMap, take, tap } from 'rxjs';
 import { saveAs } from 'file-saver';
+import {
+  BehaviorSubject,
+  catchError,
+  distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+  take,
+  tap
+} from 'rxjs';
+import { Options } from '@angular-slider/ngx-slider';
 
 import { Individual } from '../../core/model/discovery';
 import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
@@ -18,7 +48,6 @@ import { selectRouterState } from '../../core/store/router';
 import { CustomRouterState } from '../../core/store/router/router.reducer';
 import { fadeIn } from '../../shared/utilities/animation.utility';
 import { createSdrRequest } from '../../shared/utilities/discovery.utility';
-import { Options } from '@angular-slider/ngx-slider';
 
 const TURQUOISE = "#8DD3C7";
 const DARK_TURQUOISE = "#009999";
@@ -64,44 +93,24 @@ export interface FrequencyGraphFilter extends Filter {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() public organization: Individual;
+  @Input() public displayView: DisplayView;
+  @Input() public dataAndAnalyticsView: DataAndAnalyticsView;
+  @Input() public filters: any[];
+  @Input() public themeOrganization: string;
 
-  @Input()
-  public organization: Individual;
-
-  @Input()
-  public displayView: DisplayView;
-
-  @Input()
-  public dataAndAnalyticsView: DataAndAnalyticsView;
-
-  @Input()
-  public filters: any[];
-
-  @Input()
-  public themeOrganization: string;
-
-  @Output()
-  public labelEvent: EventEmitter<string>;
-
-  @Output()
-  public selectedFilters: Observable<FrequencyGraphFilter[]>;
+  @Output() public labelEvent: EventEmitter<string>;
+  @Output() public selectedFilters: Observable<FrequencyGraphFilter[]>;
 
   public selectedFiltersSubject: BehaviorSubject<FrequencyGraphFilter[]>;
-
   public routerState: Observable<CustomRouterState>;
-
   public facets: Observable<SdrFacet[]>;
-
   public selectedFacet: Observable<SdrFacet>;
-
   public selectedFacetSubject: BehaviorSubject<SdrFacet>;
-
   public form: UntypedFormGroup;
 
-  public yearEnd = new Date().getFullYear();
-
-  public yearStart = this.yearEnd - 10;
-
+  public yearEnd: number = new Date().getFullYear();
+  public yearStart: number = this.yearEnd - 10;
   public yearRangeOptions: Options = {
     floor: this.yearStart,
     ceil: this.yearEnd,
@@ -113,9 +122,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   public availableColors = [...colorConstantQueue].reverse();
 
   readonly sdrRequestSubject: BehaviorSubject<SdrRequest>;
-
   private filterSubscription: Subscription;
-
+  private originalFilters: FrequencyGraphFilter[];
   private markForChangesTimer: any;
 
   constructor(
@@ -131,15 +139,9 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedFiltersSubject = new BehaviorSubject<FrequencyGraphFilter[]>([]);
     this.selectedFilters = this.selectedFiltersSubject.asObservable();
     this.selectedFacetSubject = new BehaviorSubject<SdrFacet>(undefined);
-    this.selectedFacet = this.selectedFacetSubject.asObservable()
-      .pipe(filter(facet => !!facet));
+    this.selectedFacet = this.selectedFacetSubject.asObservable().pipe(filter(facet => !!facet));
     this.sdrRequestSubject = new BehaviorSubject<SdrRequest>(undefined);
-  }
-
-  ngOnDestroy() {
-    if (this.filterSubscription) {
-      this.filterSubscription.unsubscribe();
-    }
+    this.originalFilters = [];
   }
 
   ngOnInit(): void {
@@ -147,11 +149,9 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const formGroup = {
+    this.form = this.formBuilder.group({
       filter: new UntypedFormControl()
-    };
-
-    this.form = this.formBuilder.group(formGroup);
+    });
 
     this.routerState = this.store.pipe(
       select(selectRouterState),
@@ -160,126 +160,46 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     this.loadFacets(this.organization);
-
     this.selectedFilters.subscribe(console.log);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const { organization } = changes;
-
-    if (organization?.currentValue) {
-      this.loadFacets(organization.currentValue);
+    if (changes.organization?.currentValue) {
+      this.loadFacets(changes.organization.currentValue);
     }
   }
 
-  loadFacets(organization): void {
-    if (this.routerState) {
-
-      this.selectedFacetSubject.next(undefined);
-      this.selectedFiltersSubject.next([]);
-      this.availableColors = [...colorConstantQueue].reverse();
-      this.resetYearRange();
-
-      this.routerState.pipe(take(1)).subscribe((routerState: CustomRouterState) => {
-
-        const originalSdrRequest = createSdrRequest(routerState);
-
-        const sdrRequest = Object.assign(originalSdrRequest, {
-          page: {
-            number: 1,
-            size: 1,
-            sort: originalSdrRequest.page.sort
-          },
-          facets: originalSdrRequest.facets.map((f: Facetable) => {
-            f.pageNumber = 1;
-            f.pageSize = 2147483647;
-            return f;
-          }),
-          highlight: {},
-          query: Object.assign(originalSdrRequest.query, {
-            fields: 'class'
-          })
-        });
-
-        sdrRequest.filters.push({
-          field: 'authorOrganization',
-          opKey: OpKey.EQUALS,
-          value: organization.name
-        });
-
-        this.sdrRequestSubject.next(sdrRequest);
-
-        this.facets = this.individualRepo.search(sdrRequest)
-          .pipe(
-            tap((collection: SdrCollection) => {
-              if (collection?.facets.length > 0) {
-                for (let facet of collection.facets) {
-                  facet.entries.content.forEach(entry => entry.field = facet.field);
-                  if (facet.field === 'authorOrganization') {
-                    facet.entries.content = this.filterContent(facet, 'hasSubOrganizations');
-                  } else if (facet.field === 'authors' && this.organization.name !== this.themeOrganization) {
-                    facet.entries.content = this.filterContent(facet, 'people');
-                  }
-                }
-              }
-            }),
-            map((collection: SdrCollection) => {
-              const facets = collection.facets.filter(facet => facet.entries.content.length);
-
-              if (facets.length > 0) {
-                this.onSelectFacet(facets[0]);
-
-                let defaultSelected = 3;
-                for (const entry of facets[0].entries.content) {
-                  entry.selected = defaultSelected > 0;
-                  if (defaultSelected > 0) {
-                    this.onSelectFilter(entry);
-                    defaultSelected--;
-                  } else {
-                    break;
-                  }
-                }
-              }
-
-              return facets.length > 1 ?
-                collection.facets.concat([
-                  this.buildViewAllFacet(collection.facets)
-                ]) : facets;
-            })
-          );
-      });
+  ngOnDestroy() {
+    if (this.filterSubscription) {
+      this.filterSubscription.unsubscribe();
     }
   }
 
-  onSelectFacet(facet): void {
+  public onSelectFacet(facet): void {
     this.form.controls.filter.setValue('');
-
     if (this.filterSubscription) {
       this.filterSubscription.unsubscribe();
     }
 
-    if (!facet.page) {
-      facet.page = 1;
-    }
-    if (!facet.pageSize) {
-      facet.pageSize = 10;
-    }
+    facet.page = facet.page || 1;
+    facet.pageSize = facet.pageSize || 10;
 
-    const content = Object.assign([], facet.entries.content);
-    this.filterSubscription = this.form.controls.filter.valueChanges.pipe(
-      distinctUntilChanged()
-    ).subscribe((term: string) => {
-      term = term.toLowerCase();
-      facet.entries.content = content.filter((entry) => entry.value.toLowerCase().indexOf(term) >= 0);
-    });
+    const originalContent = [...facet.entries.content];
+    this.filterSubscription = this.form.controls.filter.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((term: string) => {
+        term = term.toLowerCase();
+        facet.entries.content = originalContent.filter(entry =>
+          entry.value.toLowerCase().includes(term)
+        );
+      });
 
     this.selectedFacetSubject.next(facet);
   }
 
-  onSelectFilter(entry): void {
+  public onSelectFilter(entry: any): void {
     if (entry.selected) {
       entry.color = this.availableColors.pop();
-
       const newFilter: FrequencyGraphFilter = {
         field: entry.field,
         value: entry.value,
@@ -291,82 +211,29 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       this.sdrRequestSubject.pipe(
         take(1),
         switchMap(originalSdrRequest => {
-          const sdrRequest = {
+          const sdrRequest: SdrRequest = {
             ...originalSdrRequest,
-            page: {
-              number: 1,
-              size: 1,
-              sort: originalSdrRequest.page.sort
-            },
+            page: { number: 1, size: 1, sort: originalSdrRequest.page.sort },
             facets: [{
               field: 'publicationDate',
               pageNumber: 1,
               pageSize: 2147483647
             }],
-            query: {
-              ...originalSdrRequest.query,
-              fields: 'class'
-            },
-            filters: [
-              ...this.mergeFiltersWithSameField([
-                ...originalSdrRequest.filters,
-                {
-                  field: entry.field,
-                  opKey: OpKey.EQUALS,
-                  value: entry.value
-                }
-              ])
-            ]
+            query: { ...originalSdrRequest.query, fields: 'class' },
+            filters: this.mergeFiltersWithSameField([
+              ...originalSdrRequest.filters,
+              { field: entry.field, opKey: OpKey.EQUALS, value: entry.value }
+            ])
           };
 
           return this.individualRepo.search(sdrRequest).pipe(
             map((collection: SdrCollection) => {
-              newFilter.series = collection.facets[0]?.entries?.content.map(entry => ({
-                field: 'publicationDate',
-                value: entry.value,
-                count: entry.count
-              })) || [];
-
-
-              // update options with new series data added
-              const options = { ...this.yearRangeOptions };
-
-              let updateYearEnd = this.yearEnd === this.yearRangeOptions.ceil;
-              let updateYearStart = this.yearStart === this.yearRangeOptions.floor;
-
-              for (let entry of newFilter.series) {
-                const year = this.getYearFromDate(entry.value);
-                if (year < options.floor) {
-                  options.floor = year;
-                }
-                if (year > options.ceil) {
-                  options.ceil = year;
-                }
-              }
-
-              if (this.yearRangeOptions.floor !== options.floor || this.yearRangeOptions.ceil !== options.ceil) {
-
-                this.yearRangeOptions = {
-                  ...options
-                };
-
-                if (updateYearEnd || this.yearEnd > options.ceil) {
-                  this.yearEnd = options.ceil;
-                }
-
-                if (updateYearStart || this.yearStart < options.floor) {
-                  this.yearStart = options.floor;
-                }
-
-                if (this.markForChangesTimer) {
-                  clearTimeout(this.markForChangesTimer);
-                }
-
-                this.markForChangesTimer = setTimeout(() => {
-                  this.changeDetectorRef.markForCheck();
-                }, 50);
-              }
-
+              newFilter.series =
+                collection.facets[0]?.entries?.content.map(pubEntry => ({
+                  field: 'publicationDate',
+                  value: pubEntry.value,
+                  count: pubEntry.count
+                })) || [];
               return newFilter;
             }),
             catchError(error => {
@@ -376,115 +243,77 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           );
         })
       ).subscribe(filterWithSeries => {
-        const filters = [...this.selectedFiltersSubject.value, filterWithSeries];
-        this.selectedFiltersSubject.next(filters);
+        this.originalFilters.push(filterWithSeries);
+        this.selectedFiltersSubject.next(this.filterFiltersByYearRange(this.originalFilters));
+        this.updateYearRangeFromFilters();
       });
     } else {
+      const origIndex = this.originalFilters.findIndex(
+        f => f.field === entry.field && f.value === entry.value
+      );
+      if (origIndex !== -1) {
+        this.originalFilters.splice(origIndex, 1);
+      }
       const filters = [...this.selectedFiltersSubject.value];
       const index = filters.findIndex(
         f => f.field === entry.field && f.value === entry.value
       );
       if (index !== -1) {
-        const filterRemoved = filters[index];
-
         filters.splice(index, 1);
         this.availableColors.push(entry.color);
         delete entry.color;
-
-
-        // update options when series data removed
-        const options = { ...this.yearRangeOptions };
-
-        let findNext = false;
-
-        if (filters.length > 0) {
-          for (const entry of filterRemoved.series) {
-            const year = this.getYearFromDate(entry.value);
-            if (year === options.ceil || year === options.floor) {
-              findNext = true;
-              break;
-            }
-          }
-        } else {
-          this.resetYearRange();
-        }
-
-        if (findNext) {
-          let ceil = new Date().getFullYear();
-          let floor = ceil - 10;
-          for (const filter of filters) {
-            for (const entry of filter.series) {
-              const year = this.getYearFromDate(entry.value);
-              if (year < floor) {
-                floor = year;
-              }
-              if (year > ceil) {
-                ceil = year;
-              }
-            }
-          }
-
-          this.yearRangeOptions = {
-            ...options,
-            floor,
-            ceil
-          };
-
-          if (this.markForChangesTimer) {
-            clearTimeout(this.markForChangesTimer);
-          }
-
-          this.markForChangesTimer = setTimeout(() => {
-            this.changeDetectorRef.markForCheck();
-          }, 50);
-        }
       }
       this.selectedFiltersSubject.next(filters);
+      this.updateYearRangeFromFilters();
     }
   }
 
-  onClear(facets: SdrFacet[]): void {
-    this.onClearSearchFilter();
-    facets.forEach(facet => facet.entries.content.filter(entry => entry.selected)
-      .reverse()
-      .forEach(entry => {
-        entry.selected = false;
-        this.onSelectFilter(entry);
-      }));
+  public onYearRangeChangeEnd(): void {
+    this.selectedFiltersSubject.next(this.filterFiltersByYearRange(this.originalFilters));
   }
 
-  onClearSearchFilter(): void {
+  public onClear(facets: SdrFacet[]): void {
+    this.onClearSearchFilter();
+    facets.forEach(facet =>
+      facet.entries.content
+        .filter(entry => entry.selected)
+        .reverse()
+        .forEach(entry => {
+          entry.selected = false;
+          this.onSelectFilter(entry);
+        })
+    );
+  }
+
+  public onClearSearchFilter(): void {
     this.form.controls.filter.setValue('');
   }
 
-  onSaveAll(facets: SdrFacet[]): void {
+  public onSaveAll(facets: SdrFacet[]): void {
     if (!facets?.length) {
-      return
-    };
+      return;
+    }
 
     const entries = facets[facets.length - 1].entries.content;
-
     const header = `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL')}, ` +
       `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_NAME')}, ` +
       `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_TYPE')}\n`;
 
-    const organization = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATION');
-    const person = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PERSON');
+    const organizationLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATION');
+    const personLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PERSON');
 
     const rows = entries.map(entry => {
       const value = entry.value.includes(',') ? `"${entry.value}"` : entry.value;
-      const type = entry.field === 'authorOrganization' ? organization : person;
+      const type = entry.field === 'authorOrganization' ? organizationLabel : personLabel;
       return `${value}, ${entry.count}, ${type}`;
     }).join('\n');
 
     const csv = header + rows;
-
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-
     saveAs(blob, this.organization.name.toLowerCase().replace(/\s+/g, '-') + '_publications.csv');
   }
 
-  getFacetLabel(facet = { field: 'all' }): string {
+  public getFacetLabel(facet = { field: 'all' }): string {
     switch (facet.field) {
       case 'authorOrganization':
         return this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATIONS');
@@ -495,67 +324,75 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private getYearFromDate(date: string): number {
-    return new Date(date).getFullYear();
-  }
-
-  private resetYearRange(): void {
-    this.yearEnd = new Date().getFullYear();
-
-    this.yearStart = this.yearEnd - 10;
-
-    this.yearRangeOptions = {
-      floor: this.yearStart,
-      ceil: this.yearEnd,
-      step: 1,
-      showTicks: true,
-      noSwitching: true
-    };
-
-    delete this.markForChangesTimer;
-  }
-
-  private filterContent(facet: SdrFacet, property: string): SdrFacetEntry[] {
-    if (this.organization.hasOwnProperty(property)) {
-      return facet.entries.content.filter(entry => {
-        for (const organization of this.organization[property]) {
-          if (organization.label === entry.value) {
-            return true;
-          }
-        }
-
-        return false;
-      });
+  private loadFacets(organization: Individual): void {
+    if (!this.routerState) {
+      return;
     }
 
-    return [];
-  }
+    this.originalFilters = [];
+    this.selectedFacetSubject.next(undefined);
+    this.selectedFiltersSubject.next([]);
+    this.availableColors = [...colorConstantQueue].reverse();
+    this.resetYearRange();
 
-  private buildViewAllFacet(facets): SdrFacet {
-    const content = facets
-      .flatMap(facet => facet.entries.content)
-      .sort((a, b) => b.count - a.count);
+    this.routerState.pipe(take(1)).subscribe((routerState: CustomRouterState) => {
+      const originalSdrRequest = createSdrRequest(routerState);
+      const sdrRequest: SdrRequest = {
+        ...originalSdrRequest,
+        page: { number: 1, size: 1, sort: originalSdrRequest.page.sort },
+        facets: originalSdrRequest.facets.map((f: Facetable) => ({
+          ...f,
+          pageNumber: 1,
+          pageSize: 2147483647
+        })),
+        query: { ...originalSdrRequest.query, fields: 'class' },
+        filters: [
+          ...originalSdrRequest.filters,
+          { field: 'authorOrganization', opKey: OpKey.EQUALS, value: organization.name }
+        ]
+      };
 
-    const page = {
-      size: 2147483647,
-      totalElements: content.length,
-      totalPages: 1,
-      number: 0,
-    };
+      this.sdrRequestSubject.next(sdrRequest);
 
-    return {
-      field: 'all',
-      entries: {
-        content,
-        page
-      }
-    };
+      this.facets = this.individualRepo.search(sdrRequest).pipe(
+        tap((collection: SdrCollection) => {
+          if (collection?.facets.length > 0) {
+            for (const facet of collection.facets) {
+              facet.entries.content.forEach(entry => (entry.field = facet.field));
+              if (facet.field === 'authorOrganization') {
+                facet.entries.content = this.filterContent(facet, 'hasSubOrganizations');
+              } else if (facet.field === 'authors' && organization.name !== this.themeOrganization) {
+                facet.entries.content = this.filterContent(facet, 'people');
+              }
+            }
+          }
+        }),
+        map((collection: SdrCollection) => {
+          const facets = collection.facets.filter(facet => facet.entries.content.length);
+          if (facets.length > 0) {
+            this.onSelectFacet(facets[0]);
+            let defaultSelected = 3;
+            for (const entry of facets[0].entries.content) {
+              entry.selected = defaultSelected > 0;
+              if (defaultSelected > 0) {
+                this.onSelectFilter(entry);
+                defaultSelected--;
+              } else {
+                break;
+              }
+            }
+          }
+          return facets.length > 1
+            ? collection.facets.concat([this.buildViewAllFacet(collection.facets)])
+            : facets;
+        })
+      );
+    });
   }
 
   private mergeFiltersWithSameField(filters: any[]): any[] {
-    const mergedFilters = filters.reduce((acc, filter) => {
+    return filters.reduce((acc, filter) => {
       const existingFilter = acc.find(f => f.field === filter.field);
-
       if (existingFilter) {
         existingFilter.value = existingFilter.value
           ? `${existingFilter.value};;${filter.value}`
@@ -563,11 +400,103 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         acc.push({ ...filter });
       }
-
       return acc;
     }, []);
+  }
 
-    return mergedFilters;
+  private resetYearRange(): void {
+    this.yearEnd = new Date().getFullYear();
+    this.yearStart = this.yearEnd - 10;
+    this.yearRangeOptions = {
+      floor: this.yearStart,
+      ceil: this.yearEnd,
+      step: 1,
+      showTicks: true,
+      noSwitching: true
+    };
+  }
+
+  private updateYearRangeFromFilters(): void {
+    if (this.originalFilters.length === 0) {
+      this.resetYearRange();
+      this.triggerChangeDetection();
+      return;
+    }
+
+    let computedMin = Infinity;
+    let computedMax = -Infinity;
+    this.originalFilters.forEach(filter => {
+      filter.series.forEach(item => {
+        const year = this.getYearFromDate(item.value);
+        computedMin = Math.min(computedMin, year);
+        computedMax = Math.max(computedMax, year);
+      });
+    });
+
+    const oldFloor = this.yearRangeOptions.floor;
+    const oldCeil = this.yearRangeOptions.ceil;
+
+    this.yearRangeOptions = {
+      ...this.yearRangeOptions,
+      floor: computedMin,
+      ceil: computedMax
+    };
+
+    if ((computedMin < oldFloor && this.yearStart === oldFloor) || (computedMin > oldFloor && this.yearStart < computedMin)) {
+      this.yearStart = computedMin;
+    }
+
+    if ((computedMax > oldCeil && this.yearEnd === oldCeil) || (computedMax < oldCeil && this.yearEnd > computedMax)) {
+      this.yearEnd = computedMax;
+    }
+
+    this.triggerChangeDetection();
+  }
+
+  private triggerChangeDetection(): void {
+    if (this.markForChangesTimer) {
+      clearTimeout(this.markForChangesTimer);
+    }
+    this.markForChangesTimer = setTimeout(() => {
+      this.changeDetectorRef.markForCheck();
+    }, 50);
+  }
+
+  private filterFiltersByYearRange(filters: FrequencyGraphFilter[]): FrequencyGraphFilter[] {
+    return filters.map(filter => {
+      const filteredSeries = filter.series.filter(item => {
+        const year = this.getYearFromDate(item.value);
+        return year >= this.yearStart && year <= this.yearEnd;
+      });
+      return { ...filter, series: filteredSeries };
+    });
+  }
+
+  private filterContent(facet: SdrFacet, property: string): SdrFacetEntry[] {
+    if (this.organization.hasOwnProperty(property)) {
+      return facet.entries.content.filter(entry => {
+        return this.organization[property].some(org => org.label === entry.value);
+      });
+    }
+    return [];
+  }
+
+  private buildViewAllFacet(facets: SdrFacet[]): SdrFacet {
+    const content = facets.flatMap(facet => facet.entries.content).sort((a, b) => b.count - a.count);
+    const page = {
+      size: 2147483647,
+      totalElements: content.length,
+      totalPages: 1,
+      number: 0,
+    };
+    return {
+      field: 'all',
+      entries: { content, page }
+    };
+  }
+
+  private getYearFromDate(date: string): number {
+    return new Date(date).getFullYear();
   }
 
 }

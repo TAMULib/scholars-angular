@@ -97,7 +97,12 @@
       <scholars-scatterplot [selectedFilters]="selectedFilters"></scholars-scatterplot>
       <div class="publication-year-slider form-group">
         <label for="publication-year-range">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_YEAR_RANGE' | translate }}</label>
-        <ngx-slider id="publication-year-range" [(value)]="yearStart" [(highValue)]="yearEnd" [options]="yearRangeOptions"></ngx-slider>
+        <ngx-slider
+          id="publication-year-range"
+          [(value)]="yearStart"
+          [(highValue)]="yearEnd"
+          [options]="yearRangeOptions"
+          (userChangeEnd)="onYearRangeChangeEnd()"></ngx-slider>
         <small id="publication-year-range-help" class="form-text text-muted">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_YEAR_RANGE_HELP' | translate }}</small>
       </div>
     </div>
