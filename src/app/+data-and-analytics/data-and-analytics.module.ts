@@ -1,3 +1,4 @@
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -35,6 +36,7 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
       isolate: false,
     }),
     RouterModule.forChild(routes),
+    NgxSliderModule
   ]
 })
 export class DataAndAnalyticsModule {
