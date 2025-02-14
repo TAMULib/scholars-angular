@@ -121,6 +121,8 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   public availableColors = [...colorConstantQueue].reverse();
 
+  public graphTitle: string;
+
   readonly sdrRequestSubject: BehaviorSubject<SdrRequest>;
   private filterSubscription: Subscription;
   private originalFilters: FrequencyGraphFilter[];
@@ -159,7 +161,16 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       map((router: any) => router.state)
     );
 
+    this.selectedFacetSubject.subscribe(() => {
+      this.updateGraphTitle();
+    });
+
+    this.sdrRequestSubject.subscribe(() => {
+      this.updateGraphTitle();
+    });
+
     this.loadFacets(this.organization);
+    this.updateGraphTitle();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -320,13 +331,13 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.routerState) {
       return;
     }
-
+  
     this.originalFilters = [];
     this.selectedFacetSubject.next(undefined);
     this.selectedFiltersSubject.next([]);
     this.availableColors = [...colorConstantQueue].reverse();
     this.resetYearRange();
-
+  
     this.routerState.pipe(take(1)).subscribe((routerState: CustomRouterState) => {
       const originalSdrRequest = createSdrRequest(routerState);
       const sdrRequest: SdrRequest = {
@@ -343,9 +354,13 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           { field: 'authorOrganization', opKey: OpKey.EQUALS, value: organization.name }
         ]
       };
-
+  
       this.sdrRequestSubject.next(sdrRequest);
-
+      // Dispatch the filter value from filters[2] into the store if it exists:
+      // if (sdrRequest.filters && sdrRequest.filters.length > 2) {
+      //   this.store.dispatch(setSdrFilterValue({ filterValue: sdrRequest.filters[2].value }));
+      // }
+  
       this.facets = this.individualRepo.search(sdrRequest).pipe(
         tap((collection: SdrCollection) => {
           if (collection?.facets.length > 0) {
@@ -491,6 +506,28 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   private getYearFromDate(date: string): number {
     return new Date(date).getFullYear();
+  }
+
+  private updateGraphTitle(): void {
+    const filterField = this.selectedFacetSubject.value?.field;
+    let filterText: string;
+
+    if (!filterField || filterField === 'authorOrganization') {
+      filterText = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS');
+    } else if (filterField === 'authors') {
+      filterText = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE');
+    } else if (filterField === 'all') {
+      filterText = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE');
+    } else {
+      filterText = '';
+    }
+  
+    const organizationValue = this.sdrRequestSubject.value?.filters[1]?.value || 'Texas A&M University';
+  
+    this.graphTitle = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.GRAPH_TITLE', {
+      filter: filterText,
+      organization: organizationValue
+    });
   }
 
 }

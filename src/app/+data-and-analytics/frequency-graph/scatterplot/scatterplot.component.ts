@@ -52,9 +52,11 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
   private readonly TICK_INTERVAL_DEFAULT: number = 5;
 
   @Input()
-  public organizationName: string;
-  @Input()
-  public selectedFacet: any;
+  public labels: {
+    title: string,
+    xAxis: string,
+    yAxis: string,
+  };
 
   private dataSubscription: Subscription;
 
@@ -166,9 +168,6 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       ? d3.axisBottom(xScale).tickValues(tickValues).tickSize(-this.height).tickFormat(() => '')
       : d3.axisBottom(xScale).ticks(d3.timeYear.every(gridTickInterval)).tickSize(-this.height).tickFormat(() => '');
 
-    const xAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.YEARS');
-    const yAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.PUBLICATION_COUNT');
-
     const xGrid = this.svg.append('g')
       .attr('class', 'grid x-grid')
       .attr('transform', `translate(0, ${this.height})`)
@@ -198,7 +197,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       .attr('text-anchor', 'middle')
       .attr('x', this.width / 2)
       .attr('y', this.height + this.margin.bottom + this.X_LABEL_PADDING)
-      .text(xAxisLabel);
+      .text(this.labels.xAxis);
 
     this.svg.append('text')
       .attr('class', 'y-axis-label')
@@ -206,7 +205,15 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       .attr('transform', 'rotate(-90)')
       .attr('x', -this.height / 2)
       .attr('y', -this.margin.left + this.Y_LABEL_PADDING)
-      .text(yAxisLabel);
+      .text(this.labels.yAxis);
+
+    this.svg.append('text')
+      .attr('class', 'graph-title')
+      .attr('x', this.width / 2)
+      .attr('y', -this.margin.top / 2)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '20px')
+      .text(this.labels.title);
   }
 
   private drawRightBorder(): void {
