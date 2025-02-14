@@ -317,9 +317,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public getFilter(organization: any): string {
-    console.log('Organization:', organization);
     const hasMultipleSubOrganizations = organization?.hasSubOrganizations?.length > 1;
-    console.log('hasMultipleSubOrganizations:', hasMultipleSubOrganizations)
     const translateKey = hasMultipleSubOrganizations 
       ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE' : 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE'
       ;
