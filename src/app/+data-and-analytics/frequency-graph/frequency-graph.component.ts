@@ -327,13 +327,13 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.routerState) {
       return;
     }
-  
+
     this.originalFilters = [];
     this.selectedFacetSubject.next(undefined);
     this.selectedFiltersSubject.next([]);
     this.availableColors = [...colorConstantQueue].reverse();
     this.resetYearRange();
-  
+
     this.routerState.pipe(take(1)).subscribe((routerState: CustomRouterState) => {
       const originalSdrRequest = createSdrRequest(routerState);
       const sdrRequest: SdrRequest = {
