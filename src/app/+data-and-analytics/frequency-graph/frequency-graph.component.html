@@ -97,7 +97,7 @@
       <scholars-scatterplot 
         [selectedFilters]="selectedFilters"
         [labels]="{
-          title: graphTitle,
+          title: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.GRAPH_TITLE' | translate: { filter: getFilter(), organization: getOrganization()},
           xAxis: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.X_AXIS_LABEL' | translate,
           yAxis: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.Y_AXIS_LABEL' | translate
       }"
