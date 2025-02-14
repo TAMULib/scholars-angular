@@ -51,6 +51,11 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
   private readonly TICK_INTERVAL_LARGE_TIMESPAN: number = 10;
   private readonly TICK_INTERVAL_DEFAULT: number = 5;
 
+  @Input()
+  public organizationName: string;
+  @Input()
+  public selectedFacet: any;
+
   private dataSubscription: Subscription;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
@@ -161,8 +166,8 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       ? d3.axisBottom(xScale).tickValues(tickValues).tickSize(-this.height).tickFormat(() => '')
       : d3.axisBottom(xScale).ticks(d3.timeYear.every(gridTickInterval)).tickSize(-this.height).tickFormat(() => '');
 
-    const xAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.YEARS');
-    const yAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT');
+    const xAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.YEARS');
+    const yAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.PUBLICATION_COUNT');
 
     const xGrid = this.svg.append('g')
       .attr('class', 'grid x-grid')
