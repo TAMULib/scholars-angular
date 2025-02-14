@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges, PLATFORM_ID } from '@angular/core';
 import * as d3 from 'd3';
 import { Observable, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import { id } from '../../../shared/utilities/id.utility';
 import { SdrFacetPivot } from '../../../core/model/sdr/sdr-facet-pivot';
@@ -52,7 +53,9 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
 
   private dataSubscription: Subscription;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+    private translate: TranslateService
+  ) {}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -158,6 +161,9 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       ? d3.axisBottom(xScale).tickValues(tickValues).tickSize(-this.height).tickFormat(() => '')
       : d3.axisBottom(xScale).ticks(d3.timeYear.every(gridTickInterval)).tickSize(-this.height).tickFormat(() => '');
 
+    const xAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.YEARS');
+    const yAxisLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT');
+
     const xGrid = this.svg.append('g')
       .attr('class', 'grid x-grid')
       .attr('transform', `translate(0, ${this.height})`)
@@ -187,7 +193,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       .attr('text-anchor', 'middle')
       .attr('x', this.width / 2)
       .attr('y', this.height + this.margin.bottom + this.X_LABEL_PADDING)
-      .text('Years');
+      .text(xAxisLabel);
 
     this.svg.append('text')
       .attr('class', 'y-axis-label')
@@ -195,7 +201,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       .attr('transform', 'rotate(-90)')
       .attr('x', -this.height / 2)
       .attr('y', -this.margin.left + this.Y_LABEL_PADDING)
-      .text('Publication Count');
+      .text(yAxisLabel);
   }
 
   private drawRightBorder(): void {
