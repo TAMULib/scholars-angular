@@ -317,12 +317,9 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public getFilter(organization: any): string {
-    const hasMultipleSubOrganizations = organization?.hasSubOrganizations?.length > 1;
-    const translateKey = hasMultipleSubOrganizations 
-      ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE' : 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE'
-      ;
-
-      return this.translate.instant(translateKey);
+    return this.translate.instant(organization?.hasSubOrganizations?.length > 1
+      ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE'
+      : 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE');
   }
   
 

@@ -97,7 +97,6 @@
       "PUBLICATION_YEAR_RANGE_HELP": "Adjust the sliders to choose the date range for the publication count chart. Publications without dates are not included.",
       "GRAPH_TITLE" : "Comparative graph of scholarly works of {{filter}} by {{organization}}",
       "FILTER_VALUES": {
-        "PEOPLE": "People",
         "ORGANIZATIONS_AND_PEOPLE": "Organizations and People"
       },
       "AXIS_LABELS" : {
