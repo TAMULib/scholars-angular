@@ -10,17 +10,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-direction: column;
 }
 
 @media (max-width: 768px) {
-  .graph-container {
-    flex-direction: column !important;
-    align-items: center;
-  }
   .graph-title {
     margin-bottom: 1rem;
-    text-align: center;
     font-size: 18px;
   }
 }
