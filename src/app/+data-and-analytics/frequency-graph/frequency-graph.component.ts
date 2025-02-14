@@ -316,23 +316,17 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public getFilter(): string {
-    const filterField = this.selectedFacetSubject.value?.field;
-  
-    const filterTextMap: Record<string, string> = {
-      authorOrganization: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS',
-      authors: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE',
-      all: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE',
-    };
-  
-    return this.translate.instant(filterTextMap[filterField] || '');
-  }
-  
-  public getOrganization(): string {
-    const organizationValue = this.sdrRequestSubject.value?.filters[1]?.value || 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.GRAPH_DEFAULT_ORGANIZATION';
+  public getFilter(organization: any): string {
+    console.log('Organization:', organization);
+    const hasMultipleSubOrganizations = organization?.hasSubOrganizations?.length > 1;
+    console.log('hasMultipleSubOrganizations:', hasMultipleSubOrganizations)
+    const translateKey = hasMultipleSubOrganizations 
+      ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE' : 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE'
+      ;
 
-    return organizationValue;
+      return this.translate.instant(translateKey);
   }
+  
 
   private loadFacets(organization: Individual): void {
     if (!this.routerState) {
