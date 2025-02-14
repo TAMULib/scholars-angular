@@ -318,7 +318,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   public getFilter(organization: any): string {
     return this.translate.instant(organization?.hasSubOrganizations?.length > 1
-      ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.ORGANIZATIONS_AND_PEOPLE'
+      ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATIONS_AND_PEOPLE'
       : 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE');
   }
   
@@ -352,6 +352,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
       };
 
       this.sdrRequestSubject.next(sdrRequest);
+
       this.facets = this.individualRepo.search(sdrRequest).pipe(
         tap((collection: SdrCollection) => {
           if (collection?.facets.length > 0) {
@@ -498,4 +499,5 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
   private getYearFromDate(date: string): number {
     return new Date(date).getFullYear();
   }
+
 }
