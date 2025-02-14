@@ -354,13 +354,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
           { field: 'authorOrganization', opKey: OpKey.EQUALS, value: organization.name }
         ]
       };
-  
       this.sdrRequestSubject.next(sdrRequest);
-      // Dispatch the filter value from filters[2] into the store if it exists:
-      // if (sdrRequest.filters && sdrRequest.filters.length > 2) {
-      //   this.store.dispatch(setSdrFilterValue({ filterValue: sdrRequest.filters[2].value }));
-      // }
-  
       this.facets = this.individualRepo.search(sdrRequest).pipe(
         tap((collection: SdrCollection) => {
           if (collection?.facets.length > 0) {
