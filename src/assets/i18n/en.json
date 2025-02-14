@@ -94,7 +94,13 @@
       "SELECT": "Select",
       "SELECT_ENTRY": "Select {{ value }}",
       "PUBLICATION_YEAR_RANGE": "Publication Year Range",
-      "PUBLICATION_YEAR_RANGE_HELP": "Select a start and end year to narrow the comparison"
+      "PUBLICATION_YEAR_RANGE_HELP": "Adjust the sliders to choose the date range for the publication count chart. Publications without dates are not included.",
+      "GRAPH_TITLE" : "Comparative graph of scholarly works of {{filter}} by {{organization}}",
+      "ORGANIZATIONS_AND_PEOPLE": "Organizations and People",
+      "AXIS_LABELS" : {
+        "X_AXIS_LABEL" : "Year",
+        "Y_AXIS_LABEL": "Number of Publications"
+      }
     }
   },
   "DIRECTORY": {

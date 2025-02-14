@@ -316,6 +316,12 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  public getFilter(organization: any): string {
+    return this.translate.instant(organization?.hasSubOrganizations?.length > 1
+      ? 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATIONS_AND_PEOPLE'
+      : 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.FILTER_VALUES.PEOPLE');
+  }
+
   private loadFacets(organization: Individual): void {
     if (!this.routerState) {
       return;

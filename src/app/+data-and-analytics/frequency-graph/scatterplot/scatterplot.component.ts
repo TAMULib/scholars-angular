@@ -20,7 +20,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
 
   private svg: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
-  private readonly MARGIN_TOP: number = 20;
+  private readonly MARGIN_TOP: number = 70;
   private readonly MARGIN_RIGHT: number = 20;
   private readonly MARGIN_BOTTOM: number = 50;
   private readonly MARGIN_LEFT: number = 70;
@@ -50,9 +50,17 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
   private readonly TICK_INTERVAL_LARGE_TIMESPAN: number = 10;
   private readonly TICK_INTERVAL_DEFAULT: number = 5;
 
+  @Input()
+  public labels: {
+    title: string,
+    xAxis: string,
+    yAxis: string,
+  };
+
   private dataSubscription: Subscription;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -82,6 +90,10 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
     const element = d3.select(`#${this.id}`);
 
     this.isMobile = window.innerWidth <= this.MOBILE_BREAKPOINT;
+
+    if (this.isMobile) {
+      this.margin.top = 90;
+    }
 
     this.width = (this.isMobile ? this.MOBILE_WIDTH : this.DESKTOP_WIDTH) - this.margin.left - this.margin.right;
     this.height = (this.isMobile ? this.MOBILE_HEIGHT : this.DESKTOP_HEIGHT) - this.margin.top - this.margin.bottom;
@@ -187,7 +199,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       .attr('text-anchor', 'middle')
       .attr('x', this.width / 2)
       .attr('y', this.height + this.margin.bottom + this.X_LABEL_PADDING)
-      .text('Years');
+      .text(this.labels.xAxis);
 
     this.svg.append('text')
       .attr('class', 'y-axis-label')
@@ -195,7 +207,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
       .attr('transform', 'rotate(-90)')
       .attr('x', -this.height / 2)
       .attr('y', -this.margin.left + this.Y_LABEL_PADDING)
-      .text('Publication Count');
+      .text(this.labels.yAxis);
   }
 
   private drawRightBorder(): void {

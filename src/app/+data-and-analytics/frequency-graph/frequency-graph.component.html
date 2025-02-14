@@ -94,7 +94,13 @@
     </div>
 
     <div class="col-xl-8">
-      <scholars-scatterplot [selectedFilters]="selectedFilters"></scholars-scatterplot>
+      <scholars-scatterplot 
+        [selectedFilters]="selectedFilters"
+        [labels]="{
+          title: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.GRAPH_TITLE' | translate: { filter: getFilter(organization), organization: organization.name},
+          xAxis: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.X_AXIS_LABEL' | translate,
+          yAxis: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.Y_AXIS_LABEL' | translate
+      }"></scholars-scatterplot>
       <div class="publication-year-slider form-group">
         <label for="publication-year-range">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_YEAR_RANGE' | translate }}</label>
         <ngx-slider
