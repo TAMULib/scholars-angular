@@ -2,7 +2,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges, PLATFORM_ID } from '@angular/core';
 import * as d3 from 'd3';
 import { Observable, Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 
 import { id } from '../../../shared/utilities/id.utility';
 import { SdrFacetPivot } from '../../../core/model/sdr/sdr-facet-pivot';
@@ -60,8 +59,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
 
   private dataSubscription: Subscription;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,
-    private translate: TranslateService
+  constructor(@Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngAfterViewInit(): void {
