@@ -36,6 +36,11 @@ describe('ScatterplotComponent', () => {
     });
     fixture = TestBed.createComponent(ScatterplotComponent);
     component = fixture.componentInstance;
+    component.labels = {
+      title: 'Comparative graph of scholarly works of People by Test',
+      xAxis: 'Year',
+      yAxis: 'Number of Publications'
+    }
     fixture.detectChanges();
   }));
 

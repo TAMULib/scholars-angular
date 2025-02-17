@@ -288,7 +288,7 @@ export class FrequencyGraphComponent implements OnInit, OnChanges, OnDestroy {
 
     const entries = facets[facets.length - 1].entries.content;
     const header = `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL')}, ` +
-      `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_NAME')}, ` +
+      `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT')}, ` +
       `${this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_TYPE')}\n`;
 
     const organizationLabel = this.translate.instant('DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ORGANIZATION');
