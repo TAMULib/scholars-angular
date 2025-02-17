@@ -8,9 +8,8 @@
 
           <ngb-alert *ngIf="availableColors.length === 0" [type]="'warning'" [dismissible]="false">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.MAXIMUM_SELECTED' | translate }}</ngb-alert>
 
-          <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
-
           <div *ngIf="facets.length > 1">
+            <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
             <span *ngFor="let facet of facets; let last = last">
               <button
                 type="button"
@@ -94,7 +93,7 @@
     </div>
 
     <div class="col-xl-8">
-      <scholars-scatterplot 
+      <scholars-scatterplot
         [selectedFilters]="selectedFilters"
         [labels]="{
           title: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.GRAPH_TITLE' | translate: { filter: getFilter(organization), organization: organization.name},
