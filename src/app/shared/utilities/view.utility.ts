@@ -13,7 +13,7 @@ const addFacetsToQueryParams = (queryParams: Params, collectionView: CollectionV
     const expanded = [];
     collectionView.facets.forEach((facet: Facet) => {
       queryParams.facets += queryParams.facets.length > 0 ? `,${facet.field}` : facet.field;
-      ['type', 'pageSize', 'pageNumber', 'rangeStart', 'rangeEnd', 'rangeGap'].forEach((key: string) => {
+      ['type', 'pivot', 'pageSize', 'pageNumber', 'rangeStart', 'rangeEnd', 'rangeGap'].forEach((key: string) => {
         queryParams[`${facet.field}.${key}`] = facet[key];
       });
       queryParams[`${facet.field}.sort`] = `${facet.sort},${facet.direction}`;
@@ -169,7 +169,7 @@ const showClearFilters = (collectionView: CollectionView, filters: Filter[]): bo
 };
 
 const getFilterField = (collectionView: CollectionView, actualFilter: Filter): string => {
-  return collectionView.facets.find(f => f.field === actualFilter.field).name;
+  return collectionView.facets.find(f => f.field === actualFilter.field)?.name;
 };
 
 const getFilterValue = (collectionView: CollectionView, actualFilter: Filter): string => {

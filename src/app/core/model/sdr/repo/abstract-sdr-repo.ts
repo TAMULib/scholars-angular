@@ -210,7 +210,7 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     const fields: string[] = [];
     facets.forEach((facet: Facetable) => {
       fields.push(facet.field);
-      ['type', 'pageSize', 'pageNumber', 'sort'].forEach((key: string) => {
+      ['type', 'pageSize', 'pageNumber', 'sort', 'pivot'].forEach((key: string) => {
         if (facet[key]) {
           parameters.push(`${facet.field}.${key}=${facet[key]}`);
         }

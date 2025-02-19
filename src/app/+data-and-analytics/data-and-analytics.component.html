@@ -36,6 +36,9 @@
                     <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
                       <span>{{ view.type }}</span>
                     </div>
+                    <div *ngSwitchCase="'FREQUENCY_GRAPH'">
+                      <span>{{ view.type }}</span>
+                    </div>
                     <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
                       <span>{{ view.type }}</span>
                     </div>
@@ -88,11 +91,16 @@
               <div class="row p-1">
                 <div class="col-12" *ngIf="organizations | async; let organizations">
                   <div class="form-group">
-                    <label class="font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
-                    <select #organizationsSelect id="organizationsSelect" class="form-control" ngModel (ngModelChange)="onSelectOrganization($event, params, organizationsSelect)">
-                      <option value="" disabled selected>{{ 'DATA_AND_ANALYTICS.SELECT' | translate }}</option>
-                      <option *ngFor="let so of organizations" [ngValue]="so.id">{{ so.name }}</option>
-                    </select>
+                    <label class="font-weight-bold" for="typeahead-organizations">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
+                    <input
+                      id="typeahead-organizations"
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="model.term"
+                      [ngbTypeahead]="search"
+                      (selectItem)="onSelectOrganization($event, params)"
+                      [resultFormatter]="formatter"
+                      [inputFormatter]="formatter"/>
                   </div>
                 </div>
               </div>
@@ -118,6 +126,16 @@
                       [defaultId]="themeOrganizationId | async"
                       (labelEvent)="onLabelEvent($event)">
                     </scholars-quantity-distribution>
+                  </div>
+                  <div *ngSwitchCase="'FREQUENCY_GRAPH'">
+                    <scholars-frequency-graph
+                      [organization]="selectedOrganization | async"
+                      [displayView]="displayView"
+                      [dataAndAnalyticsView]="view"
+                      [filters]="filters | async"
+                      [themeOrganization]="themeOrganization | async"
+                      (labelEvent)="onLabelEvent($event)">
+                    </scholars-frequency-graph>
                   </div>
                   <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
                     <scholars-profile-summaries-export

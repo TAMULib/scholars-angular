@@ -1,3 +1,4 @@
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -9,6 +10,8 @@ import { AcademicAgeGroupComponent } from './academic-age-group/academic-age-gro
 import { BarplotComponent } from './academic-age-group/barplot/barplot.component';
 import { DataAndAnalyticsComponent } from './data-and-analytics.component';
 import { routes } from './data-and-analytics.routes';
+import { FrequencyGraphComponent } from './frequency-graph/frequency-graph.component';
+import { ScatterplotComponent } from './frequency-graph/scatterplot/scatterplot.component';
 import { ProfileSummariesExportComponent } from './profile-summaries-export/profile-summaries-export.component';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
 
@@ -17,8 +20,10 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
     AcademicAgeGroupComponent,
     BarplotComponent,
     DataAndAnalyticsComponent,
+    FrequencyGraphComponent,
     ProfileSummariesExportComponent,
-    QuantityDistributionComponent
+    QuantityDistributionComponent,
+    ScatterplotComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +36,7 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
       isolate: false,
     }),
     RouterModule.forChild(routes),
+    NgxSliderModule
   ]
 })
 export class DataAndAnalyticsModule {

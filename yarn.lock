@@ -309,6 +309,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-slider/ngx-slider@npm:^19.0.0":
+  version: 19.0.0
+  resolution: "@angular-slider/ngx-slider@npm:19.0.0"
+  dependencies:
+    detect-passive-events: ^2.0.3
+    rxjs: ^7.8.1
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/common": ^19.0.0
+    "@angular/core": ^19.0.0
+    "@angular/forms": ^19.0.0
+  checksum: 3af0e7425196fbfce2fc0e2ce27e6c95d7fa1d89d512ad8da23120c57d0dde22ae45c5a88aa83a0d67b674aa4bf040d9bfbf8ffa1e6cf80f27ce23136af826f4
+  languageName: node
+  linkType: hard
+
 "@angular/animations@npm:16.2.7":
   version: 16.2.7
   resolution: "@angular/animations@npm:16.2.7"
@@ -3438,6 +3453,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/file-saver@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@types/file-saver@npm:2.0.7"
+  checksum: c3d1cd80eab1214767922cabac97681f3fb688e82b74890450d70deaca49537949bbc96d80d363d91e8f0a4752c7164909cc8902d9721c5c4809baafc42a3801
+  languageName: node
+  linkType: hard
+
 "@types/geojson@npm:*":
   version: 7946.0.14
   resolution: "@types/geojson@npm:7946.0.14"
@@ -6193,10 +6215,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"detect-it@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "detect-it@npm:4.0.1"
+  checksum: 013981eae87c0265169e11e09efcc1c78fb2fc3e956b0001eb8d741ce03784a3e8e6d60e1445105f510c52be2ccffbd1c31c1bc094d01ad77f11df9830822a9c
+  languageName: node
+  linkType: hard
+
 "detect-node@npm:^2.0.4":
   version: 2.1.0
   resolution: "detect-node@npm:2.1.0"
   checksum: 832184ec458353e41533ac9c622f16c19f7c02d8b10c303dfd3a756f56be93e903616c0bb2d4226183c9351c15fc0b3dba41a17a2308262afabcfa3776e6ae6e
+  languageName: node
+  linkType: hard
+
+"detect-passive-events@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "detect-passive-events@npm:2.0.3"
+  dependencies:
+    detect-it: ^4.0.1
+  checksum: 2fb48474e340a1add096735427433578c571e2fed0c44af86ac116c50b9b7d70662a2e3bf1539d9dff4e2a43459c874b20876270afe7beeb5d4bef08ff9d4a5c
   languageName: node
   linkType: hard
 
@@ -7261,6 +7299,13 @@ __metadata:
   dependencies:
     flat-cache: ^3.0.4
   checksum: f49701feaa6314c8127c3c2f6173cfefff17612f5ed2daaafc6da13b5c91fd43e3b2a58fd0d63f9f94478a501b167615931e7200e31485e320f74a33885a9c74
+  languageName: node
+  linkType: hard
+
+"file-saver@npm:2.0.5":
+  version: 2.0.5
+  resolution: "file-saver@npm:2.0.5"
+  checksum: c62d96e5cebc58b4bdf3ae8a60d5cf9607ad82f75f798c33a4ee63435ac2203002584d5256a2a780eda7feb5e19dc3b6351c2212e58b3f529e63d265a7cc79f7
   languageName: node
   linkType: hard
 
@@ -11964,7 +12009,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.1, rxjs@npm:^7.0.0, rxjs@npm:^7.5.5":
+"rxjs@npm:7.8.1, rxjs@npm:^7.0.0, rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
@@ -12090,6 +12135,7 @@ __metadata:
     "@angular-eslint/eslint-plugin-template": 16.2.0
     "@angular-eslint/schematics": 16.2.0
     "@angular-eslint/template-parser": 16.2.0
+    "@angular-slider/ngx-slider": ^19.0.0
     "@angular/animations": 16.2.7
     "@angular/cli": 16.2.4
     "@angular/common": 16.2.7
@@ -12115,6 +12161,7 @@ __metadata:
     "@ngx-translate/http-loader": 8.0.0
     "@types/d3": 7.4.1
     "@types/express": 4.17.18
+    "@types/file-saver": 2.0.7
     "@types/jasmine": 4.3.6
     "@types/node": 20.7.2
     "@typescript-eslint/eslint-plugin": 6.7.3
@@ -12125,6 +12172,7 @@ __metadata:
     eslint: 8.50.0
     express: 4.18.2
     express-static-gzip: 2.1.7
+    file-saver: 2.0.5
     font-awesome: 4.7.0
     gzipper: 7.2.0
     jasmine-core: 5.1.1

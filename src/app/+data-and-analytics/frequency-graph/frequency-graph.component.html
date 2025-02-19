@@ -1,0 +1,115 @@
+<div class="container mb-1">
+  <div class="text-center h2">{{organization.name}}</div>
+  <div class="row">
+
+    <div class="col-xl-4">
+      <div *ngIf="facets | async; let facets">
+        <div *ngIf="selectedFacet | async; let selectedFacet">
+
+          <ngb-alert *ngIf="availableColors.length === 0" [type]="'warning'" [dismissible]="false">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.MAXIMUM_SELECTED' | translate }}</ngb-alert>
+
+          <div *ngIf="facets.length > 1">
+            <div class="h5">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.WHAT_TO_COMPARE' | translate }}</div>
+            <span *ngFor="let facet of facets; let last = last">
+              <button
+                type="button"
+                class="frequency-graph-compare btn btn-link"
+                [class.active]="selectedFacet.field === facet.field"
+                (click)="onSelectFacet(facet)">{{ getFacetLabel(facet) }}</button>
+              <span *ngIf="!last"> | </span>
+            </span>
+          </div>
+
+          <div>
+            <form novalidate>
+              <label for="filter" class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SEARCH' | translate }}</label>
+              <div [formGroup]="form" class="form-group input-group mt-3 mb-3">
+                <input
+                  id="filter"
+                  name="filter"
+                  formControlName="filter"
+                  type="text"
+                  class="form-control"
+                  placeholder="{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SEARCH' | translate }}">
+                <div class="input-group-append">
+                  <button class="input-group-text btn fa fa-close" (click)="onClearSearchFilter()">
+                    <span class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR_SEARCH' | translate }}</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr class="frequency-graph-option-header">
+                <th scope="col">
+                  <span class="sr-only">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SELECT' | translate }}</span>
+
+                </th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.ENTITY_LABEL' | translate }}</th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_COUNT' | translate }}</th>
+                <th scope="col">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.COLOR_KEY' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="frequency-graph-option"
+                [class.selected]="entry.selected"
+                *ngFor="let entry of selectedFacet.entries?.content | slice: (selectedFacet.page - 1) * selectedFacet.pageSize : ((selectedFacet.page - 1) * selectedFacet.pageSize) + selectedFacet.pageSize; let i = index">
+                <td>
+                  <label class="sr-only" [for]="'entry-option-' + i">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SELECT_ENTRY' | translate: { value: entry.value } }}</label>
+                  <input
+                    type="checkbox"
+                    [id]="'entry-option-' + i"
+                    [(ngModel)]="entry.selected"
+                    (change)="onSelectFilter(entry)"
+                    [disabled]="!entry.selected && availableColors.length === 0">
+                </td>
+                <td>{{ entry.value }}</td>
+                <td>{{ entry.count }}</td>
+                <td [style.background-color]="entry.color"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ngb-pagination
+            [collectionSize]="selectedFacet.entries?.content.length"
+            [pageSize]="selectedFacet.pageSize"
+            [(page)]="selectedFacet.page"
+            [maxSize]="3"
+            [rotate]="true"
+            [ellipses]="true"
+            [boundaryLinks]="true"
+            [attr.aria-label]="'SHARED.DIALOG.FACET_ENTRIES.ACCESSIBILITY.PAGINATION' | translate"></ngb-pagination>
+
+            <div>
+              <button class="btn btn-primary mr-2" (click)="onSaveAll(facets)">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.SAVE_ALL' | translate }}</button>
+              <button class="btn btn-warning" (click)="onClear(facets)">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.CLEAR' | translate }}</button>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+    <div class="col-xl-8">
+      <scholars-scatterplot
+        [selectedFilters]="selectedFilters"
+        [labels]="{
+          title: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.GRAPH_TITLE' | translate: { filter: getFilter(organization), organization: organization.name},
+          xAxis: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.X_AXIS_LABEL' | translate,
+          yAxis: 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.AXIS_LABELS.Y_AXIS_LABEL' | translate
+      }"></scholars-scatterplot>
+      <div class="publication-year-slider form-group">
+        <label for="publication-year-range">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_YEAR_RANGE' | translate }}</label>
+        <ngx-slider
+          id="publication-year-range"
+          [(value)]="yearStart"
+          [(highValue)]="yearEnd"
+          [options]="yearRangeOptions"
+          (userChangeEnd)="onYearRangeChangeEnd()"></ngx-slider>
+        <small id="publication-year-range-help" class="form-text text-muted">{{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.PUBLICATION_YEAR_RANGE_HELP' | translate }}</small>
+      </div>
+    </div>
+  </div>
+</div>

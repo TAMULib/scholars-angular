@@ -1,0 +1,90 @@
+:host {
+  .col-xl-6 {
+    padding: 0px;
+  }
+
+  .frequency-graph-compare {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .frequency-graph-compare.active {
+    color: black;
+    text-decoration: none;
+  }
+
+  .frequency-graph-compare:hover {
+    color: darkblue;
+    text-decoration: underline;
+  }
+
+
+  .frequency-graph-option-header {
+    background-color: #F1F2ee;
+
+    th {
+      padding: 0.25rem;
+      vertical-align: top;
+      border-top: 1px #3D454E solid;
+      line-height: normal;
+    }
+  }
+
+  .frequency-graph-option {
+    td {
+      padding: 0.25rem;
+    }
+  }
+
+  .frequency-graph-option.selected {
+    font-weight: bolder;
+    background-color: #ECFFB3;
+  }
+}
+
+::ng-deep {
+  .publication-year-slider .ngx-slider .ngx-slider-bar {
+    background: #ffe4d1;
+    height: 2px;
+  }
+  .publication-year-slider .ngx-slider .ngx-slider-selection {
+    background: var(--primary);
+  }
+
+  .publication-year-slider .ngx-slider .ngx-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: #333;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .publication-year-slider .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+
+  .publication-year-slider .ngx-slider .ngx-slider-bubble {
+    bottom: 14px;
+  }
+
+  .publication-year-slider .ngx-slider .ngx-slider-limit {
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .publication-year-slider .ngx-slider .ngx-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+  }
+
+  .publication-year-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    background: var(--primary);
+  }
+}
