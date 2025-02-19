@@ -20,7 +20,7 @@
           <a class="nav-link" [routerLink]="['/about']">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="https://scholars.library.tamu.edu/vivo_editor/pages/about_scholars/">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
+          <a class="nav-link" href="https://library.tamu.edu/services/scholarly_communication/scholars/">{{ 'SHARED.NAVIGATION.ABOUT' | translate }}</a>
         </li>
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" *ngIf="(isAdmin | async) === true">
           <a class="nav-link" [routerLink]="['/data-and-analytics']">{{ 'SHARED.NAVIGATION.DATA_AND_ANALYTICS' | translate }}</a>
