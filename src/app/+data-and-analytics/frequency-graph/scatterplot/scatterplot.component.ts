@@ -26,6 +26,8 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
   private readonly MARGIN_LEFT: number = 70;
   private margin = { top: this.MARGIN_TOP, right: this.MARGIN_RIGHT, bottom: this.MARGIN_BOTTOM, left: this.MARGIN_LEFT };
 
+  private readonly MOBILE_MARGIN_TOP: number = 90;
+  
   private width: number;
   private height: number;
   private isMobile: boolean;
@@ -92,7 +94,7 @@ export class ScatterplotComponent implements OnChanges, AfterViewInit, OnDestroy
     this.isMobile = window.innerWidth <= this.MOBILE_BREAKPOINT;
 
     if (this.isMobile) {
-      this.margin.top = 90;
+      this.margin.top = this.MOBILE_MARGIN_TOP;
     }
 
     this.width = (this.isMobile ? this.MOBILE_WIDTH : this.DESKTOP_WIDTH) - this.margin.left - this.margin.right;
