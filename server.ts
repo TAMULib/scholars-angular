@@ -25,6 +25,7 @@ const BASE_HREF = process.env.BASE_HREF || '/';
 
 const BROKER_URL = process.env.BROKER_URL || 'ws://localhost:9000';
 const SERVICE_URL = process.env.SERVICE_URL || 'http://localhost:9000';
+const SAML2_URL = process.env.SAML2_URL || 'http://localhost:9000/saml2/authenticate/entraid';
 
 const UI_URL = process.env.UI_URL || 'http://localhost:4200';
 const EMBED_URL = process.env.EMBED_URL || 'http://localhost:4201';
@@ -102,6 +103,7 @@ function run() {
     baseHref: BASE_HREF,
     brokerUrl: BROKER_URL,
     serviceUrl: SERVICE_URL,
+    saml2Url: SAML2_URL,
     uiUrl: UI_URL,
     embedUrl: EMBED_URL,
     vivoUrl: VIVO_URL,
