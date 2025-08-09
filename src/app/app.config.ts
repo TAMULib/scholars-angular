@@ -5,6 +5,7 @@ interface AppConfig {
   port: number;
   baseHref: string;
   brokerUrl: string;
+  saml2Url: string;
   serviceUrl: string;
   uiUrl: string;
   embedUrl: string;

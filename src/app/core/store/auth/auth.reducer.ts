@@ -3,7 +3,6 @@ import { User } from '../../model/user';
 import { AuthActions, AuthActionTypes } from './auth.actions';
 
 export interface AuthState {
-  checkingSession: boolean;
   loggingIn: boolean;
   loggingOut: boolean;
   submittingRegistration: boolean;
@@ -18,7 +17,6 @@ export interface AuthState {
 }
 
 export const initialState: AuthState = {
-  checkingSession: false,
   loggingIn: false,
   loggingOut: false,
   submittingRegistration: false,
@@ -34,16 +32,10 @@ export const initialState: AuthState = {
 
 export function reducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
-    case AuthActionTypes.CHECK_SESSION:
-      return {
-        ...state,
-        checkingSession: true,
-      };
     case AuthActionTypes.SESSION_STATUS:
       return {
         ...state,
         authenticated: action.payload.authenticated,
-        checkingSession: false,
       };
     case AuthActionTypes.LOGIN:
       return {
@@ -170,7 +162,6 @@ export function reducer(state = initialState, action: AuthActions): AuthState {
   }
 }
 
-export const isCheckingSession = (state: AuthState) => state.checkingSession;
 export const isLoggingIn = (state: AuthState) => state.loggingIn;
 export const isLoggingOut = (state: AuthState) => state.loggingOut;
 export const isSubmittingRegistration = (state: AuthState) => state.submittingRegistration;

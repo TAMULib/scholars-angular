@@ -100,7 +100,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   public download(organization: Individual, exportView: ExportView): void {
     const link = exportView.name.toLowerCase().replace(/ /g, '_');
-    this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' }, false)
+    this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
       .pipe(take(1))
       .subscribe((response: any) => {
         const contentDisposition = response.headers.get('Content-Disposition');

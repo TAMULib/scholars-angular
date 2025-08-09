@@ -164,14 +164,17 @@ export class AuthEffects implements OnInitEffects {
       const logoutActions: Action[] = [
         new fromSdr.ClearResourcesAction('Theme'),
         new fromSdr.ClearResourcesAction('User'),
+        // other authorized views and states that need to clear
+        //
         new fromRouter.Link({ url: '/' })
       ];
 
-      if (payload.reauthenticate) {
-        logoutActions.push(this.dialog.loginDialog());
-        logoutActions.push(new fromAuth.SetLoginRedirectAction({ url }));
-        logoutActions.push(this.alert.unauthorizedAlert());
-      }
+      // TODO: determine if reauthenticate required, remove if alternative available for session timeout and require reauthenticating
+      // if (payload.reauthenticate) {
+      //   logoutActions.push(this.dialog.loginDialog());
+      //   logoutActions.push(new fromAuth.SetLoginRedirectAction({ url }));
+      //   logoutActions.push(this.alert.unauthorizedAlert());
+      // }
 
       return logoutActions;
     })
@@ -187,43 +190,36 @@ export class AuthEffects implements OnInitEffects {
     )
   ));
 
+  getUserSuccess = createEffect(() => this.actions.pipe(
+    ofType(fromAuth.AuthActionTypes.GET_USER_SUCCESS),
+    withLatestFrom(this.store.select(selectRouterUrl)),
+    map(([action, url]) => {
+      if (isPlatformBrowser(this.platformId)) {
+        // TODO: cleanup any unused actions/effects/reducers and determine if any UI/UX behavior desired here
+
+        // this.store.dispatch(this.dialog.loginDialog());
+        // this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
+        // this.store.dispatch(this.alert.unauthorizedAlert());
+      }
+    })
+  ), { dispatch: false });
+
   getUserFailure = createEffect(() => this.actions.pipe(
     ofType(fromAuth.AuthActionTypes.GET_USER_FAILURE),
     withLatestFrom(this.store.select(selectRouterUrl)),
     map(([action, url]) => {
       if (isPlatformBrowser(this.platformId)) {
-        this.store.dispatch(this.dialog.loginDialog());
-        this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
-        this.store.dispatch(this.alert.unauthorizedAlert());
-      }
-    })
-  ), { dispatch: false });
+        // TODO: cleanup any unused actions/effects/reducers and determine if any UI/UX behavior desired here
 
-  checkSession = createEffect(() => this.actions.pipe(
-    ofType(fromAuth.AuthActionTypes.CHECK_SESSION),
-    map(() => new fromAuth.SessionStatusAction({
-      authenticated: this.authService.hasSession(),
-    }))
-  ));
-
-  clearSession = createEffect(() => this.actions.pipe(
-    ofType(fromAuth.AuthActionTypes.CLEAR_SESSION),
-    map(() => this.authService.clearSession())
-  ), { dispatch: false });
-
-  sessionStatus = createEffect(() => this.actions.pipe(
-    ofType(fromAuth.AuthActionTypes.SESSION_STATUS),
-    map((action: fromAuth.SessionStatusAction) => action.payload),
-    map((payload: { authenticated: boolean }) => payload.authenticated),
-    map((authenticated: boolean) => {
-      if (authenticated) {
-        this.store.dispatch(new fromAuth.GetUserAction());
+        // this.store.dispatch(this.dialog.loginDialog());
+        // this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
+        // this.store.dispatch(this.alert.unauthorizedAlert());
       }
     })
   ), { dispatch: false });
 
   ngrxOnInitEffects(): Action {
-    return new fromAuth.CheckSessionAction();
+    return new fromAuth.GetUserAction();
   }
 
 }

@@ -178,6 +178,7 @@
     "ADMINISTRATION": "Administration",
     "REGISTRATION": "Admin Sign Up",
     "LOGIN": "Admin Login",
+    "SAML2_LOGIN": "EntraID Login",
     "LOGOUT": "Logout",
     "COPYRIGHT": {
       "TERMS": "Terms of Use",
@@ -267,7 +268,7 @@
       "VALIDATION": {
         "REQUIRED": "{{field}} is required",
         "EMAIL": "{{field}} must be a valid email",
-        "MIN_LENGTH": "{{field}} mest be at least {{min}}",
+        "MIN_LENGTH": "{{field}} must be at least {{min}}",
         "MAX_LENGTH": "{{field}} must be less than {{max}}",
         "CONFIRM_PASSWORD": "{{field}} must match password"
       },
