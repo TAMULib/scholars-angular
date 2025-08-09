@@ -32,11 +32,6 @@ export const initialState: AuthState = {
 
 export function reducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
-    case AuthActionTypes.SESSION_STATUS:
-      return {
-        ...state,
-        authenticated: action.payload.authenticated,
-      };
     case AuthActionTypes.LOGIN:
       return {
         ...state,
@@ -53,6 +48,7 @@ export function reducer(state = initialState, action: AuthActions): AuthState {
       return {
         ...state,
         loggingIn: false,
+        authenticated: false,
         error: action.payload.response,
       };
     case AuthActionTypes.SUBMIT_REGISTRATION:
