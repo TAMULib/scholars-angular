@@ -80,10 +80,10 @@ export class AuthGuard {
                   // User is not authenticated after server check
                   this.store.dispatch(new fromRouter.Link({ url: '/' }));
                   this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
-                  if (isPlatformBrowser(this.platformId)) {
-                    this.store.dispatch(this.dialog.loginDialog());
-                    this.store.dispatch(this.alert.forbiddenAlert());
-                  }
+                  // if (isPlatformBrowser(this.platformId)) {
+                  //   this.store.dispatch(this.dialog.loginDialog());
+                  //   this.store.dispatch(this.alert.forbiddenAlert());
+                  // }
                 }
                 return isAuthenticatedAfterCheck;
               })
