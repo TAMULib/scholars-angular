@@ -3,7 +3,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { asapScheduler, scheduled } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
 import { RegistrationStep } from '../../../shared/dialog/registration/registration.component';
@@ -157,27 +157,12 @@ export class AuthEffects implements OnInitEffects {
 
   logoutSuccess = createEffect(() => this.actions.pipe(
     ofType(fromAuth.AuthActionTypes.LOGOUT_SUCCESS),
-    map((action: fromAuth.LogoutSuccessAction) => action.payload),
-    withLatestFrom(this.store.select(selectRouterUrl)),
-    switchMap(([payload, url]: any) => {
-
-      const logoutActions: Action[] = [
-        new fromSdr.ClearResourcesAction('Theme'),
-        new fromSdr.ClearResourcesAction('User'),
-        // other authorized views and states that need to clear
-        //
-        new fromRouter.Link({ url: '/' })
-      ];
-
-      // TODO: determine if reauthenticate required, remove if alternative available for session timeout and require reauthenticating
-      // if (payload.reauthenticate) {
-      //   logoutActions.push(this.dialog.loginDialog());
-      //   logoutActions.push(new fromAuth.SetLoginRedirectAction({ url }));
-      //   logoutActions.push(this.alert.unauthorizedAlert());
-      // }
-
-      return logoutActions;
-    })
+    concatMap(() => [
+      new fromSdr.ClearResourcesAction('Theme'),
+      new fromSdr.ClearResourcesAction('User'),
+      new fromSdr.ClearAcademicAgeAction('individual'),
+      new fromRouter.Link({ url: '/' })
+    ])
   ));
 
   getUser = createEffect(() => this.actions.pipe(
@@ -195,11 +180,7 @@ export class AuthEffects implements OnInitEffects {
     withLatestFrom(this.store.select(selectRouterUrl)),
     map(([action, url]) => {
       if (isPlatformBrowser(this.platformId)) {
-        // TODO: cleanup any unused actions/effects/reducers and determine if any UI/UX behavior desired here
 
-        // this.store.dispatch(this.dialog.loginDialog());
-        // this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
-        // this.store.dispatch(this.alert.unauthorizedAlert());
       }
     })
   ), { dispatch: false });
@@ -209,11 +190,7 @@ export class AuthEffects implements OnInitEffects {
     withLatestFrom(this.store.select(selectRouterUrl)),
     map(([action, url]) => {
       if (isPlatformBrowser(this.platformId)) {
-        // TODO: cleanup any unused actions/effects/reducers and determine if any UI/UX behavior desired here
 
-        // this.store.dispatch(this.dialog.loginDialog());
-        // this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
-        // this.store.dispatch(this.alert.unauthorizedAlert());
       }
     })
   ), { dispatch: false });
