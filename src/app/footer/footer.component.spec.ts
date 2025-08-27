@@ -8,6 +8,7 @@ import { testAppConfig } from '../../test.config';
 import { DialogService } from '../core/service/dialog.service';
 import { metaReducers, reducers } from '../core/store';
 import { FooterComponent } from './footer.component';
+import { APP_CONFIG } from '../app.config';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -16,7 +17,6 @@ describe('FooterComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [FooterComponent],
-      providers: [DialogService],
       imports: [
         StoreModule.forRoot(reducers(testAppConfig), {
           metaReducers,
@@ -29,6 +29,10 @@ describe('FooterComponent', () => {
         }),
         TranslateModule.forRoot(),
         RouterTestingModule.withRoutes([]),
+      ],
+      providers: [
+        { provide: APP_CONFIG, useValue: testAppConfig },
+        DialogService
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { selectActiveThemeFooter } from '../core/store/theme';
 import { RegistrationStep } from '../shared/dialog/registration/registration.component';
 
 import * as fromAuth from '../core/store/auth/auth.actions';
+import { APP_CONFIG, AppConfig } from '../app.config';
 
 @Component({
   selector: 'scholars-footer',
@@ -30,6 +31,7 @@ export class FooterComponent implements OnInit {
   public footer: Observable<Footer>;
 
   constructor(
+    @Inject(APP_CONFIG) private readonly appConfig: AppConfig,
     private store: Store<AppState>,
     private dialog: DialogService
   ) {
@@ -44,6 +46,10 @@ export class FooterComponent implements OnInit {
       select(selectActiveThemeFooter),
       skipWhile((footer: Footer) => footer === undefined)
     );
+  }
+
+  public getSaml2Url(): string {
+    return this.appConfig.saml2Url;
   }
 
   public openLoginDialog(): void {

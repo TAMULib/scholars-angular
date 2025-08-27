@@ -3,7 +3,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { asapScheduler, scheduled } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
 import { RegistrationStep } from '../../../shared/dialog/registration/registration.component';
@@ -157,24 +157,12 @@ export class AuthEffects implements OnInitEffects {
 
   logoutSuccess = createEffect(() => this.actions.pipe(
     ofType(fromAuth.AuthActionTypes.LOGOUT_SUCCESS),
-    map((action: fromAuth.LogoutSuccessAction) => action.payload),
-    withLatestFrom(this.store.select(selectRouterUrl)),
-    switchMap(([payload, url]: any) => {
-
-      const logoutActions: Action[] = [
-        new fromSdr.ClearResourcesAction('Theme'),
-        new fromSdr.ClearResourcesAction('User'),
-        new fromRouter.Link({ url: '/' })
-      ];
-
-      if (payload.reauthenticate) {
-        logoutActions.push(this.dialog.loginDialog());
-        logoutActions.push(new fromAuth.SetLoginRedirectAction({ url }));
-        logoutActions.push(this.alert.unauthorizedAlert());
-      }
-
-      return logoutActions;
-    })
+    concatMap(() => [
+      new fromSdr.ClearResourcesAction('Theme'),
+      new fromSdr.ClearResourcesAction('User'),
+      new fromSdr.ClearAcademicAgeAction('individual'),
+      new fromRouter.Link({ url: '/' })
+    ])
   ));
 
   getUser = createEffect(() => this.actions.pipe(
@@ -187,43 +175,28 @@ export class AuthEffects implements OnInitEffects {
     )
   ));
 
+  getUserSuccess = createEffect(() => this.actions.pipe(
+    ofType(fromAuth.AuthActionTypes.GET_USER_SUCCESS),
+    withLatestFrom(this.store.select(selectRouterUrl)),
+    map(([action, url]) => {
+      if (isPlatformBrowser(this.platformId)) {
+
+      }
+    })
+  ), { dispatch: false });
+
   getUserFailure = createEffect(() => this.actions.pipe(
     ofType(fromAuth.AuthActionTypes.GET_USER_FAILURE),
     withLatestFrom(this.store.select(selectRouterUrl)),
     map(([action, url]) => {
       if (isPlatformBrowser(this.platformId)) {
-        this.store.dispatch(this.dialog.loginDialog());
-        this.store.dispatch(new fromAuth.SetLoginRedirectAction({ url }));
-        this.store.dispatch(this.alert.unauthorizedAlert());
-      }
-    })
-  ), { dispatch: false });
 
-  checkSession = createEffect(() => this.actions.pipe(
-    ofType(fromAuth.AuthActionTypes.CHECK_SESSION),
-    map(() => new fromAuth.SessionStatusAction({
-      authenticated: this.authService.hasSession(),
-    }))
-  ));
-
-  clearSession = createEffect(() => this.actions.pipe(
-    ofType(fromAuth.AuthActionTypes.CLEAR_SESSION),
-    map(() => this.authService.clearSession())
-  ), { dispatch: false });
-
-  sessionStatus = createEffect(() => this.actions.pipe(
-    ofType(fromAuth.AuthActionTypes.SESSION_STATUS),
-    map((action: fromAuth.SessionStatusAction) => action.payload),
-    map((payload: { authenticated: boolean }) => payload.authenticated),
-    map((authenticated: boolean) => {
-      if (authenticated) {
-        this.store.dispatch(new fromAuth.GetUserAction());
       }
     })
   ), { dispatch: false });
 
   ngrxOnInitEffects(): Action {
-    return new fromAuth.CheckSessionAction();
+    return new fromAuth.GetUserAction();
   }
 
 }

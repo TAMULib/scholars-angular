@@ -5,6 +5,7 @@ export const testAppConfig: AppConfig = {
   port: 4200,
   baseHref: '/',
   brokerUrl: 'ws://localhost:9000',
+  saml2Url: 'http://localhost:9000/saml2/authenticate/entraid',
   serviceUrl: 'http://localhost:9000',
   uiUrl: 'http://localhost:4200',
   embedUrl: 'http://localhost:4201',

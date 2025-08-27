@@ -27,7 +27,7 @@ In addition to having [Docker](https://docs.docker.com/) installed, a running [S
   -e BASE_HREF=/ \
   -e BROKER_URL="ws://localhost:9000" \
   -e SERVICE_URL="http://localhost:9000" \
-  -e SSR_SERVICE_URL="http://127.0.0.1:9000" \
+  -e SAML2_URL="http://127.0.0.1:9000/saml2/authenticate/entraid" \
   -e EMBED_URL="http://localhost:4201" \
   -e UI_URL="http://localhost:4200" \
   -e VIVO_URL="http://localhost:8080/vivo" \

@@ -1,7 +1,5 @@
-import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -11,26 +9,12 @@ import { map } from 'rxjs/operators';
 export class RestService {
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: string,
-    @Inject(REQUEST) private request: any,
-    private http: HttpClient,
+    private readonly http: HttpClient,
   ) {
 
   }
 
-  public hasSession(): boolean {
-    // tslint:disable-next-line: no-string-literal
-    return this.request.headers && this.request.headers['cookie'] && this.request.headers['cookie'].indexOf('SESSION') >= 0;
-  }
-
-  public clearSession(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const expires = new Date('Thu, 01 Jan 1970 00:00:00 GMT');
-      document.cookie = 'SESSION=;expires=' + expires.toUTCString() + ';';
-    }
-  }
-
-  public get<T>(url: string, options: any = {}, cache = true): Observable<T> {
+  public get<T>(url: string, options: any = {}): Observable<T> {
     // tslint:disable-next-line:no-shadowed-variable
     return this.processRequest<T>(url, options, (url: string, options: any): any => {
       return this.http.get<T>(url, options);
