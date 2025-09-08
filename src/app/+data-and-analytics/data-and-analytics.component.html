@@ -100,7 +100,8 @@
                       [ngbTypeahead]="search"
                       (selectItem)="onSelectOrganization($event, params)"
                       [resultFormatter]="formatter"
-                      [inputFormatter]="formatter"/>
+                      [inputFormatter]="formatter"
+                      [placeholder]="'DATA_AND_ANALYTICS.PLACEHOLDER_TEXT' | translate"/>
                   </div>
                 </div>
               </div>
