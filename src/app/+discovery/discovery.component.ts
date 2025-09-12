@@ -43,6 +43,8 @@ export class DiscoveryComponent implements OnDestroy, OnInit {
 
   public page: Observable<SdrPage>;
 
+  public totalPeopleCount: number;
+
   public facets: Observable<SdrFacet[]>;
 
   private subscriptions: Subscription[];
@@ -73,6 +75,11 @@ export class DiscoveryComponent implements OnDestroy, OnInit {
     this.page = this.store.pipe(select(selectResourcesPage<Individual>('individual')));
     this.facets = this.store.pipe(select(selectResourcesFacets<Individual>('individual')));
     this.discoveryViews = this.store.pipe(select(selectAllResources<DiscoveryView>('discoveryViews')));
+    this.subscriptions.push(
+      this.page.subscribe((page: SdrPage) => {
+        this.totalPeopleCount = page.totalElements;
+     })
+    );
     this.subscriptions.push(
       this.route.params.subscribe((params) => {
         if (params.view) {
