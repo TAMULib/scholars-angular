@@ -12,7 +12,7 @@
     <div class="headers-row row flex-column-reverse flex-md-row">
       <div class="col-md-8">
         <span id="sidebar-title" class="h4 text-primary">
-          <span>{{discoveryView.name}}</span>
+          <span>{{totalPeopleCount}} {{discoveryView.name}}</span>
           <span *ngIf="query | async; let query">
             <span> {{ 'DISCOVERY.RESULTS' | translate }}:</span>
             <span> {{query}}</span>
