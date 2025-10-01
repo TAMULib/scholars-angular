@@ -9,6 +9,7 @@
 
 # dependencies
 /node_modules
+/yarn.lock
 
 # profiling files
 chrome-profiler-events*.json
@@ -47,3 +48,7 @@ testem.log
 Thumbs.db
 
 package-lock.json
+
+# Ignore Yarn cache
+.yarn/cache/
+.yarn/releases/

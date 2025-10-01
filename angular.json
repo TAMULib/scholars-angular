@@ -34,7 +34,8 @@
               "src/assets/scripts/embed.js"
             ],
             "allowedCommonJsDependencies": [
-              "handlebars/dist/handlebars"
+              "handlebars/dist/handlebars",
+              "file-saver"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
