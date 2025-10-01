@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject, Observable, OperatorFunction, combineLatest, debounceTime, distinctUntilChanged, filter, map, take, withLatestFrom } from 'rxjs';
@@ -7,6 +7,7 @@ import { Individual } from '../core/model/discovery';
 import { IndividualRepo } from '../core/model/discovery/repo/individual.repo';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../core/model/view';
 import { ContainerType } from '../core/model/view/data-and-analytics-view';
+import { RestService } from '../core/service/rest.service';
 import { AppState } from '../core/store';
 import { selectRouterQueryParamFilters, selectRouterQueryParams, selectRouterState } from '../core/store/router';
 import { selectAllResources, selectDisplayViewByTypes, selectResourceSelected } from '../core/store/sdr';
@@ -17,6 +18,8 @@ import { getFilterField, getFilterValue, getQueryParamsForFacets, removeFilterFr
 import * as fromLayout from '../core/store/layout/layout.actions';
 import * as fromSdr from '../core/store/sdr/sdr.actions';
 import * as fromSidebar from '../core/store/sidebar/sidebar.actions';
+
+import { APP_CONFIG, AppConfig } from '../app.config';
 
 @Component({
   selector: 'scholars-data-and-analytics',
@@ -57,15 +60,21 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public organizations: Observable<Individual[]>;
 
+  public selectedPeople:any = [];
+
+  public selectAll: boolean = false;
+
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
   }
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private individualRepo: IndividualRepo,
+    private restService: RestService
   ) {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
@@ -175,6 +184,7 @@ export class DataAndAnalyticsComponent implements OnInit {
         this.store.dispatch(new fromSdr.SelectResourceAction('individual', { id }));
       });
   }
+
 
   public getDataAndAnalyticsRouterLink(view: DataAndAnalyticsView): string[] {
     return ['/data-and-analytics', view.name];
@@ -291,4 +301,61 @@ export class DataAndAnalyticsComponent implements OnInit {
       .pipe(map(collection => (collection._embedded.individual as Individual[]).sort((a, b) => a.name.localeCompare(b.name))));
   }
 
+  public toggleSelectAll(organization: any) {
+    if (organization.people) {
+      organization.people.forEach((person: any) => {
+        person.selected = this.selectAll;
+      });
+    }
+  }
+
+  public downloadSelectedPeople(organization: any) {
+    if (this.selectAll) {
+      this.route.queryParams.pipe(take(1)).subscribe((params) => {
+        const link = params?.export.toLowerCase().replace(/ /g, '_');
+        this.restService.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
+          .pipe(take(1))
+          .subscribe((response: any) => {
+          const contentDisposition = response.headers.get('Content-Disposition');
+          const filename = !!contentDisposition
+          ? contentDisposition.match(/^.*filename=(.*)$/)[1]
+          : 'export.zip';
+
+          const url = window.URL.createObjectURL(response.body);
+          const anchor = document.createElement('a');
+          anchor.download = filename;
+          anchor.href = url;
+          anchor.click();
+          });
+      });
+    } else {
+      const selectedIds = organization.people
+      .filter((p: any) => p.selected)
+      .map((p: any) => p.id);
+
+      this.route.queryParams.pipe(take(1)).subscribe((params) => {
+        const orgId = params?.selectedOrganization;
+        const exportName = params.export;
+        const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+
+        this.restService.post(
+          updatedHref,
+          selectedIds,
+          { responseType: 'blob' , headers: { 'Content-Type': 'application/json' } }
+        ).subscribe({
+          next: (blob: Blob) => {
+            const objectUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = objectUrl;
+            a.download = `selected_profiles.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(objectUrl);
+          },
+          error: (err) => console.error('Failed to download file', err),
+        });
+      });
+    }
+  }
 }
