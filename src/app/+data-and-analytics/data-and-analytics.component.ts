@@ -310,52 +310,62 @@ export class DataAndAnalyticsComponent implements OnInit {
   }
 
   public downloadSelectedPeople(organization: any) {
+    this.route.queryParams.pipe(take(1)).subscribe((params) => {
     if (this.selectAll) {
-      this.route.queryParams.pipe(take(1)).subscribe((params) => {
-        const link = params?.export.toLowerCase().replace(/ /g, '_');
-        this.restService.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
-          .pipe(take(1))
-          .subscribe((response: any) => {
-          const contentDisposition = response.headers.get('Content-Disposition');
-          const filename = !!contentDisposition
-          ? contentDisposition.match(/^.*filename=(.*)$/)[1]
-          : 'export.zip';
-
-          const url = window.URL.createObjectURL(response.body);
-          const anchor = document.createElement('a');
-          anchor.download = filename;
-          anchor.href = url;
-          anchor.click();
-          });
-      });
-    } else {
-      const selectedIds = organization.people
-      .filter((p: any) => p.selected)
-      .map((p: any) => p.id);
-
-      this.route.queryParams.pipe(take(1)).subscribe((params) => {
-        const orgId = params?.selectedOrganization;
-        const exportName = params.export;
-        const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
-
-        this.restService.post(
-          updatedHref,
-          selectedIds,
-          { responseType: 'blob' , headers: { 'Content-Type': 'application/json' } }
-        ).subscribe({
-          next: (blob: Blob) => {
-            const objectUrl = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = objectUrl;
-            a.download = `selected_profiles.zip`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(objectUrl);
+      const link = params?.export.toLowerCase().replace(/ /g, '_');
+      this.restService.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
+        .pipe(take(1))
+        .subscribe({
+          next: (response: any) => {
+            this.download(response, 'export.zip');
+            this.resetSelection(organization);
           },
           error: (err) => console.error('Failed to download file', err),
         });
-      });
+    } else {
+      const selectedIds = organization.people
+        .filter((p: any) => p.selected)
+        .map((p: any) => p.id);
+
+      const orgId = params?.selectedOrganization;
+      const exportName = params.export;
+      const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+
+      this.restService.post(
+        updatedHref,
+        selectedIds,
+        { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } })
+        .subscribe({
+          next: (blob: Blob) => {
+            this.download(blob, 'selected_profile(s).zip');
+            this.resetSelection(organization);
+          },
+          error: (err) => console.error('Failed to download selected profiles', err),
+        });
+      }
+    });
+  }
+
+  private download(response: any, defaultFileName = 'profile_summary_download.zip') {
+    const blob = response.body || response;
+    const contentDisposition = response.headers?.get?.('Content-Disposition');
+    const filename = contentDisposition
+      ? contentDisposition.match(/^.*filename=(.*)$/)[1]
+      : defaultFileName;
+
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.download = filename;
+    anchor.href = url;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private resetSelection(organization: any) {
+    this.selectAll = false;
+    if (organization.people) {
+      organization.people.forEach((person: any) => (person.selected = false));
     }
   }
+
 }
