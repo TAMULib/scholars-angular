@@ -94,27 +94,27 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     );
   }
 
-  public getSelectedExportView(): Observable<ExportView> {
-    return this.selectedExportView.asObservable();
-  }
+  // public getSelectedExportView(): Observable<ExportView> {
+  //   return this.selectedExportView.asObservable();
+  // }
 
-  public download(organization: Individual, exportView: ExportView): void {
-    const link = exportView.name.toLowerCase().replace(/ /g, '_');
-    this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
-      .pipe(take(1))
-      .subscribe((response: any) => {
-        const contentDisposition = response.headers.get('Content-Disposition');
-        const filename = !!contentDisposition
-          ? contentDisposition.match(/^.*filename=(.*)$/)[1]
-          : 'export.zip';
+  // public download(organization: Individual, exportView: ExportView): void {
+  //   const link = exportView.name.toLowerCase().replace(/ /g, '_');
+  //   this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
+  //     .pipe(take(1))
+  //     .subscribe((response: any) => {
+  //       const contentDisposition = response.headers.get('Content-Disposition');
+  //       const filename = !!contentDisposition
+  //         ? contentDisposition.match(/^.*filename=(.*)$/)[1]
+  //         : 'export.zip';
 
 
-        const url = window.URL.createObjectURL(response.body);
-        const anchor = document.createElement('a');
-        anchor.download = filename;
-        anchor.href = url;
-        anchor.click();
-      });
-  }
+  //       const url = window.URL.createObjectURL(response.body);
+  //       const anchor = document.createElement('a');
+  //       anchor.download = filename;
+  //       anchor.href = url;
+  //       anchor.click();
+  //     });
+  // }
 
 }
