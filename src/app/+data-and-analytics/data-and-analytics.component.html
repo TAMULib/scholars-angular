@@ -115,9 +115,11 @@
                     <input
                       type="checkbox"
                       class="form-check-input"
-                      [(ngModel)]="selectAll"
-                      (change)="toggleSelectAll(organization)">
-                    <label class="form-check-label">Select All</label>
+                      [checked]="(organization.people.length)"
+                      >
+                      <label class="form-check-label">
+                        {{ 'DATA_AND_ANALYTICS.SELECT_ALL' | translate }}
+                      </label>
                   </div>
                   <button
                     class="btn btn-primary downloadSelectedPeople"
@@ -129,13 +131,19 @@
                 <ul>
                   <li *ngFor="let person of organization.people">
                     <div class="form-check">
-                      <input type="checkbox" class="form-check-input" [(ngModel)]="person.selected" />
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [checked]="(selectedPeople | async)?.person"
+                        (change)="onSelectPerson($event, person)"
+                      />
                       <span class="font-weight-normal">{{ person.label }} - {{ person.title }}</span>
                     </div>
                   </li>
                 </ul>
-                <input type="hidden" [value]="selectedPeople | json" name="selectedPeople" />
+                <input type="hidden" [value]="(selectedPeople | async) | json" name="selectedPeople" />
               </div>
+
               <div *ngSwitchCase="'CONTAINER'">
                 <div [ngSwitch]="view.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">

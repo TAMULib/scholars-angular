@@ -59,12 +59,14 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public organizations: Observable<Individual[]>;
 
-  public selectedPeople:any = [];
-
-  public selectAll: boolean = false;
+  public selectedPeopleSubject : BehaviorSubject<any[]>;
 
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
+  }
+
+  public get selectedPeople() : Observable<any[]> {
+    return this.selectedPeopleSubject.asObservable();
   }
 
   constructor(
@@ -78,6 +80,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
     this.organizations = this.organizationsSubject.asObservable();
+    this.selectedPeopleSubject = new BehaviorSubject<any[]>([]);
     this.model = {
       term: '',
     };
@@ -299,47 +302,55 @@ export class DataAndAnalyticsComponent implements OnInit {
       .pipe(map(collection => (collection._embedded.individual as Individual[]).sort((a, b) => a.name.localeCompare(b.name))));
   }
 
-  public toggleSelectAll(organization: any) {
-    if (organization.people) {
-      organization.people.forEach((person: any) => {
-        person.selected = this.selectAll;
-      });
+  public onSelectPerson(event: Event, person: Individual): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      const current = this.selectedPeopleSubject.value;
+      if (!current.find(p => p.id === person.id)) {
+        this.selectedPeopleSubject.next([...current, person]);
+      }
+    } else {
+      const current = this.selectedPeopleSubject.value.filter(p => p.id !== person.id);
+      this.selectedPeopleSubject.next(current);
     }
   }
 
-  public downloadSelectedPeople(organization: any) {
+  public downloadSelectedPeople(organization: any): void {
     this.route.queryParams.pipe(take(1)).subscribe((params) => {
-    if (this.selectAll) {
-      const link = params?.export.toLowerCase().replace(/ /g, '_');
-      this.restService.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
-        .pipe(take(1))
-        .subscribe({
-          next: (response: any) => {
-            this.download(response, 'export.zip');
-            this.resetSelection(organization);
-          },
-          error: (err) => console.error('Failed to download file', err),
-        });
-    } else {
-      const selectedIds = organization.people
-        .filter((p: any) => p.selected)
-        .map((p: any) => p.id);
-
-      const orgId = params?.selectedOrganization;
+      const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
       const exportName = params.export;
-      const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+      const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
 
-      this.restService.post(
-        updatedHref,
-        selectedIds,
-        { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } })
-        .subscribe({
-          next: (blob: Blob) => {
-            this.download(blob, 'selected_profile(s).zip');
-            this.resetSelection(organization);
-          },
-          error: (err) => console.error('Failed to download selected profiles', err),
-        });
+      if (!orgId) {
+        console.error('Download failure: Missing Organization id.');
+        return;
+      }
+
+      if (!selectedIds.length) {
+        const link = params?.export.toLowerCase().replace(/ /g, '_');
+        this.restService.get<Blob>(
+          organization._links[link].href,
+          { observe: 'response', responseType: 'blob' as 'json' })
+          .pipe(take(1))
+          .subscribe((response: any) => {
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filename = !!contentDisposition
+                            ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'export.zip';
+            this.download(response, filename);
+          });
+      } else {
+          const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+          console.log(updatedHref);
+          this.restService.post(
+            updatedHref,
+            selectedIds,
+            { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
+          ).subscribe({
+            next: (blob: Blob) => {
+              this.download(blob, 'selected_profile(s).zip');
+            },
+            error: (err) => console.error('Failed to download selected profiles.', err),
+          });
       }
     });
   }
@@ -357,13 +368,6 @@ export class DataAndAnalyticsComponent implements OnInit {
     anchor.href = url;
     anchor.click();
     window.URL.revokeObjectURL(url);
-  }
-
-  private resetSelection(organization: any) {
-    this.selectAll = false;
-    if (organization.people) {
-      organization.people.forEach((person: any) => (person.selected = false));
-    }
   }
 
 }
