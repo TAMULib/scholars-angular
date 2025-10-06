@@ -93,17 +93,6 @@ export class SdrEffects {
           if (individual) {
             return of(new fromSdr.SelectResourceSuccessAction(action.name, { individual, select: true, queue: action.payload.queue }));
           } else {
-            const url = `${this.appConfig.serviceUrl}/individual/`;
-            this.restService.get<any>(url + action.payload.id, { observe: 'response' })
-            .subscribe({
-              next: (response) => {
-                const individuals = response.body;
-                return of(new fromSdr.SelectResourceSuccessAction(action.name, { individual: individuals, select: true, queue: action.payload.queue }));
-              },
-              error: (err) => {
-                console.error('Error during retriving profile from selected organization: ', err);
-              }
-            });
             return of(new fromSdr.GetOneResourceAction('individual', { id: action.payload.id, select: true, queue: action.payload.queue }));
           }
         })
