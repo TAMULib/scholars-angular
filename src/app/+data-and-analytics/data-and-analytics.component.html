@@ -113,11 +113,13 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <div class="form-check">
                     <input
+                      id="select-all-profile"
                       type="checkbox"
                       class="form-check-input"
-                      [checked]="(organization.people.length)"
+                      [checked]="(selectedPeople | async)?.length === organization.people.length"
+                      (change)="onSelectAll($event, organization)"
                       >
-                      <label class="form-check-label">
+                      <label class="form-check-label" for="select-all-profile">
                         {{ 'DATA_AND_ANALYTICS.SELECT_ALL' | translate }}
                       </label>
                   </div>
@@ -132,8 +134,9 @@
                   <li *ngFor="let person of organization.people">
                     <div class="form-check">
                       <input
+                        id="selected-profile"
                         type="checkbox"
-                        class="form-check-input"
+                        class="form-check-input selected-profile-checkbox"
                         [checked]="(selectedPeople | async)?.person"
                         (change)="onSelectPerson($event, person)"
                       />

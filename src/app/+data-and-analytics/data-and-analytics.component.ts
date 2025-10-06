@@ -302,6 +302,18 @@ export class DataAndAnalyticsComponent implements OnInit {
       .pipe(map(collection => (collection._embedded.individual as Individual[]).sort((a, b) => a.name.localeCompare(b.name))));
   }
 
+  public onSelectAll(event: Event, organization: any): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const people = organization.people || [];
+    if (checked) {
+      this.selectedPeopleSubject.next([...people]);
+    } else {
+      this.selectedPeopleSubject.next([]);
+    }
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.selected-profile-checkbox');
+    checkboxes.forEach(cb => cb.checked = checked);
+  }
+
   public onSelectPerson(event: Event, person: Individual): void {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -326,7 +338,7 @@ export class DataAndAnalyticsComponent implements OnInit {
         return;
       }
 
-      if (!selectedIds.length) {
+      if ( !selectedIds.length || selectedIds.length === ( organization.people?.length ?? 0 ) ) {
         const link = params?.export.toLowerCase().replace(/ /g, '_');
         this.restService.get<Blob>(
           organization._links[link].href,
@@ -340,7 +352,6 @@ export class DataAndAnalyticsComponent implements OnInit {
           });
       } else {
           const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
-          console.log(updatedHref);
           this.restService.post(
             updatedHref,
             selectedIds,
