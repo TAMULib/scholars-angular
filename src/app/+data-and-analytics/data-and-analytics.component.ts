@@ -330,7 +330,8 @@ export class DataAndAnalyticsComponent implements OnInit {
   public downloadSelectedPeople(organization: any): void {
     this.route.queryParams.pipe(take(1)).subscribe((params) => {
       const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
-      const exportName = params.export;
+      const exportName = params?.export.toLowerCase().replace(/ /g, '_');
+      console.log("\n exportName: ", exportName);
       const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
 
       if (!orgId) {
@@ -339,17 +340,16 @@ export class DataAndAnalyticsComponent implements OnInit {
       }
 
       if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
-        const link = params?.export.toLowerCase().replace(/ /g, '_');
         this.restService.get<Blob>(
-          organization._links[link].href,
+          organization._links[exportName].href,
           { observe: 'response', responseType: 'blob' as 'json' })
           .pipe(take(1))
           .subscribe((response: any) => {
             const contentDisposition = response.headers.get('Content-Disposition');
             const filename = !!contentDisposition
-                            ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'export.zip';
+                             ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'export.zip';
             this.download(response, filename);
-          });
+          },);
       } else {
           const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
           this.restService.post(
@@ -357,8 +357,12 @@ export class DataAndAnalyticsComponent implements OnInit {
             selectedIds,
             { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
           ).subscribe({
-            next: (blob: Blob) => {
-              this.download(blob, 'selected_profile(s).zip');
+            next: (response: any) => {
+              const contentDisposition = response.headers.get('Content-Disposition');
+
+              const filename = !!contentDisposition
+                               ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'selected_profile(s).zip';
+              this.download(response, filename);
             },
             error: (err) => console.error('Failed to download selected profiles.', err),
           });
