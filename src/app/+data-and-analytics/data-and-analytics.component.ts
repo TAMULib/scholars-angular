@@ -338,7 +338,7 @@ export class DataAndAnalyticsComponent implements OnInit {
         return;
       }
 
-      if ( !selectedIds.length || selectedIds.length === ( organization.people?.length ?? 0 ) ) {
+      if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
         const link = params?.export.toLowerCase().replace(/ /g, '_');
         this.restService.get<Blob>(
           organization._links[link].href,
