@@ -30,4 +30,29 @@
       cursor: pointer;
     }
   }
+
+  .selectedProfile {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .selectedProfile ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  .selectedProfile ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .selectedProfile .form-check {
+    display: flex;
+    align-items: center;
+  }
+  .selectedProfile .font-weight-normal {
+    line-height: 1.5;
+    margin-left: 10px;
+  }
 }

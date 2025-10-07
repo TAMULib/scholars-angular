@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import { Params } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
@@ -7,6 +7,7 @@ import { asapScheduler, combineLatest, defer, lastValueFrom, of, scheduled } fro
 import { catchError, filter, map, mergeMap, switchMap, take, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../';
+import { APP_CONFIG, AppConfig } from '../../../app.config';
 
 import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetEntryLabel, hasFilter } from '../../../shared/utilities/discovery.utility';
 import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
@@ -18,6 +19,7 @@ import { SidebarItem, SidebarItemType, SidebarMenu, SidebarSection } from '../..
 import { DirectoryView, DiscoveryView, Facet, FacetType, OpKey } from '../../model/view';
 import { AlertService } from '../../service/alert.service';
 import { DialogService } from '../../service/dialog.service';
+import { RestService } from '../../service/rest.service';
 import { StatsService } from '../../service/stats.service';
 import { selectRouterState } from '../router';
 import { CustomRouterState } from '../router/router.reducer';
@@ -35,13 +37,15 @@ export class SdrEffects {
   private repos: Map<string, AbstractSdrRepo<SdrResource>>;
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
     private actions: Actions,
     private injector: Injector,
     private store: Store<AppState>,
     private alert: AlertService,
     private dialog: DialogService,
     private stats: StatsService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private restService: RestService
   ) {
     this.repos = new Map<string, AbstractSdrRepo<SdrResource>>();
     this.injectRepos();

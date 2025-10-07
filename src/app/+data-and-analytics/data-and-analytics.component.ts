@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, OperatorFunction, combineLatest, debounceTime, distinctUntilChanged, filter, map, take, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, OperatorFunction, combineLatest, distinctUntilChanged, filter, map, take, withLatestFrom } from 'rxjs';
 
+import { APP_CONFIG, AppConfig } from '../app.config';
 import { Individual } from '../core/model/discovery';
 import { IndividualRepo } from '../core/model/discovery/repo/individual.repo';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../core/model/view';
 import { ContainerType } from '../core/model/view/data-and-analytics-view';
+import { RestService } from '../core/service/rest.service';
 import { AppState } from '../core/store';
 import { selectRouterQueryParamFilters, selectRouterQueryParams, selectRouterState } from '../core/store/router';
 import { selectAllResources, selectDisplayViewByTypes, selectResourceSelected } from '../core/store/sdr';
@@ -57,19 +59,28 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public organizations: Observable<Individual[]>;
 
+  public selectedPeopleSubject : BehaviorSubject<any[]>;
+
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
   }
 
+  public get selectedPeople() : Observable<any[]> {
+    return this.selectedPeopleSubject.asObservable();
+  }
+
   constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private individualRepo: IndividualRepo,
+    private restService: RestService
   ) {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
     this.organizations = this.organizationsSubject.asObservable();
+    this.selectedPeopleSubject = new BehaviorSubject<any[]>([]);
     this.model = {
       term: '',
     };
@@ -289,6 +300,85 @@ export class DataAndAnalyticsComponent implements OnInit {
 
     return this.individualRepo.search({ filters, page })
       .pipe(map(collection => (collection._embedded.individual as Individual[]).sort((a, b) => a.name.localeCompare(b.name))));
+  }
+
+  public onSelectAll(event: Event, organization: any): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const people = organization.people || [];
+    if (checked) {
+      this.selectedPeopleSubject.next([...people]);
+    } else {
+      this.selectedPeopleSubject.next([]);
+    }
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.selected-profile-checkbox');
+    checkboxes.forEach(cb => cb.checked = checked);
+  }
+
+  public onSelectPerson(event: Event, person: Individual): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      const current = this.selectedPeopleSubject.value;
+      if (!current.find(p => p.id === person.id)) {
+        this.selectedPeopleSubject.next([...current, person]);
+      }
+    } else {
+      const current = this.selectedPeopleSubject.value.filter(p => p.id !== person.id);
+      this.selectedPeopleSubject.next(current);
+    }
+  }
+
+  public downloadSelectedPeople(organization: any): void {
+    this.route.queryParams.pipe(take(1)).subscribe((params) => {
+      const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
+      const exportName = params.export;
+      const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
+
+      if (!orgId) {
+        console.error('Download failure: Missing Organization id.');
+        return;
+      }
+
+      if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
+        const link = params?.export.toLowerCase().replace(/ /g, '_');
+        this.restService.get<Blob>(
+          organization._links[link].href,
+          { observe: 'response', responseType: 'blob' as 'json' })
+          .pipe(take(1))
+          .subscribe((response: any) => {
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filename = !!contentDisposition
+                            ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'export.zip';
+            this.download(response, filename);
+          });
+      } else {
+          const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+          this.restService.post(
+            updatedHref,
+            selectedIds,
+            { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
+          ).subscribe({
+            next: (blob: Blob) => {
+              this.download(blob, 'selected_profile(s).zip');
+            },
+            error: (err) => console.error('Failed to download selected profiles.', err),
+          });
+      }
+    });
+  }
+
+  private download(response: any, defaultFileName = 'profile_summary_download.zip') {
+    const blob = response.body || response;
+    const contentDisposition = response.headers?.get?.('Content-Disposition');
+    const filename = contentDisposition
+      ? contentDisposition.match(/^.*filename=(.*)$/)[1]
+      : defaultFileName;
+
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.download = filename;
+    anchor.href = url;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
   }
 
 }
