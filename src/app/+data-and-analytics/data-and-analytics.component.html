@@ -106,47 +106,6 @@
                 </div>
               </div>
 
-              <div
-                class="container mb-1 selectedProfile"
-                *ngIf="organization.people && organization.people.length > 0">
-
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <div class="form-check">
-                    <input
-                      id="select-all-profile"
-                      type="checkbox"
-                      class="form-check-input"
-                      [checked]="(selectedPeople | async)?.length === organization.people.length"
-                      (change)="onSelectAll($event, organization)"
-                      >
-                      <label class="form-check-label" for="select-all-profile">
-                        {{ 'DATA_AND_ANALYTICS.SELECT_ALL' | translate }}
-                      </label>
-                  </div>
-                  <button
-                    class="btn btn-primary downloadSelectedPeople"
-                    type="button"
-                    (click)="downloadSelectedPeople(organization)">
-                      {{ 'DATA_AND_ANALYTICS.DOWNLOAD' | translate }}
-                  </button>
-                </div>
-                <ul>
-                  <li *ngFor="let person of organization.people">
-                    <div class="form-check">
-                      <input
-                        id="selected-profile"
-                        type="checkbox"
-                        class="form-check-input selected-profile-checkbox"
-                        [checked]="(selectedPeople | async)?.person"
-                        (change)="onSelectPerson($event, person)"
-                      />
-                      <span class="font-weight-normal">{{ person.label }} - {{ person.title }}</span>
-                    </div>
-                  </li>
-                </ul>
-                <input type="hidden" [value]="(selectedPeople | async) | json" name="selectedPeople" />
-              </div>
-
               <div *ngSwitchCase="'CONTAINER'">
                 <div [ngSwitch]="view.type">
                   <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
