@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Inject, OnDestroy, OnInit, Output } fro
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription, map, take } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, take } from 'rxjs';
 
 import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
@@ -39,8 +39,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   private subscriptions: Subscription[];
 
-  public selectAll: boolean = false;
-
   public selectedOrganization: Observable<Individual>;
 
   public organizationsSubject: BehaviorSubject<Individual[]>;
@@ -66,6 +64,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     this.organizations = this.organizationsSubject.asObservable();
 
     this.subscriptions = [];
+
   }
 
   ngOnDestroy(): void {
@@ -143,12 +142,14 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     }
   }
 
+  private extractFilename(response: any, defaultFileName: string): string {
+    const contentDisposition = response.headers?.get('Content-Disposition');
+    return contentDisposition?.match(/^.*filename=(.*)$/)[1]?.trim() || defaultFileName;
+  }
+
   public downloadSelectedPeople(organization: any, selected: any): void {
-    console.log(selected);
     this.route.queryParams.pipe(take(1)).subscribe((params) => {
       const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
-      const exportName = params?.export.toLowerCase().replace(/ /g, '_');
-      console.log("\n exportName: ", exportName);
       const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
 
       if (!orgId) {
@@ -157,43 +158,36 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
       }
 
       if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
+        const link = params?.export.toLowerCase().replace(/ /g, '_');
         this.restService.get<Blob>(
-          organization._links[exportName].href,
+          organization._links[link].href,
           { observe: 'response', responseType: 'blob' as 'json' })
           .pipe(take(1))
           .subscribe((response: any) => {
-            const contentDisposition = response.headers.get('Content-Disposition');
-            const filename = !!contentDisposition
-                             ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'export.zip';
+            const filename = this.extractFilename(response, 'export.zip');
             this.download(response, filename);
           },);
       } else {
-          const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
-          this.restService.post(
-            updatedHref,
-            selectedIds,
-            { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
-          ).subscribe({
-            next: (response: any) => {
-              const contentDisposition = response.headers.get('Content-Disposition');
-
-              const filename = !!contentDisposition
-                               ? contentDisposition.match(/^.*filename=(.*)$/)[1] : 'selected_profile(s).zip';
-              this.download(response, filename);
-            },
-            error: (err) => console.error('Failed to download selected profiles.', err),
-          });
+        const exportName = (selected?.name ? selected.name : params?.export ? params.export : '')
+                          .trim().replace(/\s+/g, ' ');
+        const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+        this.restService.post(
+          updatedHref,
+          selectedIds,
+          { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
+        ).subscribe({
+          next: (response: any) => {
+            const filename = this.extractFilename(response, 'selected_profile.zip');
+            this.download(response, filename);
+          },
+          error: (err) => console.error('Failed to download selected profiles.', err),
+        });
       }
     });
   }
 
-  private download(response: any, defaultFileName = 'profile_summary_download.zip') {
+  private download(response: any, filename: any): void {
     const blob = response.body || response;
-    const contentDisposition = response.headers?.get?.('Content-Disposition');
-    const filename = contentDisposition
-                    ? contentDisposition.match(/^.*filename=(.*)$/)[1]
-                    : defaultFileName;
-
     const url = window.URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.download = filename;
