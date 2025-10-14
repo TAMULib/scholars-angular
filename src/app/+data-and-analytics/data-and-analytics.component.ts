@@ -8,7 +8,6 @@ import { Individual } from '../core/model/discovery';
 import { IndividualRepo } from '../core/model/discovery/repo/individual.repo';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../core/model/view';
 import { ContainerType } from '../core/model/view/data-and-analytics-view';
-import { RestService } from '../core/service/rest.service';
 import { AppState } from '../core/store';
 import { selectRouterQueryParamFilters, selectRouterQueryParams, selectRouterState } from '../core/store/router';
 import { selectAllResources, selectDisplayViewByTypes, selectResourceSelected } from '../core/store/sdr';
@@ -74,8 +73,7 @@ export class DataAndAnalyticsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
-    private individualRepo: IndividualRepo,
-    private restService: RestService
+    private individualRepo: IndividualRepo
   ) {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
