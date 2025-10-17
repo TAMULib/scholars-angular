@@ -1,15 +1,22 @@
 <div class="card-header font-weight-bold text-primary text-capitalize">
-  <div  *ngIf="queryParams | async; let params">
-    <span>{{ section.name }}</span>
-    <span *ngIf="hasExport(section)" class="column-export">
-      <a [href]="geSectionExportUrl(params, section)" download class="btn">
-        <span class="fa fa-share" [attr.aria-hidden]="true"></span>
-        <span>{{ 'DIRECTORY.EXPORT' | translate }}</span>
-      </a>
-    </span>
+  <div  *ngIf="queryParams | async; let queryParams">
+  <div class="container mt-2" >
+    <div class="headers-row row flex-column-reverse flex-md-row">
+      <div class="col-md-8">
+        <span id="sidebar-title">{{ section.name }}</span>
+      </div>
+      <div class="col-md-4 text-right">
+        <span *ngIf="hasExport(section)" class="column-export">
+          <a [href]="getSectionExportUrl(queryParams, section)" download class="btn">
+            <span class="fa fa-share" [attr.aria-hidden]="true"></span>
+            <span>{{ 'DIRECTORY.EXPORT' | translate }}</span>
+          </a>
+        </span>
+      </div>
+    </div>
   </div>
-
-  <div class="float-right" *ngIf="section.shared">
+</div>
+<div class="float-right" *ngIf="section.shared">
     <div class="embed-dropdown d-inline-block" placement="bottom-right" ngbDropdown>
       <i class="fa fa-lg fa-share-alt" ngbDropdownToggle ></i>
       <div class="dropdown-menu" ngbDropdownMenu>

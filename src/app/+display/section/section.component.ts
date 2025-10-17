@@ -8,7 +8,7 @@ import { filter, map } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
-import { DisplayTabSectionView, Sort } from '../../core/model/view';
+import { DisplayView, DisplayTabSectionView, Sort } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectRouterQueryParamFilters, selectRouterQueryParams } from '../../core/store/router';
 
@@ -29,6 +29,9 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Input()
   public display: string;
+
+  @Input()
+  public displayView: Observable<DisplayView>; // DisplayView;
 
   public resources: BehaviorSubject<any[]>;
 
@@ -102,11 +105,10 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
     public hasExport(section: DisplayTabSectionView): boolean {
-    console.log(hasExport(section));
     return hasExport(section);
   }
 
-  public geSectionExportUrl(params: Params, section: DisplayTabSectionView): string {
+  public getSectionExportUrl(params: Params, section: DisplayTabSectionView): string {
     addExportToQueryParams({... params}, section);
     const tree = this.router.createUrlTree([''], {... params});
     const query = tree.toString().substring(1);
