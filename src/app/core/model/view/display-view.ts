@@ -1,4 +1,4 @@
-import { View } from './';
+import { CollectionView, View } from './';
 import { ExportView } from './export-view';
 import { FieldView } from './field-view';
 
@@ -13,7 +13,7 @@ export interface DisplaySubsectionView extends FieldView {
   templateFunction?: (individual: any) => string;
 }
 
-export interface DisplayTabSectionView extends FieldView {
+export interface DisplayTabSectionView extends FieldView, CollectionView {
   readonly hidden: boolean;
   readonly shared: boolean;
   readonly paginated: boolean;
@@ -23,6 +23,7 @@ export interface DisplayTabSectionView extends FieldView {
   readonly requiredFields: string[];
   readonly lazyReferences: string[];
   readonly subsections: DisplaySubsectionView[];
+  readonly exportViews: ExportView[];
 }
 
 export interface DisplayTabView extends View {

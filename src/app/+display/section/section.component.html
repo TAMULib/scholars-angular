@@ -1,5 +1,14 @@
 <div class="card-header font-weight-bold text-primary text-capitalize">
-  <span>{{ section.name }}</span>
+  <div  *ngIf="queryParams | async; let params">
+    <span>{{ section.name }}</span>
+    <span *ngIf="hasExport(section)" class="column-export">
+      <a [href]="geSectionExportUrl(params, section)" download class="btn">
+        <span class="fa fa-share" [attr.aria-hidden]="true"></span>
+        <span>{{ 'DIRECTORY.EXPORT' | translate }}</span>
+      </a>
+    </span>
+  </div>
+
   <div class="float-right" *ngIf="section.shared">
     <div class="embed-dropdown d-inline-block" placement="bottom-right" ngbDropdown>
       <i class="fa fa-lg fa-share-alt" ngbDropdownToggle ></i>
