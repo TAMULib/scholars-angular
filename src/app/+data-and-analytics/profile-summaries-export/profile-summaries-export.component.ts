@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription, take } from 'rxjs';
 
+import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, ExportView } from '../../core/model/view';
@@ -38,14 +39,32 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   private subscriptions: Subscription[];
 
+  public selectedOrganization: Observable<Individual>;
+
+  public organizationsSubject: BehaviorSubject<Individual[]>;
+
+  public organizations: Observable<Individual[]>;
+
+  public selectedPeopleSubject : BehaviorSubject<any[]>;
+
+  public get selectedPeople() : Observable<any[]> {
+    return this.selectedPeopleSubject.asObservable();
+  }
+
   constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
     private store: Store<AppState>,
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private rest: RestService,
+    private restService: RestService,
   ) {
     this.labelEvent = new EventEmitter<string>();
+    this.selectedPeopleSubject = new BehaviorSubject<any[]>([]);
+    this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
+    this.organizations = this.organizationsSubject.asObservable();
+
     this.subscriptions = [];
+
   }
 
   ngOnDestroy(): void {
@@ -66,7 +85,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
               title: this.translate.instant('DATA_AND_ANALYTICS.TIME_PERIOD'),
               items: this.displayView.exportViews.map((exportView: ExportView) => {
                 const selected = exportView.name === queryParams.export;
-
                 if (selected) {
                   this.selectedExportView.next(exportView);
                   this.labelEvent.next(this.translate.instant('DATA_AND_ANALYTICS.PROFILE_SUMMARIES', { timePeriod: exportView.name }));
@@ -92,29 +110,90 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
         this.store.dispatch(new fromSidebar.LoadSidebarAction({ menu }));
       })
     );
+
   }
 
   public getSelectedExportView(): Observable<ExportView> {
     return this.selectedExportView.asObservable();
   }
 
-  public download(organization: Individual, exportView: ExportView): void {
-    const link = exportView.name.toLowerCase().replace(/ /g, '_');
-    this.rest.get<Blob>(organization._links[link].href, { observe: 'response', responseType: 'blob' as 'json' })
-      .pipe(take(1))
-      .subscribe((response: any) => {
-        const contentDisposition = response.headers.get('Content-Disposition');
-        const filename = !!contentDisposition
-          ? contentDisposition.match(/^.*filename=(.*)$/)[1]
-          : 'export.zip';
+  public onSelectAll(event: Event, organization: any): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const people = organization.people || [];
+    if (checked) {
+      this.selectedPeopleSubject.next([...people]);
+    } else {
+      this.selectedPeopleSubject.next([]);
+    }
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.selected-profile-checkbox');
+    checkboxes.forEach(cb => cb.checked = checked);
+  }
 
+  public onSelectPerson(event: Event, person: Individual): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      const current = this.selectedPeopleSubject.value;
+      if (!current.find(p => p.id === person.id)) {
+        this.selectedPeopleSubject.next([...current, person]);
+      }
+    } else {
+      const current = this.selectedPeopleSubject.value.filter(p => p.id !== person.id);
+      this.selectedPeopleSubject.next(current);
+    }
+  }
 
-        const url = window.URL.createObjectURL(response.body);
-        const anchor = document.createElement('a');
-        anchor.download = filename;
-        anchor.href = url;
-        anchor.click();
-      });
+  private extractFilename(response: any, defaultFileName: string): string {
+    const contentDisposition = response.headers?.get('Content-Disposition');
+    return contentDisposition?.match(/^.*filename=(.*)$/)[1]?.trim() || defaultFileName;
+  }
+
+  public downloadSelectedPeople(organization: any, selected: any): void {
+    this.route.queryParams.pipe(take(1)).subscribe((params) => {
+      const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
+      const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
+
+      if (!orgId) {
+        console.error('Download failure: Missing Organization id.');
+        return;
+      }
+
+      if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
+        const link = params?.export.toLowerCase().replace(/ /g, '_');
+        this.restService.get<Blob>(
+          organization._links[link].href,
+          { observe: 'response', responseType: 'blob' as 'json' })
+          .pipe(take(1))
+          .subscribe((response: any) => {
+            const filename = this.extractFilename(response, 'export.zip');
+            this.download(response, filename);
+          },);
+      } else {
+        const exportName = (selected?.name ? selected.name : params?.export ? params.export : '')
+                          .trim().replace(/\s+/g, ' ');
+        const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
+        this.restService.post(
+          updatedHref,
+          selectedIds,
+          { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
+        ).subscribe({
+          next: (response: any) => {
+            const filename = this.extractFilename(response, 'selected_profile.zip');
+            this.download(response, filename);
+          },
+          error: (err) => console.error('Failed to download selected profiles.', err),
+        });
+      }
+    });
+  }
+
+  private download(response: any, filename: any): void {
+    const blob = response.body || response;
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.download = filename;
+    anchor.href = url;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
   }
 
 }
