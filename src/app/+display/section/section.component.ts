@@ -10,8 +10,7 @@ import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
 import { DisplayView, DisplayTabSectionView, Sort } from '../../core/model/view';
 import { AppState } from '../../core/store';
-import { selectRouterQueryParamFilters, selectRouterQueryParams } from '../../core/store/router';
-
+import { selectRouterQueryParams } from '../../core/store/router';
 import { addExportToQueryParams, getResourcesPage, getSubsectionResources,hasExport, loadBadges } from '../../shared/utilities/view.utility';
 
 @Component({
@@ -31,7 +30,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   public display: string;
 
   @Input()
-  public displayView: Observable<DisplayView>; // DisplayView;
+  public displayView: Observable<DisplayView>;
 
   public resources: BehaviorSubject<any[]>;
 
@@ -104,17 +103,18 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
     setTimeout(() => tooltip.close(), 2000);
   }
 
-    public hasExport(section: DisplayTabSectionView): boolean {
+  public hasExport(section: DisplayTabSectionView): boolean {
     return hasExport(section);
   }
 
   public getSectionExportUrl(params: Params, section: DisplayTabSectionView): string {
-    addExportToQueryParams({... params}, section);
-    const tree = this.router.createUrlTree([''], {... params});
+    const queryParams: Params = { ...params };
+    queryParams.facets = null;
+    queryParams.collection = null;
+    addExportToQueryParams(queryParams, section);
+    const tree = this.router.createUrlTree([''], { queryParams });
     const query = tree.toString().substring(1);
-    const url = `${this.appConfig.serviceUrl}/individual/search/export${query}&view=${section.name}`;
-    console.log(url);
-    return url;
+    return `${this.appConfig.serviceUrl}/individual/search/export${query}&view=${section.name}`;
   }
 
 }
