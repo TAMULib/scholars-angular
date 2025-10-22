@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { BehaviorSubject, Observable, OperatorFunction, combineLatest, debounceTime, distinctUntilChanged, filter, map, take, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, OperatorFunction, combineLatest, distinctUntilChanged, filter, map, take, withLatestFrom } from 'rxjs';
 
+import { APP_CONFIG, AppConfig } from '../app.config';
 import { Individual } from '../core/model/discovery';
 import { IndividualRepo } from '../core/model/discovery/repo/individual.repo';
 import { DataAndAnalyticsView, DisplayView, Filter, OpKey } from '../core/model/view';
@@ -57,19 +58,27 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public organizations: Observable<Individual[]>;
 
+  public selectedPeopleSubject : BehaviorSubject<any[]>;
+
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
   }
 
+  public get selectedPeople() : Observable<any[]> {
+    return this.selectedPeopleSubject.asObservable();
+  }
+
   constructor(
+    @Inject(APP_CONFIG) private appConfig: AppConfig,
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
-    private individualRepo: IndividualRepo,
+    private individualRepo: IndividualRepo
   ) {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
     this.organizations = this.organizationsSubject.asObservable();
+    this.selectedPeopleSubject = new BehaviorSubject<any[]>([]);
     this.model = {
       term: '',
     };
