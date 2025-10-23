@@ -8,7 +8,7 @@ import { filter, map } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
-import { DisplayView, DisplayTabSectionView, Sort } from '../../core/model/view';
+import { DisplayTabSectionView, Sort } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectRouterQueryParams } from '../../core/store/router';
 import { addExportToQueryParams, getResourcesPage, getSubsectionResources,hasExport, loadBadges } from '../../shared/utilities/view.utility';
@@ -28,9 +28,6 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Input()
   public display: string;
-
-  @Input()
-  public displayView: Observable<DisplayView>;
 
   public resources: BehaviorSubject<any[]>;
 
