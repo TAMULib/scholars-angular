@@ -111,7 +111,11 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
     addExportToQueryParams(queryParams, section);
     const tree = this.router.createUrlTree([''], { queryParams });
     const query = tree.toString().substring(1);
-    return `${this.appConfig.serviceUrl}/individual/${this.individual?.id}/export${query}&view=${section.name}`;
+    if (!this.individual?.id) {
+      return;
+    }
+
+    return `${this.appConfig.serviceUrl}/individual/${this.individual.id}/export${query}&view=${section.name}`;
   }
 
 }

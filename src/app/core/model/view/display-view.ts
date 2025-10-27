@@ -23,7 +23,6 @@ export interface DisplayTabSectionView extends FieldView, CollectionView {
   readonly requiredFields: string[];
   readonly lazyReferences: string[];
   readonly subsections: DisplaySubsectionView[];
-  readonly exportViews: ExportView[];
 }
 
 export interface DisplayTabView extends View {
