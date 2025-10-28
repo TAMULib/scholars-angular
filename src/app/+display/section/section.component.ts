@@ -2,13 +2,16 @@ import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID
 import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Store, select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
 
 import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
 import { DisplayTabSectionView, Sort } from '../../core/model/view';
-import { getResourcesPage, getSubsectionResources, loadBadges } from '../../shared/utilities/view.utility';
+import { AppState } from '../../core/store';
+import { selectRouterQueryParams } from '../../core/store/router';
+import { addExportToQueryParams, getResourcesPage, getSubsectionResources,hasExport, loadBadges } from '../../shared/utilities/view.utility';
 
 @Component({
   selector: 'scholars-section',
@@ -34,9 +37,12 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private subscriptions: Subscription[];
 
+  public queryParams: Observable<Params>;
+
   constructor(
     @Inject(APP_CONFIG) private appConfig: AppConfig,
     @Inject(PLATFORM_ID) private platformId: string,
+    private store: Store<AppState>,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -51,11 +57,13 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.queryParams = this.store.pipe(select(selectRouterQueryParams));
     if (this.section.paginated) {
       this.subscriptions.push(
         this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => loadBadges(this.platformId))
       );
       const resources = getSubsectionResources(this.individual[this.section.field], this.section.filters);
+
       this.page = this.route.queryParams.pipe(
         map((params: Params) => {
           const pageSize = params[`${this.section.name}.size`] ? Number(params[`${this.section.name}.size`]) : this.section.pageSize;
@@ -90,6 +98,24 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
     document.execCommand('copy');
     copyElement.setSelectionRange(0, 0);
     setTimeout(() => tooltip.close(), 2000);
+  }
+
+  public hasExport(section: DisplayTabSectionView): boolean {
+    return hasExport(section);
+  }
+
+  public getSectionExportUrl(params: Params, section: DisplayTabSectionView): string {
+    const queryParams: Params = { ...params };
+    queryParams.facets = null;
+    queryParams.collection = null;
+    addExportToQueryParams(queryParams, section);
+    const tree = this.router.createUrlTree([''], { queryParams });
+    const query = tree.toString().substring(1);
+    if (!this.individual?.id) {
+      return;
+    }
+
+    return `${this.appConfig.serviceUrl}/individual/${this.individual.id}/export${query}&view=${section.field}`;
   }
 
 }
