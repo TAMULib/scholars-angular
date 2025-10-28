@@ -115,7 +115,7 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
       return;
     }
 
-    return `${this.appConfig.serviceUrl}/individual/${this.individual.id}/export${query}&view=${section.name}`;
+    return `${this.appConfig.serviceUrl}/individual/${this.individual.id}/export${query}&view=${section.field}`;
   }
 
 }
