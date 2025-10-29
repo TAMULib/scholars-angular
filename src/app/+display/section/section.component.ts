@@ -8,7 +8,7 @@ import { filter, map } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
 import { SdrPage } from '../../core/model/sdr';
-import { DisplayTabSectionView, Sort } from '../../core/model/view';
+import { DisplayTabSectionView, Export, Sort } from '../../core/model/view';
 import { AppState } from '../../core/store';
 import { selectRouterQueryParams } from '../../core/store/router';
 import { addExportToQueryParams, getResourcesPage, getSubsectionResources,hasExport, loadBadges } from '../../shared/utilities/view.utility';
@@ -105,17 +105,24 @@ export class SectionComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public getSectionExportUrl(params: Params, section: DisplayTabSectionView): string {
+    console.log(this.individual); // link is on here, maybe use it, maybe not
+
     const queryParams: Params = { ...params };
     queryParams.facets = null;
     queryParams.collection = null;
-    addExportToQueryParams(queryParams, section);
+    queryParams.type = 'csv';
+
+    section.export.forEach((exp: Export) => {
+      queryParams.export.push(`${exp.valuePath},${exp.columnHeader}`);
+    });
+
     const tree = this.router.createUrlTree([''], { queryParams });
     const query = tree.toString().substring(1);
     if (!this.individual?.id) {
       return;
     }
 
-    return `${this.appConfig.serviceUrl}/individual/${this.individual.id}/export${query}&view=${section.field}`;
+    return `${this.appConfig.serviceUrl}/individual/${this.individual.id}/export${query}&field=${section.field}`;
   }
 
 }

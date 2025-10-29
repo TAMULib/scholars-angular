@@ -183,8 +183,8 @@ const getFilterValue = (collectionView: CollectionView, actualFilter: Filter): s
   return actualFilter.value;
 };
 
-const hasExport = (collectionView: CollectionView): boolean => {
-  return collectionView.export !== undefined && collectionView.export.length > 0;
+const hasExport = (view: {export: Export[]}): boolean => {
+  return view.export !== undefined && view.export.length > 0;
 };
 
 const equals = (filterOne: Filter, filterTwo: Filter): boolean => {

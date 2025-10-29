@@ -177,7 +177,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
           { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
         ).subscribe({
           next: (response: any) => {
-            const filename = this.extractFilename(response, 'selected_profile.zip');
+            const filename = this.extractFilename(response, 'selected_profiles.zip');
             this.download(response, filename);
           },
           error: (err) => console.error('Failed to download selected profiles.', err),
