@@ -58,14 +58,8 @@ export class DataAndAnalyticsComponent implements OnInit {
 
   public organizations: Observable<Individual[]>;
 
-  public selectedPeopleSubject : BehaviorSubject<any[]>;
-
   public get label(): Observable<string> {
     return this.labelSubject.asObservable();
-  }
-
-  public get selectedPeople() : Observable<any[]> {
-    return this.selectedPeopleSubject.asObservable();
   }
 
   constructor(
@@ -78,7 +72,6 @@ export class DataAndAnalyticsComponent implements OnInit {
     this.labelSubject = new BehaviorSubject<string>('');
     this.organizationsSubject = new BehaviorSubject<Individual[]>([]);
     this.organizations = this.organizationsSubject.asObservable();
-    this.selectedPeopleSubject = new BehaviorSubject<any[]>([]);
     this.model = {
       term: '',
     };
