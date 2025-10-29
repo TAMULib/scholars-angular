@@ -64,6 +64,7 @@
     "TIME_PERIOD": "Time Period",
     "PROFILE_SUMMARIES": "Profile Summaries for the {{timePeriod}}",
     "SELECT": "- Select -",
+    "SELECT_ALL": "Select All",
     "DOWNLOAD": "Download",
     "UNKNOWN": "{{value}} Unknown",
     "NOT_SUPPORTED": "{{value}} Not Supported",
