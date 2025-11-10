@@ -21,7 +21,9 @@ export const environment = {
     Webpage: 'InternetPublication',
     ERO_0000071: 'Software',
     selectedPublicationTag: 'UN SDG',
-    tags: 'UN SDG'
+    tags: 'UN SDG',
+    GraduateStudent: 'Student Researcher',
+    UndergraduateStudent: 'Student Researcher'
   },
   suppressAside: [
     'Publisher',
