@@ -263,9 +263,9 @@ const loadBadges = (platformId: string): void => {
   if (isPlatformBrowser(platformId)) {
     setTimeout(() => {
       // tslint:disable-next-line: no-string-literal
-      window['_altmetric_embed_init']();
+      window['_altmetric_embed_init']?.();
       // tslint:disable-next-line: no-string-literal
-      window['__dimensions_embed'].addBadges();
+      window['__dimensions_embed']?.addBadges();
     }, 250);
   }
 };
