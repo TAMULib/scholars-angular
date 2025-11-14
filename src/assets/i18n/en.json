@@ -63,6 +63,7 @@
     "ORGANIZATIONS": "Organizations",
     "TIME_PERIOD": "Time Period",
     "PROFILE_SUMMARIES": "Profile Summaries for the {{timePeriod}}",
+    "PROFILE_SUMMARIES_DESCRIPTION": "Download Profile Summaries that include profile details and scholarly works for selected researchers from {{value}}.",
     "SELECT": "- Select -",
     "SELECT_ALL": "Select All",
     "DOWNLOAD": "Download",

@@ -1,6 +1,6 @@
 <div class="container mb-1 selectedProfile" *ngIf="getSelectedExportView() | async; let selected">
-
  <div class="col-12" *ngIf="organization as organization">
+    <span>{{ 'DATA_AND_ANALYTICS.PROFILE_SUMMARIES_DESCRIPTION' | translate : { value: organization.name } }}</span>
     <div class="mb-1" *ngIf="organization.people && organization.people.length > 0">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <div class="form-check">
