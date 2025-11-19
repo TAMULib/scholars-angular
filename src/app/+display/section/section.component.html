@@ -1,6 +1,5 @@
 <div class="card-header font-weight-bold text-primary text-capitalize">
-  <div *ngIf="queryParams | async; let queryParams">
-  <div class="container mt-2" >
+  <div *ngIf="queryParams | async; let queryParams" class="container mt-2">
     <div class="headers-row row flex-column-reverse flex-md-row">
       <div class="col-md-8">
         <span id="sidebar-title">{{ section.name }}</span>
@@ -12,23 +11,20 @@
             <span>{{ 'DIRECTORY.EXPORT' | translate }}</span>
           </a>
         </span>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="float-right" *ngIf="section.shared">
-    <div class="embed-dropdown d-inline-block" placement="bottom-right" ngbDropdown>
-      <i class="fa fa-lg fa-share-alt" ngbDropdownToggle ></i>
-      <div class="dropdown-menu" ngbDropdownMenu>
-        <div class="form-group col-12">
-          <label>{{ "DISPLAY.EMBEDDABLE.LABEL" | translate }}</label>
-          <div class="input-group">
-            <textarea class="form-control" type="text" rows="4" ng-bind-html [value]="getEmbedSnippet()" #embedCode></textarea>
-            <span class="input-group-btn ml-2">
-              <i class="fa fa-lg fa-copy" (click)="copyToClipBoard(embedCode, tooltip)" triggers="click" placement="top-left" ngbTooltip="{{ 'DISPLAY.EMBEDDABLE.COPIED' | translate }}" #tooltip="ngbTooltip"></i>
-            </span>
+        <span *ngIf="section.shared" class="embed-dropdown d-inline-block" placement="bottom-right" ngbDropdown>
+          <i class="fa fa-lg fa-share-alt" ngbDropdownToggle></i>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <div class="form-group col-12">
+              <label>{{ "DISPLAY.EMBEDDABLE.LABEL" | translate }}</label>
+              <div class="input-group">
+                <textarea class="form-control" rows="4" [value]="getEmbedSnippet()" #embedCode></textarea>
+                <span class="input-group-btn ml-2">
+                  <i class="fa fa-lg fa-copy" (click)="copyToClipBoard(embedCode, tooltip)" triggers="click" ngbTooltip="{{ 'DISPLAY.EMBEDDABLE.COPIED' | translate }}" #tooltip="ngbTooltip"></i>
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        </span>
       </div>
     </div>
   </div>

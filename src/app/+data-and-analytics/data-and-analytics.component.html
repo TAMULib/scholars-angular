@@ -64,14 +64,7 @@
 
               <div class="row p-1 mb-2" *ngIf="(label | async)?.length > 0">
                 <div class="col-12">
-                  <span class="h4 font-weight-bold">{{ label | async }}</span>
-                </div>
-              </div>
-
-              <div class="row p-1 mb-2">
-                <div class="col-12">
-                  <span class="h4 font-weight-bold">{{ 'DATA_AND_ANALYTICS.ORGANIZATION' | translate }}: </span>
-                  <span class="h4">{{ organization.name }}</span>
+                  <span>{{ 'DATA_AND_ANALYTICS.PROFILE_SUMMARIES_DESCRIPTION' | translate : { value: organization.name } }}</span>
                 </div>
               </div>
 
@@ -91,7 +84,6 @@
               <div class="row p-1">
                 <div class="col-12" *ngIf="organizations | async; let organizations">
                   <div class="form-group">
-                    <label class="font-weight-bold" for="typeahead-organizations">{{ 'DATA_AND_ANALYTICS.ORGANIZATIONS' | translate }}</label>
                     <input
                       id="typeahead-organizations"
                       type="text"
