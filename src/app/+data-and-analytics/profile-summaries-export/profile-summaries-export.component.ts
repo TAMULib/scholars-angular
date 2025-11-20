@@ -73,9 +73,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
     });
   }
 
-  // ngOnChanges() : void {
-  //   this.clearSelections();
-  // }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['organization'] && !changes['organization'].firstChange) {
       this.clearSelections();
@@ -122,9 +119,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
   }
 
-
   private clearSelections(): void {
-    console.log(this.selectedPeopleSubject.value);
     this.selectedPeopleSubject.next([]);
   }
 
@@ -181,8 +176,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
       }
 
       if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
-        console.log("IF org name: ", organization.name );
-        console.log("IF selectedIds: ", selectedIds );
         const link = params?.export.toLowerCase().replace(/ /g, '_');
         this.restService.get<Blob>(
           organization._links[link].href,
@@ -193,8 +186,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
             this.download(response, filename);
           },);
       } else {
-        console.log("else org name: ", organization.name );
-        console.log("IF selectedIds: ", selectedIds );
         const exportName = (selected?.name ? selected.name : params?.export ? params.export : '')
                           .trim().replace(/\s+/g, ' ');
         const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
