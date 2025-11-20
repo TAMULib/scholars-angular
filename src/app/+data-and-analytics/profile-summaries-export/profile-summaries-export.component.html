@@ -29,7 +29,7 @@
               id="selected-profile"
               type="checkbox"
               class="form-check-input selected-profile-checkbox"
-              [checked]="(selectedPeople | async)?.person"
+              [checked]="isPersonSelected(person)"
               (change)="onSelectPerson($event, person)"
             />
             <span class="font-weight-normal">{{ person.label }} - {{ person.title }}</span>
@@ -40,3 +40,4 @@
     </div>
  </div>
  </div>
+ 
