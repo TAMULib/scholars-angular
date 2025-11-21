@@ -129,8 +129,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
   public onSelectAll(event: Event, organization: any): void {
     const currentOrgIds = (organization.people || []).map(p => p.id);
-    console.log(currentOrgIds);
-    console.log(organization.name);
     const checked = (event.target as HTMLInputElement).checked;
     const people = organization.people || [];
     if (checked) {
