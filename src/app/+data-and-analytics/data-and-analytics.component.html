@@ -34,16 +34,16 @@
                 <div *ngSwitchCase="'CONTAINER'">
                   <div [ngSwitch]="view.type">
                     <div *ngSwitchCase="'ACADEMIC_AGE_GROUP'">
-                      <span>{{ view.type }}</span>
+                      <span>{{ view.label }}</span>
                     </div>
                     <div *ngSwitchCase="'FREQUENCY_GRAPH'">
-                      <span>{{ view.type }}</span>
+                      <span>{{ view.label }}</span>
                     </div>
                     <div *ngSwitchCase="'QUANTITY_DISTRIBUTION'">
-                      <span>{{ view.type }}</span>
+                      <span>{{ view.label }}</span>
                     </div>
                     <div *ngSwitchCase="'PROFILE_SUMMARIES_EXPORT'">
-                      <span>{{ view.type }}</span>
+                      <span>{{ view.label }}</span>
                     </div>
                     <div *ngSwitchDefault>{{ 'DATA_AND_ANALYTICS.UNKNOWN' | translate: { value: view.layout } }}</div>
                   </div>
@@ -62,9 +62,25 @@
           <div class="card">
             <div class="card-body" [ngSwitch]="view.layout">
 
-              <div class="row p-1 mb-2" *ngIf="(label | async)?.length > 0">
+              <div class="row p-1 mb-2">
                 <div class="col-12">
-                  <span>{{ 'DATA_AND_ANALYTICS.PROFILE_SUMMARIES_DESCRIPTION' | translate : { value: organization.name } }}</span>
+
+                  <span *ngIf="view?.type === 'ACADEMIC_AGE_GROUP'">
+                    {{ 'DATA_AND_ANALYTICS.ACADEMIC_AGE_GROUP.LABEL' | translate : { value: organization?.name } }}
+                  </span>
+
+                  <span *ngIf="view?.type === 'FREQUENCY_GRAPH'">
+                    {{ 'DATA_AND_ANALYTICS.FREQUENCY_GRAPH.LABEL' | translate : { value: organization?.name } }}
+                  </span>
+
+                  <span *ngIf="view?.type === 'QUANTITY_DISTRIBUTION'">
+                    {{ 'DATA_AND_ANALYTICS.QUANTITY_DISTRIBUTION_DESCRIPTION' | translate : { value: organization?.name } }}
+                  </span>
+
+                  <span *ngIf="view.type === 'PROFILE_SUMMARIES_EXPORT'">
+                    {{ 'DATA_AND_ANALYTICS.PROFILE_SUMMARIES_DESCRIPTION' | translate : { value: organization?.name } }}
+                  </span>
+
                 </div>
               </div>
 
