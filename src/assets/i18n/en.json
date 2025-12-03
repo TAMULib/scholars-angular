@@ -69,7 +69,7 @@
     "DOWNLOAD": "Download",
     "UNKNOWN": "{{value}} Unknown",
     "NOT_SUPPORTED": "{{value}} Not Supported",
-    "PLACEHOLDER_TEXT": "Enter first few letters",
+    "PLACEHOLDER_TEXT": "Enter the first few letters of an Organization",
     "ACADEMIC_AGE_GROUP": {
       "MEAN": "Average academic age of affiliated researchers 🛈",
       "PUBLICATIONS": "Researchers and publications per academic age group",
