@@ -23,7 +23,7 @@
         </button>
       </div>
       <ul>
-        <li *ngFor="let person of organization.people">
+        <li *ngFor="let person of organization.people | sortOrgPeople">
           <div class="form-check">
             <input
               id="selected-profile"
