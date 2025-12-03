@@ -32,7 +32,7 @@ export class SortOrgPeople implements PipeTransform {
       const aFirst = this.extractFirstName(a.label);
       const bFirst = this.extractFirstName(b.label);
 
-      return aFirst.localeCompare(bFirst);;
+      return aFirst.localeCompare(bFirst);
     });
 
     return copy;
