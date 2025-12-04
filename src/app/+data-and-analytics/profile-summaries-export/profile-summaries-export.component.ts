@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Inject, OnDestroy, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,7 +18,7 @@ import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
   templateUrl: './profile-summaries-export.component.html',
   styleUrls: ['./profile-summaries-export.component.scss']
 })
-export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
+export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, OnInit {
 
   @Input()
   public organization: Individual;
@@ -73,6 +73,12 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['organization'] && !changes['organization'].firstChange) {
+      this.clearSelections();
+    }
+  }
+
   ngOnInit(): void {
     this.selectedExportView = new BehaviorSubject<ExportView>(undefined);
 
@@ -113,11 +119,16 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
 
   }
 
+  private clearSelections(): void {
+    this.selectedPeopleSubject.next([]);
+  }
+
   public getSelectedExportView(): Observable<ExportView> {
     return this.selectedExportView.asObservable();
   }
 
   public onSelectAll(event: Event, organization: any): void {
+    const currentOrgIds = (organization.people || []).map(p => p.id);
     const checked = (event.target as HTMLInputElement).checked;
     const people = organization.people || [];
     if (checked) {
@@ -145,6 +156,11 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnInit {
   private extractFilename(response: any, defaultFileName: string): string {
     const contentDisposition = response.headers?.get('Content-Disposition');
     return contentDisposition?.match(/^.*filename=(.*)$/)[1]?.trim() || defaultFileName;
+  }
+
+  public isPersonSelected(person: any): boolean {
+    const list = this.selectedPeopleSubject.value || [];
+    return list.some(p => p.id === person.id);
   }
 
   public downloadSelectedPeople(organization: any, selected: any): void {
