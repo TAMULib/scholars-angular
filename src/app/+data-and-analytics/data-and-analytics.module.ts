@@ -14,6 +14,7 @@ import { FrequencyGraphComponent } from './frequency-graph/frequency-graph.compo
 import { ScatterplotComponent } from './frequency-graph/scatterplot/scatterplot.component';
 import { ProfileSummariesExportComponent } from './profile-summaries-export/profile-summaries-export.component';
 import { QuantityDistributionComponent } from './quantity-distribution/quantity-distribution.component';
+import { SortOrgPeople } from '../shared/utilities/sort-org-people.pipe';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { QuantityDistributionComponent } from './quantity-distribution/quantity-
     ProfileSummariesExportComponent,
     QuantityDistributionComponent,
     ScatterplotComponent,
+    SortOrgPeople
   ],
   imports: [
     CommonModule,
