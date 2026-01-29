@@ -16,7 +16,7 @@
       <div [ngClass]="{ 'col-lg-9': showAside(displayView, individual), 'col-lg-12': !showAside(displayView, individual) }">
         <div class="row mt-2">
           <div *ngIf="showLeftScan(displayView)" class="col-md-{{ getLeftScanColSize(displayView) }}" [innerHtml]="displayView.leftScanTemplateFunction(individual) | safeHtml"></div>
-          <div *ngIf="showMainContent(displayView)" class="col-md-{{ getMainContentColSize(displayView) }}" [innerHtml]="displayView.mainContentTemplateFunction(individual) | safeHtml"></div>
+          <div #mainContent *ngIf="showMainContent(displayView)" class="col-md-{{ getMainContentColSize(displayView) }}" [innerHtml]="displayView.mainContentTemplateFunction(individual) | safeHtml"></div>
           <div *ngIf="showRightScan(displayView)" class="col-md-{{ getRightScanColSize(displayView) }}" [innerHtml]="displayView.rightScanTemplateFunction(individual) | safeHtml"></div>
         </div>
         <div class="row mt-4 mb-4">
