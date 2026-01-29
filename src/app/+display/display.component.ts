@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { MetaDefinition } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -332,6 +332,30 @@ export class DisplayComponent implements OnDestroy, OnInit {
       }
     }
     return metaTags;
+  }
+
+  @HostListener('click', ['$event'])
+  public onMainContentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (!target) return;
+
+    const toggleBtn = target.closest<HTMLButtonElement>('.toggle-btn');
+
+    if (!toggleBtn) return;
+
+    const container = toggleBtn.closest('.research-areas') as HTMLElement;
+
+    if (!container) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextState = !(container.getAttribute('data-expanded') === 'true');
+
+    container.setAttribute('data-expanded', String(nextState));
+    toggleBtn.textContent = nextState ? 'Show less' : 'Show more';
+    toggleBtn.setAttribute('aria-expanded', String(nextState));
   }
 
 }
