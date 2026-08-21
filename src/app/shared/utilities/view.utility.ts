@@ -173,11 +173,16 @@ const getFilterField = (collectionView: CollectionView, actualFilter: Filter): s
 };
 
 const getFilterValue = (collectionView: CollectionView, actualFilter: Filter): string => {
+  console.log("\n get Filter value\n\n");
   for (const facet of collectionView.facets) {
     if (facet.type === FacetType.DATE_YEAR && facet.field === actualFilter.field) {
       const from = actualFilter.value.substring(1, actualFilter.value.length - 1).split(' TO ')[0];
       const year = new Date(from).getFullYear() + 1;
       return year.toString();
+    } else if ((facet.type === FacetType.NUMBER_RANGE || facet.type === FacetType.DATE_RANGE) && facet.field === actualFilter.field) {
+      const from = actualFilter.value.substring(1, actualFilter.value.length - 1).split(' TO ')[0];
+      const to = actualFilter.value.substring(1, actualFilter.value.length - 1).split(' TO ')[1];
+      return `${from} - ${to}`;
     }
   }
   return actualFilter.value;

@@ -21,7 +21,8 @@ export enum Layout {
 export enum FacetType {
   STRING = 'STRING',
   DATE_YEAR = 'DATE_YEAR',
-  NUMBER_RANGE = 'NUMBER_RANGE'
+  NUMBER_RANGE = 'NUMBER_RANGE',
+  DATE_RANGE = 'DATE_RANGE'
 }
 
 export enum FacetSort {

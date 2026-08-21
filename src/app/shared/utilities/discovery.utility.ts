@@ -24,20 +24,43 @@ export const buildNumberRangeFilterValue = (facet: Facet, facetEntry: SdrFacetEn
   return `[${from} TO ${to}]`;
 };
 
+export const buildDateRangeFilterValue = (facet: Facet, facetEntry: SdrFacetEntry): string => {
+  console.log("\n in buildDateRangeFilterValue");
+  const from = Number(facetEntry.value);
+  const to = Number(facetEntry.value) + Number(facet.rangeGap) - 1;
+  return `[${from} TO ${to}]`;
+};
+
 export const getFacetEntryLabel = (facet: Facet, facetEntry: SdrFacetEntry): string => {
-  let label = facetEntry.value;
-  if (facet.type === FacetType.NUMBER_RANGE) {
-    label = buildNumberRangeFilterValue(facet, facetEntry);
+  console.log("\n\n discovery util: getFacetEntryLabel facet: ", facet);
+  console.log("\n\n discovery util: getFacetEntryLabel facetEntry: ", facetEntry);
+
+  let label = facetEntry.value; console.log("\n discovery util getFacetEntryLabel: ",facetEntry);
+  if (facet.type === FacetType.NUMBER_RANGE || facet.type === FacetType.DATE_RANGE) {
+    label = facet.type === FacetType.DATE_RANGE
+      ? buildDateRangeFilterValue(facet, facetEntry)
+      : buildNumberRangeFilterValue(facet, facetEntry);
     label = label.toLowerCase().substring(1, label.length - 1);
   }
   return label;
 };
 
 export const getFacetFilterLabel = (facet: Facet, filter: Filter): string => {
+  console.log("\n\n getFacetFilterLabel facet:", facet);
+  console.log("\n\n getFacetFilterLabel filter:", filter);
+
   let label = filter.value;
-  if (facet.type === FacetType.DATE_YEAR) {
+  if (facet.type === FacetType.DATE_YEAR) { 
+    console.log('for AcademicAgeGroupComponent.getFacetFilterLabel facet', facet);
+    console.log('for AcademicAgeGroupComponent.getFacetFilterLabel FacetType', FacetType);
     label = new Date(label.slice(1, label.indexOf("TO")).trim()).getUTCFullYear().toString();
+  } else if (facet.type === FacetType.NUMBER_RANGE || facet.type === FacetType.DATE_RANGE) {
+    label = facet.type === FacetType.DATE_RANGE
+      ? buildDateRangeFilterValue(facet, { value: label } as SdrFacetEntry)
+      : buildNumberRangeFilterValue(facet, { value: label } as SdrFacetEntry);
+    label = label.toLowerCase().substring(1, label.length - 1);
   }
+  console.log(label);
   return label;
 };
 

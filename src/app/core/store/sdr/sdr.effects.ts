@@ -9,7 +9,7 @@ import { catchError, filter, map, mergeMap, switchMap, take, withLatestFrom } fr
 import { AppState } from '../';
 import { APP_CONFIG, AppConfig } from '../../../app.config';
 
-import { FILTER_VALUE_DELIMITER, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetEntryLabel, hasFilter } from '../../../shared/utilities/discovery.utility';
+import { FILTER_VALUE_DELIMITER, buildDateRangeFilterValue, buildDateYearFilterValue, buildNumberRangeFilterValue, createSdrRequest, getFacetEntryLabel, hasFilter } from '../../../shared/utilities/discovery.utility';
 import { removeFilterFromQueryParams } from '../../../shared/utilities/view.utility';
 import { Individual } from '../../model/discovery';
 import { injectable, repos } from '../../model/repos';
@@ -724,7 +724,9 @@ export class SdrEffects {
                   ? buildDateYearFilterValue(facetEntry)
                   : viewFacet.type === FacetType.NUMBER_RANGE
                     ? buildNumberRangeFilterValue(viewFacet, facetEntry)
-                    : facetEntry.value;
+                    : viewFacet.type === FacetType.DATE_RANGE
+                      ? buildDateRangeFilterValue(viewFacet, facetEntry)
+                      : facetEntry.value;
 
                 if (requestFacet && route.queryParams[`${requestFacet}.filter`] !== undefined) {
                   selected = route.queryParams[`${requestFacet}.filter`].split(FILTER_VALUE_DELIMITER).indexOf(filterValue) >= 0;
@@ -770,7 +772,11 @@ export class SdrEffects {
 
                   sidebarItem.queryParams[`${sdrFacet.field}.filter`] = filterValue;
 
-                  sidebarItem.queryParams[`${sdrFacet.field}.opKey`] = (viewFacet.type === FacetType.DATE_YEAR || viewFacet.type === FacetType.NUMBER_RANGE)
+                  sidebarItem.queryParams[`${sdrFacet.field}.opKey`] = (
+                    viewFacet.type === FacetType.DATE_YEAR ||
+                    viewFacet.type === FacetType.NUMBER_RANGE ||
+                    viewFacet.type === FacetType.DATE_RANGE
+                  )
                     ? OpKey.BETWEEN
                     : OpKey.EQUALS;
                 }

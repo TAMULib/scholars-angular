@@ -20,4 +20,6 @@ export interface SdrRepo<R extends SdrResource> {
   patch(resource: R): Observable<R>;
 
   delete(resource: R): Observable<string>;
+
+  getDateRange(orgName: string): Observable<SdrCollection>;
 }

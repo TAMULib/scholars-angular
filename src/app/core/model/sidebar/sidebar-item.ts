@@ -7,6 +7,7 @@ export enum SidebarItemType {
   INFO = 'INFO',
   LINK = 'LINK',
   NUMBER_RANGE = 'NUMBER_RANGE',
+  DATE_RANGE = 'DATE_RANGE',
 }
 
 export interface SidebarItem {
@@ -21,4 +22,6 @@ export interface SidebarItem {
   rangeOptions?: any;
   rangeValues?: any;
   classes?: string;
+  startYear?: string | number;
+  endYear?: string | number;
 }

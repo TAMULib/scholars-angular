@@ -38,7 +38,7 @@
                 <span class="badge badge-light" *ngIf="item.parenthetical">{{item.parenthetical}}</span>
               </span>
 
-              <span *ngSwitchCase="'DATE_YEAR'" class="d-flex flex-nowrap justify-content-between">
+              <span *ngSwitchCase="'DATE_YEAR'" class="w-100 py-1">
                 <a [routerLink]="item.route" [queryParams]="item.queryParams" role="link">
                   <span>
                     <span *ngIf="item.selected" class="fa fa-close mr-2" aria-hidden="true"></span>
@@ -47,6 +47,40 @@
                 </a>
                 <span class="badge badge-light" *ngIf="item.parenthetical">{{item.parenthetical}}</span>
               </span>
+
+              <div *ngSwitchCase="'DATE_RANGE'" class="d-flex flex-nowrap justify-content-between">
+                <div class="d-flex align-items-center justify-content-between">
+                  <!-- <span class="font-weight-bold">{{ item.label }}</span> -->
+                  <span class="badge badge-light" *ngIf="item.parenthetical">{{ item.parenthetical }}</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 mt-1">
+
+                  <div class="flex-fill startYear">
+                    <label class="font-weight-bold">Start Year</label>
+                    <select [id]="'startYear-' + item.label" class="form-control"
+                    [ngModel]="item.facet?.selectedStartYear"
+                    (ngModelChange)="item.facet?.onStartChange($event)">
+                    <option *ngFor="let year of item.facet?.availableYears" [value]="year">
+                    {{ year }}
+                    </option>
+                    </select>
+                  </div>
+
+                  <span class="px-1 text-muted"> - </span>
+
+                  <div class="flex-fill endYear">
+                    <label class="font-weight-bold">End Year</label>
+                    <select [id]="'endYear-' + item.label" class="form-control"
+                    [ngModel]="item.facet?.selectedEndYear"
+                    (ngModelChange)="item.facet?.onEndChange($event)">
+                    <option *ngFor="let year of item.facet?.availableYears" [value]="year">
+                    {{ year }}
+                    </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </span>
 
             <span *ngSwitchCase="'ACTION'">

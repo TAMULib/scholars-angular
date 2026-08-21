@@ -13,6 +13,7 @@ import { Queryable } from '../../request/sdr.request';
 import { Count } from '../count';
 import { SdrCollection } from '../sdr-collection';
 import { SdrResource } from '../sdr-resource';
+import { OpKey } from '../../view';
 
 @Injectable({
   providedIn: 'root',
@@ -133,6 +134,37 @@ export abstract class AbstractSdrRepo<R extends SdrResource> implements SdrRepo<
     return this.restService.delete<string>(resource._links.self.href, {
       responseType: 'text',
     });
+  }
+
+  public getDateRange(orgName: string): Observable<SdrCollection> {
+    console.log("\n\n NONFormatted Org Name: ", orgName);
+    const escapedOrg = orgName.trim().replace(/\s+/g, '\\ ');
+    const formattedOrg = `*${escapedOrg}*`;
+    console.log("\n\n Formatted Org Name: ", formattedOrg);
+    const request: SdrRequest = {
+      query: {
+        expression: '*:*'
+      },
+      filters: [
+        { field: 'class', value: 'Document', opKey: OpKey.EQUALS },
+        { field: 'authorOrganization', value: orgName, opKey: OpKey.EQUALS }
+      ],
+      facets: [
+        {
+          field: 'publicationDate',
+          pageSize: 2147483647,
+          pageNumber: 1,
+          sort: 'INDEX,ASC'
+        }
+      ],
+      page: {
+        number: 1,
+        size: 1,
+        sort: []
+      }
+    };
+
+    return this.search(request);
   }
 
   protected mapParameters(request: SdrRequest): string {

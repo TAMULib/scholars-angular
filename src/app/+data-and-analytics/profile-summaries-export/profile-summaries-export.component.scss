@@ -2,6 +2,11 @@
 
 
 :host {
+  .form-check-label {
+    margin-top: 0.3rem;
+    margin-left: 0.75rem;
+  }
+
   .selectedProfile {
     padding: 10px;
     background-color: #f9f9f9;
