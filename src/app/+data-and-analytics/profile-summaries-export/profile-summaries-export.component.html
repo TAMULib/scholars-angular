@@ -26,7 +26,7 @@
         <li *ngFor="let person of organization.people | sortOrgPeople">
           <div class="form-check">
             <input
-              id="selected-profile"
+              id="selected-profile-{{ person.id }}"
               type="checkbox"
               class="form-check-input selected-profile-checkbox"
               [checked]="isPersonSelected(person)"
