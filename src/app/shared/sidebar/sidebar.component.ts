@@ -1,6 +1,6 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { Params, Router } from '@angular/router';
+import { Component, EventEmitter, Inject, OnInit, Output, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -30,10 +30,13 @@ export class SidebarComponent implements OnInit {
 
   public loading: Observable<boolean>;
 
+  @Output() dateRangeChanged = new EventEmitter<{ startYear: any; endYear: any; item: any }>();
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
     private store: Store<AppState>,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -87,6 +90,18 @@ export class SidebarComponent implements OnInit {
       delete tree.queryParams.expanded;
     }
     return tree.queryParams;
+  }
+
+  updateUrlQueryParams(item: any): void {
+    console.log('updateUrlQueryParams', item);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        startYear: item.facet?.selectedStartYear,
+        endYear: item.facet?.selectedEndYear
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
 }
