@@ -35,6 +35,26 @@
             height: 18px;
           }
         }
+        .date-range {
+          margin-left: -5px;
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+          .start-year label, .end-year label {
+            font-size: 0.85rem;
+            margin-left: 1.05rem;
+            margin-bottom: 0.25rem;
+            color: #495057;
+          }
+
+          span.text-muted {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+          }
+        }
       }
     }
     .content {
