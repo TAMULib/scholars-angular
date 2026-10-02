@@ -52,24 +52,28 @@
                 <div class="d-flex align-items-center gap-2 mt-1 date-range">
                   <div class="flex-fill start-year">
                     <label for="startYear-{{ item.label }}">Start Year</label>
-                    <select [id]="'startYear-' + item.label" class="form-control"
-                    [ngModel]="item.facet?.selectedStartYear"
-                    (ngModelChange)="item.facet?.onStartChange($event)">
-                    <option *ngFor="let year of item.facet?.availableYears" [value]="year">
-                    {{ year }}
-                    </option>
+                    <select [id]="'startYear-' + item.label"
+                      class="form-control"
+                      [ngModel]="item.facet?.selectedStartYear"
+                      (ngModelChange)="item.facet?.onStartChange($event)">
+                      <option *ngFor="let year of item.facet?.availableYears" [value]="year">
+                        {{ year }}
+                      </option>
                     </select>
                   </div>
                   <span class="px-1 text-muted"> - </span>
                   <div class="flex-fill end-year">
                     <label for="endYear-{{ item.label }}">End Year</label>
-                    <select [id]="'endYear-' + item.label" class="form-control"
-                    [ngModel]="item.facet?.selectedEndYear"
-                    (ngModelChange)="item.facet?.onEndChange($event)">
-                    <option *ngFor="let year of item.facet?.availableYears" [value]="year">
-                    {{ year }}
-                    </option>
+                    <select [id]="'endYear-' + item.label"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': endYearError }"
+                      [ngModel]="item.facet?.selectedEndYear"
+                      (ngModelChange)="item.facet?.onEndChange($event)">
+                      <option *ngFor="let year of item.facet?.availableYears" [value]="year">
+                        {{ year }}
+                      </option>
                     </select>
+                    <small *ngIf="endYearError" id="endYear-range-help" class="form-text text-muted">{{ 'DATA_AND_ANALYTICS.PROFILE_SUMMARIES.END_YEAR_INVALID' | translate }}</small>
                   </div>
                 </div>
               </div>

@@ -30,6 +30,8 @@ export class SidebarComponent implements OnInit {
 
   public loading: Observable<boolean>;
 
+  public endYearError: boolean = false;
+
   @Output() dateRangeChanged = new EventEmitter<{ startYear: any; endYear: any; item: any }>();
 
   constructor(
@@ -93,7 +95,6 @@ export class SidebarComponent implements OnInit {
   }
 
   updateUrlQueryParams(item: any): void {
-    console.log('updateUrlQueryParams', item);
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
