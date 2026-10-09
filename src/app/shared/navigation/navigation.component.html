@@ -10,7 +10,7 @@
           <span class="nav-link menu-action" (click)="toggleSidebar()" role="button" [attr.aria-label]="(isSidebarExpanded | async) ? ('SHARED.SIDEBAR.BACK' | translate) : ('SHARED.SIDEBAR.MENU' | translate)">{{ ((isSidebarExpanded | async) ? 'SHARED.SIDEBAR.BACK' : 'SHARED.SIDEBAR.MENU') | translate }}</span>
         </li>
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" [routerLink]="['/']">{{ 'SHARED.NAVIGATION.HOME' | translate }}</a>
+          <a class="nav-link" href="https://library.tamu.edu/scholars/index.html">{{ 'SHARED.NAVIGATION.HOME' | translate }}</a>
         </li>
         <!-- NOTE: can not use routerLinkActive here due to the changes in the query parameters -->
         <li class="nav-item" *ngFor="let directoryView of directoryViews" [class.active]="isActive(directoryView, url | async)">
