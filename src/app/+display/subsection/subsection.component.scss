@@ -7,4 +7,17 @@
       flex-grow: 1;
     }
   }
+
+  scholars-pagination .list-group .altmetric-embed > a > img {
+    display: inline;
+  }
+
+  scholars-pagination .list-group .__dimensions_badge_embed__ .__dimensions_Badge_Image {
+    height: 18px;
+    width: auto;
+  }
+
+  scholars-pagination .list-group .__dimensions_badge_embed__ .__dimensions_png {
+    visibility; hidden;
+  }
 }
