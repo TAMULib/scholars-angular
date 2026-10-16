@@ -76,12 +76,15 @@ body {
   display: inline !important;
 }
 
-.__dimensions_badge_embed__ .__dimensions_Badge_Image {
-  height: 18px;
+.__dimensions_badge_embed__ .__dimensions_Badge .__dimensions_Badge_Image {
   width: auto;
 }
 
-.__dimensions_badge_embed__ .__dimensions_Badge_Image .__db_score {
+.__dimensions_badge_embed__ .__dimensions_Badge .__dimensions_Badge_Image .__dimensions_png {
+  height: 19px;
+}
+
+.__dimensions_badge_embed__ .__dimensions_Badge .__dimensions_Badge_Image .__db_score {
   visibility: hidden;
 }
 
