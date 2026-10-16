@@ -72,3 +72,19 @@ body {
   }
 }
 
+.list-group .altmetric-embed > a > img {
+  display: inline !important;
+}
+
+.list-group .__dimensions_badge_embed__ .__dimensions_Badge_Image {
+  height: 18px;
+  width: auto;
+}
+
+.list-group .__dimensions_badge_embed__ .__dimensions_png {
+  visibility: hidden;
+}
+
+.spatula {
+  display: none;
+}
