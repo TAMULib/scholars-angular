@@ -72,3 +72,27 @@ body {
   }
 }
 
+.altmetric-embed > a > img {
+  display: inline !important;
+}
+
+.__dimensions_badge_embed__ .__dimensions_Badge .__dimensions_Badge_Image {
+  width: auto;
+}
+
+.__dimensions_badge_embed__ .__dimensions_Badge .__dimensions_Badge_Image .__dimensions_png {
+  height: 18px;
+}
+
+.__dimensions_badge_embed__ .__dimensions_Badge .__dimensions_Badge_Image .__db_score {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+
+  height: 1px;
+  width: 1px;
+}
