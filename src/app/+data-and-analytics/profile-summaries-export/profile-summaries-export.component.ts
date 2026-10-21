@@ -103,7 +103,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['organization']) {
       const orgObj = changes['organization'].currentValue;
-      const orgName = typeof orgObj === 'object' ? orgObj.name : orgObj?.name;
+      const orgName = orgObj?.name;
 
       if (orgName) {
         if (!changes['organization'].firstChange) {
@@ -125,11 +125,15 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         this.endYear = queryParams['endYear'] || '';
 
         const exportParam = queryParams.export;
-        const activeExportView = this.displayView.exportViews.find((exportView: ExportView) =>
-                                  exportParam ? exportView.name === exportParam : !exportView.name);
+        const activeExportView = this.displayView.exportViews.find(
+          (exportView: ExportView) =>
+            exportParam
+              ? exportView.name === exportParam
+              : !exportView.name);
+
         if (!activeExportView) {
           console.error("Export view not specified");
-        return;
+          return;
         }
 
         this.selectedExportView.next(exportParam);
@@ -203,7 +207,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
   }
 
   public onSelectAll(event: Event, organization: any): void {
-    // const currentOrgIds = (organization.people || []).map(p => p.id);
     const checked = (event.target as HTMLInputElement).checked;
     const people = organization.people || [];
     if (checked) {
@@ -240,16 +243,31 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
   public downloadSelectedPeople(organization: any, selected: any): void {
     this.route.queryParams.pipe(take(1)).subscribe((params) => {
-    const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
-    const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
+      const orgId = params?.selectedOrganization
+        ? params.selectedOrganization
+        : organization?.id;
 
-    const rawStart = params['startYear'] || this.startYear;
-    const rawEnd = params['endYear'] || this.endYear;
+      const selectedIds = this.selectedPeopleSubject.value.map(p => p?.id);
+      const rawStart = params['startYear'] || this.startYear;
+      const rawEnd = params['endYear'] || this.endYear;
 
-    const exportName = (selected?.name ? selected.name : params?.export ? params.export : '').trim().replace(/\s+/g, ' ');
+      const exportName = (
+        selected?.name
+          ? selected.name
+          : params?.export
+            ? params.export
+            : ''
+      )
+        .trim()
+        .replace(/\s+/g, ' ');
 
-    const startYearParam = rawStart && String(rawStart).trim() !== '' ? `&startYear=${encodeURIComponent(String(rawStart).trim())}` : '';
-    const endYearParam = rawEnd && String(rawEnd).trim() !== '' ? `&endYear=${encodeURIComponent(String(rawEnd).trim())}` : '';
+      const formattedStart = this.formatYear(rawStart);
+      const startYearParam = formattedStart ? `&startYear=${encodeURIComponent(formattedStart)}` : '';
+
+      const formattedEnd = this.formatYear(rawEnd);
+      const endYearParam = formattedEnd ? `&endYear=${encodeURIComponent(formattedEnd)}` : '';
+
+      const targetUrl = `${this.appConfig.serviceUrl}/individual/${encodeURIComponent(orgId)}/export?type=zip&name=${encodeURIComponent(exportName)}${startYearParam}${endYearParam}`;
 
       if (!orgId || !rawStart || !rawEnd) {
         console.error('Download failure: Missing Organization id or Date Range.', { orgId, rawStart, rawEnd });
@@ -257,34 +275,38 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
       }
 
       if (!selectedIds.length) {
-      const linkKey = params?.export ? params.export.toLowerCase().replace(/ /g, '_') : '';
-      let downloadUrl = organization?._links?.[linkKey]?.href ||
-        `${this.appConfig.serviceUrl}/individual/${encodeURIComponent(orgId)}/export?type=zip&name=${encodeURIComponent(exportName)}${startYearParam}${endYearParam}`;
+        const linkKey = params?.export ? params.export?.toLowerCase().replace(/\s+/g, '_') : '';
+        let downloadUrl = organization?._links?.[linkKey]?.href;
 
-      this.restService.get<Blob>(downloadUrl, { observe: 'response', responseType: 'blob' as 'json' })
-        .pipe(take(1))
-        .subscribe({
-          next: (response: any) => this.download(response, this.extractFilename(response, 'export.zip')),
-          error: (err) => console.error('Download failed.', err)
-        });
+        if (downloadUrl == null || downloadUrl === '') {
+          downloadUrl = targetUrl;
+        }
 
-    } else {
-      const updatedHref = `${this.appConfig.serviceUrl}/individual/${encodeURIComponent(orgId)}/export?type=zip&name=${encodeURIComponent(exportName)}${startYearParam}${endYearParam}`;
-
-      const payload = selectedIds;
-
-      this.restService.post(updatedHref, payload, {
-        observe: 'response',
-        responseType: 'blob' as 'json',
-        headers: { 'Content-Type': 'application/json' }
-       })
-        .pipe(take(1))
-        .subscribe({
-          next: (response: any) => this.download(response, this.extractFilename(response, 'selected_profile.zip')),
-          error: (err) => console.error('Download failed.', err),
-        });
+        this.restService.get<Blob>(downloadUrl, { observe: 'response', responseType: 'blob' as 'json' })
+          .pipe(take(1))
+          .subscribe({
+            next: (response: any) => this.download(response, this.extractFilename(response, 'export.zip')),
+            error: (err) => console.error('Download failed.', err)
+          });
+      } else {
+        this.restService.post(targetUrl, selectedIds, {
+           observe: 'response',
+           responseType: 'blob' as 'json',
+           headers: { 'Content-Type': 'application/json' }
+         })
+           .pipe(take(1))
+           .subscribe({
+             next: (response: any) => this.download(response, this.extractFilename(response, 'selected_profile.zip')),
+             error: (err) => console.error('Download failed.', err),
+           });
        }
-   });
+    });
+  }
+
+  private formatYear(year: unknown): string {
+    if (year == null) return '';
+    const trimmed = `${year}`.trim();
+    return trimmed !== '' ? trimmed : '';
   }
 
   private download(response: any, filename: any): void {
@@ -300,8 +322,8 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
   private populateAvailableYears(min?: number | string, max?: number | string): void {
     const currentYear = new Date().getFullYear();
 
-    const parsedMin = min !== null && min !== undefined && min !== '' ? Number(min) : this.minYear;
-    const parsedMax = max !== null && max !== undefined && max !== '' ? Number(max) : this.maxYear;
+    const parsedMin = min != null && (typeof min === 'number' || (typeof min === 'string' && min.trim() !== '')) ? Number(min) : this.minYear;
+    const parsedMax = max != null && (typeof max === 'number' || (typeof max === 'string' && max.trim() !== '')) ? Number(max) : this.maxYear;
 
     const lower = !Number.isNaN(parsedMin) ? parsedMin : this.DEFAULT_MIN_YEAR;
     const upper = !Number.isNaN(parsedMax) ? parsedMax : currentYear;
@@ -324,7 +346,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         const entries = facet?.entries?.content || [];
 
         let calculatedMin = this.DEFAULT_MIN_YEAR;
-        let calculatedMax = new Date().getFullYear();
+        let calculatedMax = new Date().getUTCFullYear();
 
         if (entries.length > 0) {
           const years = entries
