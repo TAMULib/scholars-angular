@@ -1,17 +1,19 @@
-import { Component, EventEmitter, Input, Inject, OnDestroy, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, EventEmitter, Input, Inject, OnDestroy, OnInit, Output, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription, take } from 'rxjs';
 
 import { APP_CONFIG, AppConfig } from '../../app.config';
 import { Individual } from '../../core/model/discovery';
+import { IndividualRepo } from '../../core/model/discovery/repo/individual.repo';
 import { SidebarItemType, SidebarMenu } from '../../core/model/sidebar';
 import { DataAndAnalyticsView, DisplayView, ExportView } from '../../core/model/view';
 import { RestService } from '../../core/service/rest.service';
 import { AppState } from '../../core/store';
 
 import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
+import { SdrCollection } from 'src/app/core/model/sdr/sdr-collection';
 
 @Component({
   selector: 'scholars-profile-summaries-export',
@@ -19,6 +21,8 @@ import * as fromSidebar from '../../core/store/sidebar/sidebar.actions';
   styleUrls: ['./profile-summaries-export.component.scss']
 })
 export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, OnInit {
+
+  private readonly DEFAULT_MIN_YEAR: number = 1900;
 
   @Input()
   public organization: Individual;
@@ -51,12 +55,29 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
     return this.selectedPeopleSubject.asObservable();
   }
 
+  public startYear: number | string = '';
+
+  public endYear: number | string = '';
+
+  public isLoadingDateRange = false;
+
+  public minYear: number = this.DEFAULT_MIN_YEAR;
+
+  public maxYear: number = new Date().getFullYear();
+
+  public availableYears: number[] = [];
+
+  public endYearError: boolean = false;
+
   constructor(
     @Inject(APP_CONFIG) private appConfig: AppConfig,
+    private individualRepo: IndividualRepo,
     private store: Store<AppState>,
     private route: ActivatedRoute,
+    private router: Router,
     private translate: TranslateService,
     private restService: RestService,
+    readonly changeDetectorRef: ChangeDetectorRef
   ) {
     this.labelEvent = new EventEmitter<string>();
     this.selectedPeopleSubject = new BehaviorSubject<any[]>([]);
@@ -73,10 +94,25 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
     });
   }
 
+  private clearSelections(): void {
+    this.selectedPeopleSubject.next([]);
+    this.startYear = '';
+    this.endYear = '';
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['organization'] && !changes['organization'].firstChange) {
-      this.clearSelections();
+    if (changes['organization']) {
+      const orgObj = changes['organization'].currentValue;
+      const orgName = typeof orgObj === 'object' ? orgObj.name : orgObj?.name;
+
+      if (orgName) {
+        if (!changes['organization'].firstChange) {
+          this.clearSelections();
+        }
+        this.fetchDateRangeByOrganization(orgName);
+      }
     }
+
   }
 
   ngOnInit(): void {
@@ -84,6 +120,20 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
     this.subscriptions.push(
       this.route.queryParams.subscribe((queryParams: Params) => {
+
+        this.startYear = queryParams['startYear'] || '';
+        this.endYear = queryParams['endYear'] || '';
+
+        const exportParam = queryParams.export;
+        const activeExportView = this.displayView.exportViews.find((exportView: ExportView) =>
+                                  exportParam ? exportView.name === exportParam : !exportView.name);
+        if (!activeExportView) {
+          console.error("Export view not specified");
+        return;
+        }
+
+        this.selectedExportView.next(exportParam);
+        this.labelEvent.next(this.translate.instant('DATA_AND_ANALYTICS.PROFILE_SUMMARIES', { timePeriod: exportParam || activeExportView.name }));
 
         const menu: SidebarMenu = {
           sections: [
@@ -97,12 +147,41 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
                 }
                 return {
                   label: exportView.name,
-                  type: SidebarItemType.LINK,
+                  type: SidebarItemType.FACET,
+                  facet: {
+                    type: 'DATE_RANGE',
+                    availableYears: this.availableYears,
+                    selectedStartYear: this.startYear,
+                    selectedEndYear: this.endYear,
+                    onStartChange: (year: any) => {
+                      this.startYear = year;
+
+                      if (this.endYear && Number(this.startYear) > Number(this.endYear)) {
+                        this.endYearError = true;
+                        return;
+                      }
+                      this.endYearError = false;
+
+                      this.updateQueryParams(queryParams.export, this.startYear, this.endYear);
+                    },
+                    onEndChange: (year: any) => {
+
+                      if (this.startYear && Number(year) < Number(this.startYear)) {
+                        this.endYearError = true;
+                        return;
+                      }
+
+                      this.endYearError = false;
+                      this.endYear = year;
+                      this.updateQueryParams(queryParams.export, this.startYear, this.endYear);
+                    }
+                  },
                   route: ['./'],
                   queryParams: {
-                    export: exportView.name
-                  },
-                  selected
+                    export: exportView.name,
+                    startYear: this.startYear,
+                    endYear: this.endYear
+                  }
                 }
               }),
               collapsed: false,
@@ -119,16 +198,12 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
   }
 
-  private clearSelections(): void {
-    this.selectedPeopleSubject.next([]);
-  }
-
   public getSelectedExportView(): Observable<ExportView> {
     return this.selectedExportView.asObservable();
   }
 
   public onSelectAll(event: Event, organization: any): void {
-    const currentOrgIds = (organization.people || []).map(p => p.id);
+    // const currentOrgIds = (organization.people || []).map(p => p.id);
     const checked = (event.target as HTMLInputElement).checked;
     const people = organization.people || [];
     if (checked) {
@@ -165,41 +240,51 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
   public downloadSelectedPeople(organization: any, selected: any): void {
     this.route.queryParams.pipe(take(1)).subscribe((params) => {
-      const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
-      const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
+    const orgId = params?.selectedOrganization ? params.selectedOrganization : organization.id;
+    const selectedIds = this.selectedPeopleSubject.value.map(p => p.id);
 
-      if (!orgId) {
-        console.error('Download failure: Missing Organization id.');
+    const rawStart = params['startYear'] || this.startYear;
+    const rawEnd = params['endYear'] || this.endYear;
+
+    const exportName = (selected?.name ? selected.name : params?.export ? params.export : '').trim().replace(/\s+/g, ' ');
+
+    const startYearParam = rawStart && String(rawStart).trim() !== '' ? `&startYear=${encodeURIComponent(String(rawStart).trim())}` : '';
+    const endYearParam = rawEnd && String(rawEnd).trim() !== '' ? `&endYear=${encodeURIComponent(String(rawEnd).trim())}` : '';
+
+      if (!orgId || !rawStart || !rawEnd) {
+        console.error('Download failure: Missing Organization id or Date Range.', { orgId, rawStart, rawEnd });
         return;
       }
 
-      if (!selectedIds.length || selectedIds.length === (organization.people?.length ?? 0)) {
-        const link = params?.export.toLowerCase().replace(/ /g, '_');
-        this.restService.get<Blob>(
-          organization._links[link].href,
-          { observe: 'response', responseType: 'blob' as 'json' })
-          .pipe(take(1))
-          .subscribe((response: any) => {
-            const filename = this.extractFilename(response, 'export.zip');
-            this.download(response, filename);
-          },);
-      } else {
-        const exportName = (selected?.name ? selected.name : params?.export ? params.export : '')
-                          .trim().replace(/\s+/g, ' ');
-        const updatedHref = `${this.appConfig.serviceUrl}/individual/${orgId}/export?type=zip&name=${encodeURIComponent(exportName)}`;
-        this.restService.post(
-          updatedHref,
-          selectedIds,
-          { observe: 'response', responseType: 'blob' as 'json', headers: { 'Content-Type': 'application/json' } }
-        ).subscribe({
-          next: (response: any) => {
-            const filename = this.extractFilename(response, 'selected_profile.zip');
-            this.download(response, filename);
-          },
-          error: (err) => console.error('Failed to download selected profiles.', err),
+      if (!selectedIds.length) {
+      const linkKey = params?.export ? params.export.toLowerCase().replace(/ /g, '_') : '';
+      let downloadUrl = organization?._links?.[linkKey]?.href ||
+        `${this.appConfig.serviceUrl}/individual/${encodeURIComponent(orgId)}/export?type=zip&name=${encodeURIComponent(exportName)}${startYearParam}${endYearParam}`;
+
+      this.restService.get<Blob>(downloadUrl, { observe: 'response', responseType: 'blob' as 'json' })
+        .pipe(take(1))
+        .subscribe({
+          next: (response: any) => this.download(response, this.extractFilename(response, 'export.zip')),
+          error: (err) => console.error('Download failed.', err)
         });
-      }
-    });
+
+    } else {
+      const updatedHref = `${this.appConfig.serviceUrl}/individual/${encodeURIComponent(orgId)}/export?type=zip&name=${encodeURIComponent(exportName)}${startYearParam}${endYearParam}`;
+
+      const payload = selectedIds;
+
+      this.restService.post(updatedHref, payload, {
+        observe: 'response',
+        responseType: 'blob' as 'json',
+        headers: { 'Content-Type': 'application/json' }
+       })
+        .pipe(take(1))
+        .subscribe({
+          next: (response: any) => this.download(response, this.extractFilename(response, 'selected_profile.zip')),
+          error: (err) => console.error('Download failed.', err),
+        });
+       }
+   });
   }
 
   private download(response: any, filename: any): void {
@@ -210,6 +295,89 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
     anchor.href = url;
     anchor.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  private populateAvailableYears(min?: number | string, max?: number | string): void {
+    const currentYear = new Date().getFullYear();
+
+    const parsedMin = min !== null && min !== undefined && min !== '' ? Number(min) : this.minYear;
+    const parsedMax = max !== null && max !== undefined && max !== '' ? Number(max) : this.maxYear;
+
+    const lower = !Number.isNaN(parsedMin) ? parsedMin : this.DEFAULT_MIN_YEAR;
+    const upper = !Number.isNaN(parsedMax) ? parsedMax : currentYear;
+
+    const minBoundary = Math.min(lower, upper);
+    const maxBoundary = Math.max(lower, upper);
+
+    this.availableYears = Array.from(
+      { length: maxBoundary - minBoundary + 1 },
+      (_, i) => maxBoundary - i
+    );
+  }
+
+  private fetchDateRangeByOrganization(orgName: string): void {
+    this.isLoadingDateRange = true;
+
+    const sub = this.individualRepo.getDateRange(orgName).subscribe({
+      next: (collection: SdrCollection) => {
+        const facet = collection.facets?.find(f => f.field === 'publicationDate');
+        const entries = facet?.entries?.content || [];
+
+        let calculatedMin = this.DEFAULT_MIN_YEAR;
+        let calculatedMax = new Date().getFullYear();
+
+        if (entries.length > 0) {
+          const years = entries
+            .map(entry => new Date(entry.value).getUTCFullYear())
+            .filter(year => !Number.isNaN(year))
+            .sort((a, b) => a - b);
+
+          if (years.length > 0) {
+            calculatedMin = years[0];
+            calculatedMax = years[years.length - 1];
+          }
+        }
+        this.minYear = calculatedMin;
+        this.maxYear = calculatedMax;
+
+        this.populateAvailableYears(this.minYear, this.maxYear);
+
+        if (!this.startYear) {
+          this.startYear = entries.length > 0 ? this.minYear : '';
+        }
+        if (!this.endYear) {
+          this.endYear = entries.length > 0 ? this.maxYear : '';
+        }
+
+        this.updateQueryParams(
+          orgName,
+          this.startYear ? String(this.startYear).trim() : '',
+          this.endYear ? String(this.endYear).trim() : ''
+        );
+
+        this.isLoadingDateRange = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading date range for organization:', err);
+        this.isLoadingDateRange = false;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
+    this.subscriptions.push(sub);
+  }
+
+  private updateQueryParams(orgName: string, startYear: any, endYear: any): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        organization: orgName || null,
+        startYear: startYear ? String(startYear) : null,
+        endYear: endYear ? String(endYear) : null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
 }
