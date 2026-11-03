@@ -272,7 +272,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         return;
       }
 
-      if (!selectedIds.length) {
+      if (!selectedIds?.length) {
         const linkKey = params?.export ? params.export?.toLowerCase().replace(/\s+/g, '_') : '';
         let downloadUrl = organization?._links?.[linkKey]?.href;
 
