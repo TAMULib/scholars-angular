@@ -32,4 +32,8 @@ export class IndividualRepo extends AbstractSdrRepo<Individual> {
   public findByTypesIn(types: string[]): Observable<Individual> {
     throw new Error('Individuals does not support find by types in!');
   }
+
+  public fetchDateRangeByOrganization(organiationName: string): Observable<Individual> {
+    throw new Error('Individual does not support fetch date range by organization!');
+  }
 }
