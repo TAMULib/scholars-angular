@@ -125,12 +125,10 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         this.endYear = queryParams['endYear'] || '';
 
         const exportParam = queryParams.export;
+        console.log(this.displayView.exportViews);
         const activeExportView = this.displayView.exportViews.find(
-          (exportView: ExportView) =>
-            exportParam
-              ? exportView.name === exportParam
-              : !exportView.name);
-
+          (exportView: ExportView) => exportView.name === exportParam
+        );
         if (!activeExportView) {
           console.error("Export view not specified");
           return;
