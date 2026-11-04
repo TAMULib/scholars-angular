@@ -63,7 +63,7 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
   public minYear: number = this.DEFAULT_MIN_YEAR;
 
-  public maxYear: number = new Date().getFullYear();
+  public maxYear: number = new Date().getUTCFullYear();
 
   public availableYears: number[] = [];
 
@@ -101,12 +101,12 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['organization']) {
-      const orgObj = changes['organization'].currentValue;
+    if (changes?.organization) {
+      const orgObj = changes?.organization?.currentValue;
       const orgName = orgObj?.name;
 
       if (orgName) {
-        if (!changes['organization'].firstChange) {
+        if (!changes?.organization?.firstChange) {
           this.clearSelections();
         }
         this.fetchDateRangeByOrganization(orgName);
@@ -125,7 +125,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         this.endYear = queryParams['endYear'] || '';
 
         const exportParam = queryParams.export;
-        console.log(this.displayView.exportViews);
         const activeExportView = this.displayView.exportViews.find(
           (exportView: ExportView) => exportView.name === exportParam
         );
@@ -246,8 +245,6 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         : organization?.id;
 
       const selectedIds = this.selectedPeopleSubject.value.map(p => p?.id);
-      const rawStart = params['startYear'] || this.startYear;
-      const rawEnd = params['endYear'] || this.endYear;
 
       const exportName = (
         selected?.name
@@ -259,26 +256,30 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         .trim()
         .replace(/\s+/g, ' ');
 
-      const formattedStart = this.formatYear(rawStart);
+      const exportNameEnc = encodeURIComponent(exportName);
+      const orgIdEnc = encodeURIComponent(orgId);
+
+      const formattedStart = this.asString(params['startYear'] || this.startYear);
       const startYearParam = formattedStart ? `&startYear=${encodeURIComponent(formattedStart)}` : '';
 
-      const formattedEnd = this.formatYear(rawEnd);
+      const formattedEnd = this.asString(params['endYear'] || this.endYear);
       const endYearParam = formattedEnd ? `&endYear=${encodeURIComponent(formattedEnd)}` : '';
 
-      const targetUrl = `${this.appConfig.serviceUrl}/individual/${encodeURIComponent(orgId)}/export?type=zip&name=${encodeURIComponent(exportName)}${startYearParam}${endYearParam}`;
+      const targetUrl = `${this.appConfig.serviceUrl}/individual/${orgIdEnc}/export?type=zip&name=${exportNameEnc}${startYearParam}${endYearParam}`;
 
-      if (!orgId || !rawStart || !rawEnd) {
-        console.error('Download failure: Missing Organization id or Date Range.', { orgId, rawStart, rawEnd });
+      if (!orgId) {
+        console.error('Download failure: Missing Organization id.', orgId);
+        return;
+      }
+
+      if (!this.startYear || !this.endYear) {
+        console.error('Download failure: Missing a complete Date Range.', this.startYear, this.endYear);
         return;
       }
 
       if (!selectedIds?.length) {
         const linkKey = params?.export ? params.export?.toLowerCase().replace(/\s+/g, '_') : '';
-        let downloadUrl = organization?._links?.[linkKey]?.href;
-
-        if (downloadUrl == null || downloadUrl === '') {
-          downloadUrl = targetUrl;
-        }
+        const downloadUrl = organization?._links?.[linkKey]?.href || targetUrl;
 
         this.restService.get<Blob>(downloadUrl, { observe: 'response', responseType: 'blob' as 'json' })
           .pipe(take(1))
@@ -301,10 +302,20 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
     });
   }
 
-  private formatYear(year: unknown): string {
-    if (year == null) return '';
-    const trimmed = `${year}`.trim();
-    return trimmed !== '' ? trimmed : '';
+  /**
+   * Converts year value to a string if it is a string, else return null.
+   *
+   * @param  year The value to convert.
+   * @return The converted string or null.
+   */
+  private asString(year: any): string | null {
+    if (typeof year === 'number') {
+      return String(year);
+    }
+    if (year != null && typeof year === 'string') {
+      return year.trim();
+    }
+    return null;
   }
 
   private download(response: any, filename: any): void {
@@ -318,10 +329,12 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
   }
 
   private populateAvailableYears(min?: number | string, max?: number | string): void {
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getUTCFullYear();
+    const strMin = this.asString(min);
+    const strMax = this.asString(max);
 
-    const parsedMin = min != null && (typeof min === 'number' || (typeof min === 'string' && min.trim() !== '')) ? Number(min) : this.minYear;
-    const parsedMax = max != null && (typeof max === 'number' || (typeof max === 'string' && max.trim() !== '')) ? Number(max) : this.maxYear;
+    const parsedMin = strMin != null && strMin !== '' ? Number(strMin) : this.minYear;
+    const parsedMax = strMax != null && strMax !== '' ? Number(strMax) : currentYear;
 
     const lower = !Number.isNaN(parsedMin) ? parsedMin : this.DEFAULT_MIN_YEAR;
     const upper = !Number.isNaN(parsedMax) ? parsedMax : currentYear;
@@ -347,16 +360,30 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
         let calculatedMax = new Date().getUTCFullYear();
 
         if (entries.length > 0) {
-          const years = entries
-            .map(entry => new Date(entry.value).getUTCFullYear())
-            .filter(year => !Number.isNaN(year))
-            .sort((a, b) => a - b);
+          const validYears: number[] = [];
+          const invalidEntries: any[] = [];
+
+          entries.forEach(entry => {
+            const year = new Date(entry.value).getUTCFullYear();
+            if (Number.isNaN(year)) {
+              invalidEntries.push(entry.value);
+            } else {
+              validYears.push(year);
+            }
+          });
+
+          if (invalidEntries.length > 0) {
+            console.warn('Invalid publicationDate values from backend:',invalidEntries);
+          }
+
+          const years = validYears.sort((a, b) => a - b);
 
           if (years.length > 0) {
             calculatedMin = years[0];
             calculatedMax = years[years.length - 1];
           }
         }
+
         this.minYear = calculatedMin;
         this.maxYear = calculatedMax;
 
@@ -371,8 +398,8 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
 
         this.updateQueryParams(
           orgName,
-          this.startYear ? String(this.startYear).trim() : '',
-          this.endYear ? String(this.endYear).trim() : ''
+          this.asString(this.startYear),
+          this.asString(this.endYear)
         );
 
         this.isLoadingDateRange = false;
@@ -393,8 +420,8 @@ export class ProfileSummariesExportComponent implements OnDestroy, OnChanges, On
       relativeTo: this.route,
       queryParams: {
         organization: orgName || null,
-        startYear: startYear ? String(startYear) : null,
-        endYear: endYear ? String(endYear) : null
+        startYear: this.asString(startYear),
+        endYear: this.asString(endYear)
       },
       queryParamsHandling: 'merge'
     });
